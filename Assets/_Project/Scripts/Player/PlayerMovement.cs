@@ -1,4 +1,5 @@
 using System;
+using R3;
 using UnityEngine;
 
 namespace _Project.Scripts.Player
@@ -6,24 +7,41 @@ namespace _Project.Scripts.Player
     [RequireComponent(typeof(Rigidbody2D))]
     public class PlayerMovement : MonoBehaviour
     {
-        [SerializeField] private float _playerSpeed;
+        public readonly ReactiveProperty<float> CurrentSpeed = new();
+        public readonly ReactiveProperty<float> CurrentXPosition = new();
+        public readonly ReactiveProperty<float> CurrentYPosition = new();
+        public readonly ReactiveProperty<float> CurrentRotationAngle = new();
+        
         [SerializeField] private float _rotateSpeed;
         [Range(0, 1)] [SerializeField] private float _moveDecay;
         [SerializeField] private float _acceleration;
 
         private Rigidbody2D _rigidbody2D;
+        private RectTransform _rectTransform;
         private float _yInput;
         private float _xInput;
+        private float _playerSpeed;
 
+        public void Init(float speed)
+        {
+            _playerSpeed = speed;
+        }
+        
         private void Start()
         {
             _rigidbody2D = GetComponent<Rigidbody2D>();
+            _rectTransform = GetComponent<RectTransform>();
         }
 
         private void Update()
         {
             _yInput = Input.GetAxisRaw("Vertical");
             _xInput = Input.GetAxisRaw("Horizontal");
+            
+            CurrentRotationAngle.Value = transform.eulerAngles.z;
+            
+            CurrentXPosition.Value = _rectTransform.anchoredPosition.x;
+            CurrentYPosition.Value = _rectTransform.anchoredPosition.y;
         }
 
         private void FixedUpdate()
@@ -32,9 +50,12 @@ namespace _Project.Scripts.Player
             {
                 Vector2 direction = transform.up; 
                 float increment = _yInput * _acceleration;
+                
                 Vector2 newVelocity = _rigidbody2D.velocity + direction * increment;
                 newVelocity = Vector2.ClampMagnitude(newVelocity, _playerSpeed);
                 _rigidbody2D.velocity = newVelocity;
+                
+                CurrentSpeed.Value = _rigidbody2D.velocity.y;
             }
             else
             {
@@ -49,6 +70,8 @@ namespace _Project.Scripts.Player
             {
                 _rigidbody2D.angularVelocity *= _moveDecay;
             }
+            
+            CurrentSpeed.Value = _rigidbody2D.velocity.magnitude;
         }
     }
 }

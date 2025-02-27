@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 3143593800971198230}
   - component: {fileID: 8776049288954024894}
   m_Layer: 0
-  m_Name: Bullet
+  m_Name: Lazer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -52,7 +52,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2d7dc2ea56c468a9ed343dd96ed6905, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <Config>k__BackingField: {fileID: 11400000, guid: bd6a8b9d482d6444c90586fcb6288be7, type: 2}
+  <Config>k__BackingField: {fileID: 11400000, guid: 4f075026d7924714a922434afd006d37, type: 2}
 --- !u!50 &353302112851319395
 Rigidbody2D:
   serializedVersion: 4
@@ -153,7 +153,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: ffdea931372c41c438048be166cf416d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c6832326a06081e42b89823c48be4ab9, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

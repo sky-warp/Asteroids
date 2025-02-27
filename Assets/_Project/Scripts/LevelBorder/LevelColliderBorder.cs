@@ -1,4 +1,4 @@
-using _Project.Scripts.Infrastructure;
+using _Project.Scripts.Entities;
 using UnityEngine;
 using R3;
 
@@ -7,13 +7,16 @@ namespace _Project.Scripts.LevelBorder
     [RequireComponent(typeof(BoxCollider2D))]
     public class LevelColliderBorder : MonoBehaviour
     {
-        public Subject<Projectileable> OnProjectileEnter = new Subject<Projectileable>();
+        public readonly Subject<Projectile> OnProjectileExit = new();
         
         private void OnTriggerExit2D(Collider2D other)
         {
-            var bullet = other.GetComponent<Projectileable>();
+            if (other.gameObject.GetComponent<Projectile>())
+            {
+                var projectile = other.GetComponent<Projectile>();
             
-            OnProjectileEnter?.OnNext(bullet);
+                OnProjectileExit?.OnNext(projectile);
+            }
         }
     }
 }

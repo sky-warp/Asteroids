@@ -13,28 +13,26 @@ namespace _Project.Scripts.CustomPool
 
         private T _prefab;
         private Transform _parent;
-        private List<T> _pool;
-        private int _count;
+        public List<T> Pool { get; }
 
         public CustomPool(T prefab, int prewarnObjects, Transform parent)
         {
             _prefab = prefab;
             _parent = parent;
-            _pool = new List<T>();
+            Pool = new List<T>();
 
-            _count = prewarnObjects;
 
             for (int i = 0; i < prewarnObjects; i++)
             {
                 var obj = GameObject.Instantiate(_prefab, _parent);
                 obj.gameObject.SetActive(false);
-                _pool.Add(obj);
+                Pool.Add(obj);
             }
         }
 
         public T Get()
         {
-            var obj = _pool.FirstOrDefault(x => !x.isActiveAndEnabled);
+            var obj = Pool.FirstOrDefault(x => !x.isActiveAndEnabled);
 
 
             if (obj == null)
@@ -47,24 +45,13 @@ namespace _Project.Scripts.CustomPool
 
         public void Release(T obj)
         {
-            _pool.Remove(obj);
-
-            /*if (_count > 3)
-            {
-                while (_pool.Count > 3)
-                {
-                    var currentItem = _pool[_pool.Count - 1];
-                    _pool.RemoveAt(_pool.Count - 1);
-                    GameObject.Destroy(currentItem.gameObject);
-                }
-            }*/
+            Pool.Remove(obj);
         }
 
         public T Create()
         {
             var obj = GameObject.Instantiate(_prefab, _parent);
-            _pool.Add(obj);
-            _count++;
+            Pool.Add(obj);
             return obj;
         }
     }
