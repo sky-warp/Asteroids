@@ -32,7 +32,7 @@ namespace _Project.Scripts.CustomPool
 
         public T Get()
         {
-            var obj = Pool.FirstOrDefault(x => !x.isActiveAndEnabled);
+            var obj = Pool.FirstOrDefault(obj => !obj.gameObject.activeSelf);
 
 
             if (obj == null)
@@ -45,7 +45,10 @@ namespace _Project.Scripts.CustomPool
 
         public void Release(T obj)
         {
-            Pool.Remove(obj);
+            obj.transform.localPosition = Vector3.zero;
+            obj.transform.localRotation = Quaternion.identity;
+            obj.gameObject.SetActive(false);
+            //Pool.Remove(obj);
         }
 
         public T Create()

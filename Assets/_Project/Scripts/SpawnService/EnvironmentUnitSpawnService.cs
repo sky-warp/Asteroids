@@ -72,7 +72,6 @@ namespace _Project.Scripts.SpawnService
         private void DeleteBigAsteroid(AsteroidBig asteroidBig)
         {
             _asteroidPool.Release(asteroidBig);
-            Destroy(asteroidBig.gameObject);
         }
 
         private void CreateSmallAsteroids(AsteroidBig shootedAsteroid, Vector3 startPosition)

@@ -1,6 +1,6 @@
 namespace _Project.Scripts.Projectiles.ProjectileTypes
 {
-    public class Bullet : ProjectileTypes.Projectile
+    public class Bullet : Projectile
     {
         
     }

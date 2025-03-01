@@ -46,6 +46,10 @@ namespace _Project.Scripts.SpawnService
         private void CreateBullet()
         {
             var bullet = _bulletsPool.Get();
+            bullet.OnAsteroidHit
+                .Subscribe(projectile => DeleteSpawnedBullet((Bullet)projectile))
+                .AddTo(_disposable);
+            
             bullet.MoveProjectile();
         }
 
@@ -54,21 +58,20 @@ namespace _Project.Scripts.SpawnService
             if (IsReadyToShootLaser.Value)
             {
                 var laser = _lasersPool.Get();
+                
                 laser.MoveProjectile();
                 OnLaserSpawned?.OnNext(Unit.Default);
             }
         }
-
+        
         private void DeleteSpawnedBullet(Bullet projectile)
         {
             _bulletsPool.Release(projectile);
-            Destroy(projectile.gameObject);
         }
 
         private void DeleteSpawnedLaser(Laser projectile)
         {
             _lasersPool.Release(projectile);
-            Destroy(projectile.gameObject);
         }
 
         private void OnDestroy()

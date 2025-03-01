@@ -1,11 +1,16 @@
 using _Project.Scripts.Configs.EnvironmentConfigs;
+using _Project.Scripts.Projectiles.ProjectileTypes;
+using R3;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace _Project.Scripts.Environment.EnvironmentUnitTypes
 {
     [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
     public class AsteroidSmall : MonoBehaviour
     {
+        public readonly Subject<Bullet> OnBulletHitSmallAsteroid = new();
+        
         [SerializeField] private EnvironmentUnitConfig _environmentUnitConfig;
 
         private float _speed;
@@ -24,6 +29,19 @@ namespace _Project.Scripts.Environment.EnvironmentUnitTypes
             Vector2 direction = Random.insideUnitCircle.normalized;
             
             _rigidbody2D.velocity = direction * _speed;
+        }
+        
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            if (other.gameObject.GetComponent<Bullet>())
+            {
+                OnBulletHitSmallAsteroid?.OnNext(other.gameObject.GetComponent<Bullet>());
+                Destroy(gameObject);
+            }
+            if (other.gameObject.GetComponent<Laser>())
+            {
+                Destroy(gameObject);
+            }
         }
     }
 }

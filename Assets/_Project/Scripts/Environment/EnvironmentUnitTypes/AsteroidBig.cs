@@ -28,7 +28,7 @@ namespace _Project.Scripts.Environment.EnvironmentUnitTypes
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.gameObject.GetComponent<Bullet>())
+            if (other.gameObject.GetComponent<Bullet>() || other.gameObject.GetComponent<Laser>())
             {
                 OnBigAsteroidBulletHit?.OnNext(gameObject.GetComponent<AsteroidBig>());
             }
