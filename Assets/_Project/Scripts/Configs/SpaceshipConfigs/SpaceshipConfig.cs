@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace _Project.Scripts.Configs.Spaceship
+namespace _Project.Scripts.Configs.SpaceshipConfigs
 {
     [CreateAssetMenu(fileName = "SpaceshipConfig", menuName = "Create New Spaceship Config/Spaceship Config")]
     public class SpaceshipConfig : ScriptableObject

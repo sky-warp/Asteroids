@@ -1,6 +1,6 @@
 using _Project.Scripts.CustomPool;
 using _Project.Scripts.LevelBorder;
-using _Project.Scripts.Projectiles;
+using _Project.Scripts.Projectiles.ProjectileTypes;
 using R3;
 using UnityEngine;
 
@@ -8,10 +8,6 @@ namespace _Project.Scripts.SpawnService
 {
     public class ProjectileSpawnService : MonoBehaviour
     {
-        public readonly ReactiveProperty<bool> IsReadyToShootLaser = new();
-
-        public Subject<Unit> OnLaserSpawned = new();
-        
         [SerializeField] private InputService.InputManager _inputManager;
 
         [SerializeField] private Bullet _bulletPrefab;
@@ -19,6 +15,9 @@ namespace _Project.Scripts.SpawnService
 
         [SerializeField] private Transform _shipTransform;
         [SerializeField] private LevelColliderBorder _levelBorder;
+
+        public Subject<Unit> OnLaserSpawned = new();
+        public readonly ReactiveProperty<bool> IsReadyToShootLaser = new();
 
         private CustomPool<Bullet> _bulletsPool;
         private CustomPool<Laser> _lasersPool;

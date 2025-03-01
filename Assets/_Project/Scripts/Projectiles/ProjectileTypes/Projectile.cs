@@ -1,9 +1,9 @@
-using _Project.Scripts.Configs.Projectiles;
+using _Project.Scripts.Configs.ProjectilesConfigs;
 using UnityEngine;
 
-namespace _Project.Scripts.Projectiles
+namespace _Project.Scripts.Projectiles.ProjectileTypes
 {
-    [RequireComponent(typeof(Rigidbody2D))]
+    [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
     public abstract class Projectile : MonoBehaviour
     {
         [field: SerializeField] public ProjectileConfig Config { get; private set; }

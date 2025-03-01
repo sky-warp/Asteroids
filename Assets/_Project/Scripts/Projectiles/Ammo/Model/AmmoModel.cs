@@ -1,4 +1,4 @@
-using _Project.Scripts.Configs.AmmoConfig;
+using _Project.Scripts.Configs.AmmoConfigs;
 using R3;
 
 namespace _Project.Scripts.Projectile.Ammo.Model

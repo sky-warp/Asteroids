@@ -1,4 +1,4 @@
-using _Project.Scripts.Configs.Spaceship;
+using _Project.Scripts.Configs.SpaceshipConfigs;
 using R3;
 
 namespace _Project.Scripts.Spaceship.Model

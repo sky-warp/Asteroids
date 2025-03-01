@@ -1,5 +1,5 @@
-using _Project.Scripts.Configs.AmmoConfig;
-using _Project.Scripts.Configs.Spaceship;
+using _Project.Scripts.Configs.AmmoConfigs;
+using _Project.Scripts.Configs.SpaceshipConfigs;
 using _Project.Scripts.Projectile.Ammo.Model;
 using _Project.Scripts.Projectile.Ammo.View;
 using _Project.Scripts.Projectile.Ammo.ViewModel;

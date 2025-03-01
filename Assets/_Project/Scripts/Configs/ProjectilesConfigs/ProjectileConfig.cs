@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace _Project.Scripts.Configs.Projectiles
+namespace _Project.Scripts.Configs.ProjectilesConfigs
 {
     public abstract class ProjectileConfig : ScriptableObject
     {

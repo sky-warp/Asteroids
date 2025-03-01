@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace _Project.Scripts.Configs.AmmoConfig
+namespace _Project.Scripts.Configs.AmmoConfigs
 {
     [CreateAssetMenu(fileName = "AmmoConfig", menuName = "Create New Ammo Config/ AmmoConfig")]
     public class AmmoConfig : ScriptableObject
