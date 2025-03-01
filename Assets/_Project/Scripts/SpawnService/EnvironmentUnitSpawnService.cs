@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using _Project.Scripts.CustomPool;
 using _Project.Scripts.Environment.EnvironmentUnitTypes;
@@ -42,7 +41,7 @@ namespace _Project.Scripts.SpawnService
         {
             var asteroid = _asteroidPool.Get();
             
-            asteroid.OnBigAsteroidBulletHit
+            asteroid.OnBigAsteroidHit
                 .Subscribe(_ => CreateSmallAsteroids(asteroid, asteroid.transform.position))
                 .AddTo(_disposable);
             

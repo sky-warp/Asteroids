@@ -48,7 +48,6 @@ namespace _Project.Scripts.CustomPool
             obj.transform.localPosition = Vector3.zero;
             obj.transform.localRotation = Quaternion.identity;
             obj.gameObject.SetActive(false);
-            //Pool.Remove(obj);
         }
 
         public T Create()

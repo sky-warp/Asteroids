@@ -8,7 +8,7 @@ namespace _Project.Scripts.Environment.EnvironmentUnitTypes
     [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
     public class AsteroidBig : MonoBehaviour
     {
-        public readonly Subject<AsteroidBig> OnBigAsteroidBulletHit = new();
+        public readonly Subject<AsteroidBig> OnBigAsteroidHit = new();
         
         [SerializeField] private EnvironmentUnitConfig _environmentUnitConfig;
         
@@ -30,7 +30,7 @@ namespace _Project.Scripts.Environment.EnvironmentUnitTypes
         {
             if (other.gameObject.GetComponent<Bullet>() || other.gameObject.GetComponent<Laser>())
             {
-                OnBigAsteroidBulletHit?.OnNext(gameObject.GetComponent<AsteroidBig>());
+                OnBigAsteroidHit?.OnNext(gameObject.GetComponent<AsteroidBig>());
             }
         }
     }

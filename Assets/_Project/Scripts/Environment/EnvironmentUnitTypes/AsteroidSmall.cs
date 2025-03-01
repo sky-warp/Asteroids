@@ -9,8 +9,6 @@ namespace _Project.Scripts.Environment.EnvironmentUnitTypes
     [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
     public class AsteroidSmall : MonoBehaviour
     {
-        public readonly Subject<Bullet> OnBulletHitSmallAsteroid = new();
-        
         [SerializeField] private EnvironmentUnitConfig _environmentUnitConfig;
 
         private float _speed;
@@ -33,12 +31,7 @@ namespace _Project.Scripts.Environment.EnvironmentUnitTypes
         
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.gameObject.GetComponent<Bullet>())
-            {
-                OnBulletHitSmallAsteroid?.OnNext(other.gameObject.GetComponent<Bullet>());
-                Destroy(gameObject);
-            }
-            if (other.gameObject.GetComponent<Laser>())
+            if (other.TryGetComponent(out Bullet bullet) || other.TryGetComponent(out Laser laser))
             {
                 Destroy(gameObject);
             }
