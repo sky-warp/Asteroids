@@ -1,6 +1,6 @@
 using _Project.Scripts.CustomPool;
-using _Project.Scripts.Entities;
 using _Project.Scripts.LevelBorder;
+using _Project.Scripts.Projectiles;
 using R3;
 using UnityEngine;
 
@@ -8,16 +8,20 @@ namespace _Project.Scripts.SpawnService
 {
     public class ProjectileSpawnService : MonoBehaviour
     {
+        public readonly ReactiveProperty<bool> IsReadyToShootLaser = new();
+
+        public Subject<Unit> OnLaserSpawned = new();
+        
         [SerializeField] private InputService.InputManager _inputManager;
 
-        [SerializeField] private Projectile _bulletPrefab;
-        [SerializeField] private Projectile _laserPrefab;
+        [SerializeField] private Bullet _bulletPrefab;
+        [SerializeField] private Laser _laserPrefab;
 
         [SerializeField] private Transform _shipTransform;
         [SerializeField] private LevelColliderBorder _levelBorder;
-        
-        private CustomPool<Projectile> _bulletsPool;
-        private CustomPool<Projectile> _lasersPool;
+
+        private CustomPool<Bullet> _bulletsPool;
+        private CustomPool<Laser> _lasersPool;
         private readonly CompositeDisposable _disposable = new();
 
         private void Awake()
@@ -29,12 +33,15 @@ namespace _Project.Scripts.SpawnService
                 .Subscribe(_ => CreateLaser())
                 .AddTo(_disposable);
 
-            _levelBorder.OnProjectileExit
-                .Subscribe(DeleteSpawnedProjectile)
+            _levelBorder.OnBulletExit
+                .Subscribe(DeleteSpawnedBullet)
+                .AddTo(_disposable);
+            _levelBorder.OnLaserExit
+                .Subscribe(DeleteSpawnedLaser)
                 .AddTo(_disposable);
 
-            _bulletsPool = new CustomPool<Projectile>(_bulletPrefab, 3, _shipTransform);
-            _lasersPool = new CustomPool<Projectile>(_laserPrefab, 3, _shipTransform);
+            _bulletsPool = new CustomPool<Bullet>(_bulletPrefab, 3, _shipTransform);
+            _lasersPool = new CustomPool<Laser>(_laserPrefab, 3, _shipTransform);
         }
 
         private void CreateBullet()
@@ -43,20 +50,25 @@ namespace _Project.Scripts.SpawnService
             bullet.MoveProjectile();
         }
 
-        private void CreateLaser()
+        public void CreateLaser()
         {
-            var laser = _lasersPool.Get();
-            laser.MoveProjectile();
+            if (IsReadyToShootLaser.Value)
+            {
+                var laser = _lasersPool.Get();
+                laser.MoveProjectile();
+                OnLaserSpawned?.OnNext(Unit.Default);
+            }
         }
 
-        private void DeleteSpawnedProjectile(Projectile projectile)
+        private void DeleteSpawnedBullet(Bullet projectile)
         {
-            if(projectile.Type == "Bullet")
-                _bulletsPool.Release(projectile);
-            
-            if(projectile.Type == "Laser")
-                _lasersPool.Release(projectile);
-                
+            _bulletsPool.Release(projectile);
+            Destroy(projectile.gameObject);
+        }
+
+        private void DeleteSpawnedLaser(Laser projectile)
+        {
+            _lasersPool.Release(projectile);
             Destroy(projectile.gameObject);
         }
 

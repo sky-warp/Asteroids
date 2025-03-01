@@ -12,5 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8369efe090bf4779aca5205755c45531, type: 3}
   m_Name: BulletConfig
   m_EditorClassIdentifier: 
-  <Speed>k__BackingField: 1000
-  <Type>k__BackingField: Bullet
+  <Speed>k__BackingField: 750

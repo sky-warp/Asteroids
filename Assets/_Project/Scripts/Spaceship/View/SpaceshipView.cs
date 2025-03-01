@@ -76,10 +76,5 @@ namespace _Project.Scripts.Spaceship.View
         {
             _shipImage.sprite = _shipSprite;
         }
-
-        private void OnDestroy()
-        {
-            _spaceshipViewModel.DisposableSpaceshipViewModel?.Dispose();
-        }
     }
 }

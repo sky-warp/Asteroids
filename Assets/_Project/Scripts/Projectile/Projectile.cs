@@ -1,10 +1,10 @@
 using _Project.Scripts.Configs.Projectiles;
 using UnityEngine;
 
-namespace _Project.Scripts.Entities
+namespace _Project.Scripts.Projectiles
 {
     [RequireComponent(typeof(Rigidbody2D))]
-    public class Projectile : MonoBehaviour
+    public abstract class Projectile : MonoBehaviour
     {
         [field: SerializeField] public ProjectileConfig Config { get; private set; }
         
@@ -12,7 +12,6 @@ namespace _Project.Scripts.Entities
         private Transform _sourceObjectPosition;
         
         public float Speed { get; private set; }
-        public string Type { get; private set; }
 
         private void Awake()
         {
@@ -20,7 +19,6 @@ namespace _Project.Scripts.Entities
             _rigidbody2D = GetComponent<Rigidbody2D>();
             
             Speed = Config.Speed;
-            Type = Config.Type;
         }
 
         public void MoveProjectile()
