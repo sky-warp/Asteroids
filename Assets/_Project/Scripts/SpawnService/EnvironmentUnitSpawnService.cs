@@ -29,18 +29,23 @@ namespace _Project.Scripts.SpawnService
         [Header("Ufo target")] [SerializeField]
         private Transform _ufoTarget;
 
-        private CustomPool<AsteroidBig> _asteroidsPool;
+        private CustomPool<AsteroidBig> _bigAsteroidsPool;
+        private CustomPool<AsteroidSmall> _smallAsteroidsPool;
         private CustomPool<UfoChaser> _ufoChasersPool;
         private bool _isEnough;
 
         private void Start()
         {
-            _asteroidsPool = new CustomPool<AsteroidBig>(_asteroidBigPrefab, 3, _environmentParent);
+            _bigAsteroidsPool = new CustomPool<AsteroidBig>(_asteroidBigPrefab, 3, _environmentParent);
+            _smallAsteroidsPool = new CustomPool<AsteroidSmall>(_asteroidSmallPrefab, 3, _environmentParent);
 
             StartCoroutine(SpawnBigAsteroids());
 
             _levelColliderBorder.OnBigAsteroidExit
                 .Subscribe(DeleteBigAsteroid)
+                .AddTo(this);
+            _levelColliderBorder.OnSmallAsteroidExit
+                .Subscribe(DeleteSmallAsteroid)
                 .AddTo(this);
 
             _ufoChasersPool = new CustomPool<UfoChaser>(_ufoChaserPrefab, 3, _environmentParent);
@@ -56,12 +61,12 @@ namespace _Project.Scripts.SpawnService
 
         private void CreateAsteroid()
         {
-            var asteroid = _asteroidsPool.Get();
+            var asteroid = _bigAsteroidsPool.Get();
 
             asteroid.ResetSubscription();
 
             var subscription = asteroid.OnBigAsteroidHit
-                .Subscribe(_ => CreateSmallAsteroids(asteroid, asteroid.transform.position));
+                .Subscribe(_ => CreateSmallAsteroids(asteroid, asteroid.transform.position, asteroid.SmallAsteroidsAmountAfterHit));
 
             asteroid.AddSubscription(subscription);
 
@@ -92,16 +97,27 @@ namespace _Project.Scripts.SpawnService
         {
             asteroidBig.ResetSubscription();
 
-            _asteroidsPool.Release(asteroidBig);
+            _bigAsteroidsPool.Release(asteroidBig);
             
             OnScoreChanged?.OnNext(asteroidBig.Score);
         }
 
-        private void CreateSmallAsteroids(AsteroidBig shootedAsteroid, Vector3 startPosition)
+        private void CreateSmallAsteroids(AsteroidBig shootedAsteroid, Vector3 startPosition, int amount)
         {
+            for (int i = 0; i < amount; i++)
+            {
+                var asteroidSmall = _smallAsteroidsPool.Get();
+                
+                asteroidSmall.OnSmallAsteroidHit
+                    .Subscribe(DeleteSmallAsteroid)
+                    .AddTo(this);
+                
+                asteroidSmall.MoveSmallAsteroid(startPosition);
+            }
+            
             DeleteBigAsteroid(shootedAsteroid);
-
-            AsteroidSmall[] smallAsteroids = new AsteroidSmall[3];
+            
+            /*AsteroidSmall[] smallAsteroids = new AsteroidSmall[3];
 
             for (int i = 0; i < smallAsteroids.Length; i++)
             {
@@ -111,9 +127,15 @@ namespace _Project.Scripts.SpawnService
             foreach (var asteroid in smallAsteroids)
             {
                 asteroid.MoveSmallAsteroid(startPosition);
-            }
+            }*/
         }
 
+        private void DeleteSmallAsteroid(AsteroidSmall asteroidSmall)
+        {
+            _smallAsteroidsPool.Release(asteroidSmall);
+            OnScoreChanged?.OnNext(asteroidSmall.Score);
+        }
+        
         private void CreateUfoChaser()
         {
             var ufoChaser = _ufoChasersPool.Get();

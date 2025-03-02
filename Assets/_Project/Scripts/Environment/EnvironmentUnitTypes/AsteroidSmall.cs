@@ -9,6 +9,8 @@ namespace _Project.Scripts.Environment.EnvironmentUnitTypes
     [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
     public class AsteroidSmall : MonoBehaviour
     {
+        public readonly Subject<AsteroidSmall> OnSmallAsteroidHit = new();
+        
         public int Score { get; private set; }
         
         [SerializeField] private EnvironmentUnitConfig _environmentUnitConfig;
@@ -36,7 +38,7 @@ namespace _Project.Scripts.Environment.EnvironmentUnitTypes
         {
             if (other.TryGetComponent(out Bullet bullet) || other.TryGetComponent(out Laser laser))
             {
-                Destroy(gameObject);
+                OnSmallAsteroidHit?.OnNext(gameObject.GetComponentInParent<AsteroidSmall>());
             }
         }
     }

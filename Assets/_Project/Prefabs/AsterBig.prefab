@@ -53,6 +53,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _environmentUnitConfig: {fileID: 11400000, guid: bfe80c34effd3cf4ab98e143b420b14c, type: 2}
+  <SmallAsteroidsAmountAfterHit>k__BackingField: 3
 --- !u!222 &796208922319270016
 CanvasRenderer:
   m_ObjectHideFlags: 0

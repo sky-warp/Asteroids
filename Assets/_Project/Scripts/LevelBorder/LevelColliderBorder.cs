@@ -11,6 +11,7 @@ namespace _Project.Scripts.LevelBorder
         public readonly Subject<Bullet> OnBulletExit = new();
         public readonly Subject<Laser> OnLaserExit = new();
         public readonly Subject<AsteroidBig> OnBigAsteroidExit = new();
+        public readonly Subject<AsteroidSmall> OnSmallAsteroidExit = new();
 
         private void OnTriggerExit2D(Collider2D other)
         {
@@ -35,7 +36,7 @@ namespace _Project.Scripts.LevelBorder
             }
             if (other.gameObject.GetComponent<AsteroidSmall>())
             {
-                Destroy(other.gameObject);
+                OnSmallAsteroidExit?.OnNext(other.gameObject.GetComponent<AsteroidSmall>());
             }
         }
     }

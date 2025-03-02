@@ -14,6 +14,7 @@ namespace _Project.Scripts.Environment.EnvironmentUnitTypes
         public int Score { get; private set; }
         
         [SerializeField] private EnvironmentUnitConfig _environmentUnitConfig;
+        [field: SerializeField] public int SmallAsteroidsAmountAfterHit { get; private set; }
         
         private float _speed;
         private Rigidbody2D _rigidbody2D;
