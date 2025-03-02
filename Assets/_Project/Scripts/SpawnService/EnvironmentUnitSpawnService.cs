@@ -10,24 +10,41 @@ namespace _Project.Scripts.SpawnService
 {
     public class EnvironmentUnitSpawnService : MonoBehaviour
     {
-        [SerializeField] private AsteroidBig _asteroidBigPrefab;
+        [Header("Types of environment unit")] [SerializeField]
+        private AsteroidBig _asteroidBigPrefab;
+
         [SerializeField] private AsteroidSmall _asteroidSmallPrefab;
-        [SerializeField] private Transform _environmentParent;
-        [SerializeField] private Transform[] _spawnPoints;
+        [SerializeField] private UfoChaser _ufoChaserPrefab;
 
-        [SerializeField] private LevelColliderBorder _levelColliderBorder;
+        [Header("Level area")] [SerializeField]
+        private Transform _environmentParent;
 
-        private CustomPool<AsteroidBig> _asteroidPool;
+        [Header("Spawn points")] [SerializeField]
+        private Transform[] _spawnPoints;
+
+        [Header("Level's border")] [SerializeField]
+        private LevelColliderBorder _levelColliderBorder;
+
+        [Header("Ufo target")] [SerializeField]
+        private Transform _ufoTarget;
+
+        private CustomPool<AsteroidBig> _asteroidsPool;
+        private CustomPool<UfoChaser> _ufoChasersPool;
         private bool _isEnough;
 
         private void Start()
         {
-            _asteroidPool = new CustomPool<AsteroidBig>(_asteroidBigPrefab, 3, _environmentParent);
+            _asteroidsPool = new CustomPool<AsteroidBig>(_asteroidBigPrefab, 3, _environmentParent);
+
             StartCoroutine(SpawnBigAsteroids());
 
             _levelColliderBorder.OnBigAsteroidExit
                 .Subscribe(DeleteBigAsteroid)
                 .AddTo(this);
+
+            _ufoChasersPool = new CustomPool<UfoChaser>(_ufoChaserPrefab, 3, _environmentParent);
+
+            StartCoroutine(SpawnUfoChasers());
         }
 
         private void Update()
@@ -38,15 +55,15 @@ namespace _Project.Scripts.SpawnService
 
         private void CreateAsteroid()
         {
-            var asteroid = _asteroidPool.Get();
+            var asteroid = _asteroidsPool.Get();
 
             asteroid.ResetSubscription();
-            
+
             var subscription = asteroid.OnBigAsteroidHit
                 .Subscribe(_ => CreateSmallAsteroids(asteroid, asteroid.transform.position));
 
             asteroid.AddSubscription(subscription);
-            
+
             var spawnPoint = _spawnPoints[Random.Range(0, _spawnPoints.Length)];
 
             asteroid.transform.SetParent(spawnPoint.transform);
@@ -73,8 +90,8 @@ namespace _Project.Scripts.SpawnService
         private void DeleteBigAsteroid(AsteroidBig asteroidBig)
         {
             asteroidBig.ResetSubscription();
-            
-            _asteroidPool.Release(asteroidBig);
+
+            _asteroidsPool.Release(asteroidBig);
         }
 
         private void CreateSmallAsteroids(AsteroidBig shootedAsteroid, Vector3 startPosition)
@@ -94,13 +111,52 @@ namespace _Project.Scripts.SpawnService
             }
         }
 
-        public IEnumerator SpawnBigAsteroids()
+        private void CreateUfoChaser()
+        {
+            
+            var ufoChaser = _ufoChasersPool.Get();
+
+            ufoChaser.MoveTowardsTarget();
+
+            Observable
+                .EveryUpdate()
+                .Subscribe(_ => ufoChaser.TargetPosition.Value = _ufoTarget.position)
+                .AddTo(this);
+            
+            ufoChaser.OnProjectileHitUfo
+                .Subscribe(DeleteUfoChaser)
+                .AddTo(this);
+
+            var spawnPoint = _spawnPoints[Random.Range(0, _spawnPoints.Length)];
+
+            ufoChaser.transform.SetParent(spawnPoint.transform);
+            ufoChaser.transform.position = spawnPoint.position;
+        }
+
+        private void DeleteUfoChaser(UfoChaser ufoChaser)
+        {
+            _ufoChasersPool.Release(ufoChaser);
+        }
+
+        private IEnumerator SpawnBigAsteroids()
         {
             while (!_isEnough)
             {
                 float interval = Random.Range(0.5f, 1.5f);
 
                 CreateAsteroid();
+
+                yield return new WaitForSeconds(interval);
+            }
+        }
+
+        private IEnumerator SpawnUfoChasers()
+        {
+            while (!_isEnough)
+            {
+                int interval = Random.Range(3, 6);
+
+                CreateUfoChaser();
 
                 yield return new WaitForSeconds(interval);
             }

@@ -6,11 +6,6 @@ namespace _Project.Scripts.CustomPool
 {
     public class CustomPool<T> where T : MonoBehaviour
     {
-        //1. INIT - creating a pool. Which objects pool will contain, do we need to pre-instantiate certain amount of them
-        //2. GET - find a non-use object and change it status to "in-use" (when player shoots we change bullet status)
-        //3. RELEASE - deactivating object, it's status return to "non-use" and object itself will be deleted from scene when bullet hits the enemy or gets out of screen bounds  
-        //4/ CREATE - create object in pull if there's no free object (often works with GET command, so we are trying to get free object - if we cant, then we need to create one
-
         private T _prefab;
         private Transform _parent;
         public List<T> Pool { get; }

@@ -8,12 +8,17 @@ namespace _Project.Scripts.SpawnService
 {
     public class ProjectileSpawnService : MonoBehaviour
     {
+        [Header("InputManager")]
         [SerializeField] private InputService.InputManager _inputManager;
 
+        [Header("Projectiles")]
         [SerializeField] private Bullet _bulletPrefab;
         [SerializeField] private Laser _laserPrefab;
 
+        [Header("Spaceship position")]
         [SerializeField] private Transform _shipTransform;
+        
+        [Header("Level's border")]
         [SerializeField] private LevelColliderBorder _levelBorder;
 
         public Subject<Unit> OnLaserSpawned = new();

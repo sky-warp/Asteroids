@@ -1,4 +1,5 @@
 using _Project.Scripts.Configs.ProjectilesConfigs;
+using _Project.Scripts.Environment.EnvironmentUnitTypes;
 using R3;
 using UnityEngine;
 
@@ -32,7 +33,9 @@ namespace _Project.Scripts.Projectiles.ProjectileTypes
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.gameObject.layer == LayerMask.NameToLayer("Asteroids"))
+            if (other.TryGetComponent(out AsteroidBig big) 
+                || other.TryGetComponent(out AsteroidSmall small) 
+                || other.TryGetComponent(out UfoChaser ufo))
             {
                 OnAsteroidHit?.OnNext(gameObject.GetComponent<Projectile>());
             }

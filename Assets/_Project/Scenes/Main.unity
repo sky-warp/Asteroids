@@ -1461,13 +1461,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _asteroidBigPrefab: {fileID: 4315259478175544581, guid: 65f8ff121e79c004db2ea13f48e2ecdc, type: 3}
   _asteroidSmallPrefab: {fileID: 187014730003432527, guid: b00e382cede7c10419cab21e7e5e95eb, type: 3}
-  _environmentParent: {fileID: 954629047}
+  _ufoChaserPrefab: {fileID: 2442529068009088309, guid: bd5d401fb466cd140a5467c86f4fcf44, type: 3}
+  _environmentParent: {fileID: 1500080768}
   _spawnPoints:
   - {fileID: 1223984486}
   - {fileID: 1182714392}
   - {fileID: 1123631651}
   - {fileID: 639987648}
   _levelColliderBorder: {fileID: 1129032465}
+  _ufoTarget: {fileID: 855608285}
 --- !u!4 &1304555929
 Transform:
   m_ObjectHideFlags: 0
