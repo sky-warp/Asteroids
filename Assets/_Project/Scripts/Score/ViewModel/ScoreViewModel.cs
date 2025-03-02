@@ -24,7 +24,7 @@ namespace _Project.Scripts.Score.ViewModel
 
         public void IncreaseScore(int score)
         {
-            _scoreModel.CurrentScore.Value += score;
+            CurrentScoreView.Value += score;
         }
         
         public void ResetScore()

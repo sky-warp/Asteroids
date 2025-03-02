@@ -98,41 +98,41 @@ namespace _Project.Scripts.SpawnService
             asteroidBig.ResetSubscription();
 
             _bigAsteroidsPool.Release(asteroidBig);
-            
-            OnScoreChanged?.OnNext(asteroidBig.Score);
         }
 
         private void CreateSmallAsteroids(AsteroidBig shootedAsteroid, Vector3 startPosition, int amount)
         {
+            OnScoreChanged?.OnNext(shootedAsteroid.Score);
+            
             for (int i = 0; i < amount; i++)
             {
                 var asteroidSmall = _smallAsteroidsPool.Get();
                 
-                asteroidSmall.OnSmallAsteroidHit
-                    .Subscribe(DeleteSmallAsteroid)
+                asteroidSmall.ResetSubscription();
+                
+                var subscription = asteroidSmall.OnSmallAsteroidHit
+                    .Subscribe(TakeScoreForSmallAsteroidHit)
                     .AddTo(this);
+                
+                asteroidSmall.AddSubscription(subscription);
                 
                 asteroidSmall.MoveSmallAsteroid(startPosition);
             }
             
             DeleteBigAsteroid(shootedAsteroid);
-            
-            /*AsteroidSmall[] smallAsteroids = new AsteroidSmall[3];
-
-            for (int i = 0; i < smallAsteroids.Length; i++)
-            {
-                smallAsteroids[i] = Instantiate(_asteroidSmallPrefab, _environmentParent);
-            }
-
-            foreach (var asteroid in smallAsteroids)
-            {
-                asteroid.MoveSmallAsteroid(startPosition);
-            }*/
         }
 
         private void DeleteSmallAsteroid(AsteroidSmall asteroidSmall)
         {
+            asteroidSmall.ResetSubscription();
+            
             _smallAsteroidsPool.Release(asteroidSmall);
+        }
+
+        private void TakeScoreForSmallAsteroidHit(AsteroidSmall asteroidSmall)
+        {
+            DeleteSmallAsteroid(asteroidSmall);
+            
             OnScoreChanged?.OnNext(asteroidSmall.Score);
         }
         
@@ -140,16 +140,18 @@ namespace _Project.Scripts.SpawnService
         {
             var ufoChaser = _ufoChasersPool.Get();
 
+            ufoChaser.ResetSubscription();
+            
             ufoChaser.MoveTowardsTarget();
 
             Observable
                 .EveryUpdate()
                 .Subscribe(_ => ufoChaser.TargetPosition.Value = _ufoTarget.position)
-                .AddTo(this);
+                .AddTo(ufoChaser.Disposable);
 
-            ufoChaser.OnProjectileHitUfo
+            ufoChaser.OnUfoHit
                 .Subscribe(DeleteUfoChaser)
-                .AddTo(this);
+                .AddTo(ufoChaser.Disposable);
 
             var spawnPoint = _spawnPoints[Random.Range(0, _spawnPoints.Length)];
 
@@ -159,6 +161,8 @@ namespace _Project.Scripts.SpawnService
 
         private void DeleteUfoChaser(UfoChaser ufoChaser)
         {
+            ufoChaser.ResetSubscription();
+            
             _ufoChasersPool.Release(ufoChaser);
             
             OnScoreChanged?.OnNext(ufoChaser.Score);

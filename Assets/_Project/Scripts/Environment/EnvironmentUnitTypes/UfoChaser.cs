@@ -8,10 +8,12 @@ namespace _Project.Scripts.Environment.EnvironmentUnitTypes
     [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
     public class UfoChaser : MonoBehaviour
     {
-        public readonly Subject<UfoChaser> OnProjectileHitUfo = new();
+        public readonly Subject<UfoChaser> OnUfoHit = new();
         public readonly ReactiveProperty<Vector2> TargetPosition = new();
 
         public int Score { get; private set; }
+
+        public CompositeDisposable Disposable { get; private set; } = new();
         
         [SerializeField] private EnvironmentUnitConfig _environmentUnitConfig;
 
@@ -37,14 +39,20 @@ namespace _Project.Scripts.Environment.EnvironmentUnitTypes
                     float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90.0f;
                     _rigidbody2D.rotation = angle;
                 })
-                .AddTo(this);
+                .AddTo(Disposable);
         }
 
+        public void ResetSubscription()
+        {
+            Disposable?.Dispose();
+            Disposable = new();
+        }
+        
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (other.TryGetComponent(out Bullet bullet) || other.TryGetComponent(out Laser laser))
             {
-                OnProjectileHitUfo?.OnNext(this);
+                OnUfoHit?.OnNext(this);
             }
         }
 

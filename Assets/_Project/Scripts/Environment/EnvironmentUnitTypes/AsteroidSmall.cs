@@ -1,3 +1,4 @@
+using System;
 using _Project.Scripts.Configs.EnvironmentConfigs;
 using _Project.Scripts.Projectiles.ProjectileTypes;
 using R3;
@@ -17,6 +18,7 @@ namespace _Project.Scripts.Environment.EnvironmentUnitTypes
 
         private float _speed;
         private Rigidbody2D _rigidbody2D;
+        private CompositeDisposable _disposable = new();
 
         private void Awake()
         {
@@ -32,6 +34,17 @@ namespace _Project.Scripts.Environment.EnvironmentUnitTypes
             Vector2 direction = Random.insideUnitCircle.normalized;
             
             _rigidbody2D.velocity = direction * _speed;
+        }
+
+        public void AddSubscription(IDisposable subscription)
+        {
+            _disposable.Add(subscription);
+        }
+
+        public void ResetSubscription()
+        {
+            _disposable?.Dispose();
+            _disposable = new();
         }
         
         private void OnTriggerEnter2D(Collider2D other)
