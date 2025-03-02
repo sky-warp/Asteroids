@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: UfoChaserConfig
   m_EditorClassIdentifier: 
   <UnitSpeed>k__BackingField: 100
+  <UnitScore>k__BackingField: 20

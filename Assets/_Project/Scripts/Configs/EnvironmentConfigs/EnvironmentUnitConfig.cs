@@ -6,5 +6,6 @@ namespace _Project.Scripts.Configs.EnvironmentConfigs
     public class EnvironmentUnitConfig : ScriptableObject
     {
         [field: SerializeField] public float UnitSpeed { get; private set; }
+        [field: SerializeField] public int UnitScore { get; private set; }
     }
 }

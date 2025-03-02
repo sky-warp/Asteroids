@@ -9,6 +9,8 @@ namespace _Project.Scripts.Environment.EnvironmentUnitTypes
     [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
     public class AsteroidSmall : MonoBehaviour
     {
+        public int Score { get; private set; }
+        
         [SerializeField] private EnvironmentUnitConfig _environmentUnitConfig;
 
         private float _speed;
@@ -17,6 +19,7 @@ namespace _Project.Scripts.Environment.EnvironmentUnitTypes
         private void Awake()
         {
             _speed = _environmentUnitConfig.UnitSpeed;
+            Score = _environmentUnitConfig.UnitScore;
             _rigidbody2D = GetComponent<Rigidbody2D>();
         }
 

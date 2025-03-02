@@ -11,6 +11,8 @@ namespace _Project.Scripts.Environment.EnvironmentUnitTypes
     {
         public readonly Subject<AsteroidBig> OnBigAsteroidHit = new();
         
+        public int Score { get; private set; }
+        
         [SerializeField] private EnvironmentUnitConfig _environmentUnitConfig;
         
         private float _speed;
@@ -20,6 +22,7 @@ namespace _Project.Scripts.Environment.EnvironmentUnitTypes
         private void Awake()
         {
             _speed = _environmentUnitConfig.UnitSpeed;
+            Score = _environmentUnitConfig.UnitScore;
             _rigidbody2D = GetComponent<Rigidbody2D>();
         }
 

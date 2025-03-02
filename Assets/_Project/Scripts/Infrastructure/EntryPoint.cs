@@ -3,6 +3,9 @@ using _Project.Scripts.Configs.SpaceshipConfigs;
 using _Project.Scripts.Projectile.Ammo.Model;
 using _Project.Scripts.Projectile.Ammo.View;
 using _Project.Scripts.Projectile.Ammo.ViewModel;
+using _Project.Scripts.Score.Model;
+using _Project.Scripts.Score.View;
+using _Project.Scripts.Score.ViewModel;
 using _Project.Scripts.Spaceship.Model;
 using _Project.Scripts.Spaceship.View;
 using _Project.Scripts.Spaceship.ViewModel;
@@ -17,9 +20,11 @@ namespace _Project.Scripts.Infrastructure
         
         [SerializeField] private SpaceshipView _spaceshipView;
         [SerializeField] private AmmoView _ammoView;
+        [SerializeField] private ScoreView _scoreView;
 
         private SpaceshipViewModel _spaceshipViewModel;
         private AmmoViewModel _ammoViewModel;
+        private ScoreViewModel _scoreViewModel;
         
         private void Start()
         {
@@ -30,12 +35,17 @@ namespace _Project.Scripts.Infrastructure
             AmmoModel ammoModel = new AmmoModel(_ammoConfig);
             _ammoViewModel = new AmmoViewModel(ammoModel);
             _ammoView.Init(_ammoViewModel);
+
+            ScoreModel scoreModel = new();
+            _scoreViewModel = new ScoreViewModel(scoreModel);
+            _scoreView.Init(_scoreViewModel);
         }
 
         private void OnDestroy()
         {
             _spaceshipViewModel.DisposableSpaceshipViewModel?.Dispose();
             _ammoViewModel?.Disposable.Dispose();
+            _scoreViewModel?.Disposable.Dispose();
         }
     }
 }

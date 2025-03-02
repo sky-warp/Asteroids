@@ -5,10 +5,10 @@ namespace _Project.Scripts.Spaceship.Model
 {
     public class SpaceshipModel
     {
-        public ReactiveProperty<float> ShipSpeed { get; private set; }
-        public ReactiveProperty<float> CoordinateX { get; private set; } = new();
-        public ReactiveProperty<float> CoordinateY { get; private set; } = new();
-        public ReactiveProperty<float> RotationAngle { get; private set; } = new();
+        public readonly ReactiveProperty<float> ShipSpeed; 
+        public readonly ReactiveProperty<float> CoordinateX  = new();
+        public readonly ReactiveProperty<float> CoordinateY  = new();
+        public readonly ReactiveProperty<float> RotationAngle  = new();
         
         public SpaceshipModel(SpaceshipConfig config)
         {

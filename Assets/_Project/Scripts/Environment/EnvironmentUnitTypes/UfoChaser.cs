@@ -11,15 +11,19 @@ namespace _Project.Scripts.Environment.EnvironmentUnitTypes
         public readonly Subject<UfoChaser> OnProjectileHitUfo = new();
         public readonly ReactiveProperty<Vector2> TargetPosition = new();
 
-        [SerializeField] private EnvironmentUnitConfig _config;
+        public int Score { get; private set; }
+        
+        [SerializeField] private EnvironmentUnitConfig _environmentUnitConfig;
 
         private float _speed;
         private Rigidbody2D _rigidbody2D;
 
         private void Awake()
         {
+            _speed = _environmentUnitConfig.UnitSpeed;
+            Score = _environmentUnitConfig.UnitScore;
             _rigidbody2D = GetComponent<Rigidbody2D>();
-            _speed = _config.UnitSpeed;
+
         }
 
         public void MoveTowardsTarget()

@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: AsteroidBigConfig
   m_EditorClassIdentifier: 
   <UnitSpeed>k__BackingField: 150
+  <UnitScore>k__BackingField: 10

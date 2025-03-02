@@ -5,11 +5,11 @@ namespace _Project.Scripts.Spaceship.ViewModel
 {
     public class SpaceshipViewModel
     {
-        public ReactiveProperty<float> SpaceshipSpeedView { get; private set; } = new();
-        public ReactiveProperty<float> CoordinateXView { get; private set; } = new();
-        public ReactiveProperty<float> CoordinateYView { get; private set; } = new();
-        public ReactiveProperty<float> RotationAngleView { get; private set; } = new();
-        public CompositeDisposable DisposableSpaceshipViewModel { get; private set; } = new();
+        public readonly ReactiveProperty<float> SpaceshipSpeedView = new();
+        public readonly ReactiveProperty<float> CoordinateXView = new();
+        public readonly ReactiveProperty<float> CoordinateYView = new();
+        public readonly ReactiveProperty<float> RotationAngleView = new();
+        public readonly CompositeDisposable DisposableSpaceshipViewModel = new();
 
         private SpaceshipModel _spaceshipModel;
 

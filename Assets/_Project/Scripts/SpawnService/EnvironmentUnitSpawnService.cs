@@ -10,9 +10,10 @@ namespace _Project.Scripts.SpawnService
 {
     public class EnvironmentUnitSpawnService : MonoBehaviour
     {
+        public readonly Subject<int> OnScoreChanged = new();
+        
         [Header("Types of environment unit")] [SerializeField]
         private AsteroidBig _asteroidBigPrefab;
-
         [SerializeField] private AsteroidSmall _asteroidSmallPrefab;
         [SerializeField] private UfoChaser _ufoChaserPrefab;
 
@@ -92,6 +93,8 @@ namespace _Project.Scripts.SpawnService
             asteroidBig.ResetSubscription();
 
             _asteroidsPool.Release(asteroidBig);
+            
+            OnScoreChanged?.OnNext(asteroidBig.Score);
         }
 
         private void CreateSmallAsteroids(AsteroidBig shootedAsteroid, Vector3 startPosition)
@@ -113,7 +116,6 @@ namespace _Project.Scripts.SpawnService
 
         private void CreateUfoChaser()
         {
-            
             var ufoChaser = _ufoChasersPool.Get();
 
             ufoChaser.MoveTowardsTarget();
@@ -122,7 +124,7 @@ namespace _Project.Scripts.SpawnService
                 .EveryUpdate()
                 .Subscribe(_ => ufoChaser.TargetPosition.Value = _ufoTarget.position)
                 .AddTo(this);
-            
+
             ufoChaser.OnProjectileHitUfo
                 .Subscribe(DeleteUfoChaser)
                 .AddTo(this);
@@ -136,6 +138,8 @@ namespace _Project.Scripts.SpawnService
         private void DeleteUfoChaser(UfoChaser ufoChaser)
         {
             _ufoChasersPool.Release(ufoChaser);
+            
+            OnScoreChanged?.OnNext(ufoChaser.Score);
         }
 
         private IEnumerator SpawnBigAsteroids()
