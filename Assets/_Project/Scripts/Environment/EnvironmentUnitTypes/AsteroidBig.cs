@@ -1,3 +1,4 @@
+using System;
 using _Project.Scripts.Configs.EnvironmentConfigs;
 using _Project.Scripts.Projectiles.ProjectileTypes;
 using R3;
@@ -14,11 +15,23 @@ namespace _Project.Scripts.Environment.EnvironmentUnitTypes
         
         private float _speed;
         private Rigidbody2D _rigidbody2D;
+        private CompositeDisposable _disposable = new();
 
         private void Awake()
         {
             _speed = _environmentUnitConfig.UnitSpeed;
             _rigidbody2D = GetComponent<Rigidbody2D>();
+        }
+
+        public void AddSubscription(IDisposable subscription)
+        {
+            _disposable.Add(subscription);
+        }
+
+        public void ResetSubscription()
+        {
+            _disposable.Dispose();
+            _disposable = new();
         }
 
         public void MoveAsteroidBig(Vector2 direction)
