@@ -54,8 +54,12 @@ namespace _Project.Scripts.SpawnService
             StartCoroutine(SpawnUfoChasers());
         }
 
-        public void GameOver()
+        private void GameOver()
         {
+            _bigAsteroidsPool.ReleaseAll();
+            _smallAsteroidsPool.ReleaseAll();
+            _ufoChasersPool.ReleaseAll();
+            
             OnGameOver?.OnNext(Unit.Default);
             StopAllCoroutines();
         }

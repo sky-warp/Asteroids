@@ -8,7 +8,7 @@ namespace _Project.Scripts.CustomPool
     {
         private T _prefab;
         private Transform _parent;
-        public List<T> Pool { get; }
+        private List<T> Pool { get; }
 
         public CustomPool(T prefab, int prewarnObjects, Transform parent)
         {
@@ -45,7 +45,15 @@ namespace _Project.Scripts.CustomPool
             obj.gameObject.SetActive(false);
         }
 
-        public T Create()
+        public void ReleaseAll()
+        {
+            foreach (var t in Pool)
+            {
+                Release(t);
+            }
+        }
+        
+        private T Create()
         {
             var obj = GameObject.Instantiate(_prefab, _parent);
             Pool.Add(obj);

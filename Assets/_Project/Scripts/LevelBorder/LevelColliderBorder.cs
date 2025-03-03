@@ -1,5 +1,6 @@
 using _Project.Scripts.Environment.EnvironmentUnitTypes;
 using _Project.Scripts.Projectiles.ProjectileTypes;
+using _Project.Scripts.Spaceship.View;
 using UnityEngine;
 using R3;
 
@@ -15,28 +16,59 @@ namespace _Project.Scripts.LevelBorder
 
         private void OnTriggerExit2D(Collider2D other)
         {
-            if (other.gameObject.GetComponent<Projectiles.ProjectileTypes.Projectile>())
+            if (other.gameObject.TryGetComponent<Projectile>(out Projectile projectile))
             {
-                if (other.GetComponent<Bullet>())
+                if (other.TryGetComponent<Bullet>(out Bullet bullet))
                 {
-                    var projectile = other.GetComponent<Bullet>();
-                    OnBulletExit?.OnNext(projectile);
+                    OnBulletExit?.OnNext(bullet);
                 }
 
-                if (other.GetComponent<Laser>())
+                if (other.TryGetComponent<Laser>(out Laser laser))
                 {
-                    var projectile = other.GetComponent<Laser>();
-                    OnLaserExit?.OnNext(projectile);
+                    OnLaserExit?.OnNext(laser);
                 }
             }
 
-            if (other.gameObject.GetComponent<AsteroidBig>())
+            if (other.gameObject.TryGetComponent<AsteroidBig>(out AsteroidBig asteroidBig))
             {
                 OnBigAsteroidExit?.OnNext(other.gameObject.GetComponent<AsteroidBig>());
             }
-            if (other.gameObject.GetComponent<AsteroidSmall>())
+
+            if (other.gameObject.TryGetComponent<AsteroidSmall>(out AsteroidSmall asteroidSmall))
             {
                 OnSmallAsteroidExit?.OnNext(other.gameObject.GetComponent<AsteroidSmall>());
+            }
+
+            if (other.gameObject.TryGetComponent<SpaceshipView>(out SpaceshipView playerMovement))
+            {
+                TeleportSpaceship(other);
+            }
+        }
+
+        private void TeleportSpaceship(Collider2D playerCollider)
+        {
+            var spaceship = playerCollider.GetComponent<SpaceshipView>();
+            if (spaceship == null) return;
+
+            Vector2 playerPosition = playerCollider.transform.position;
+            Vector2 colliderPosition = transform.position;
+            Vector2 colliderSize = GetComponent<BoxCollider2D>().size;
+
+            if (playerPosition.x < colliderPosition.x - colliderSize.x / 2)
+            {
+                spaceship.transform.position = new Vector2(colliderPosition.x + colliderSize.x / 2, playerPosition.y);
+            }
+            else if (playerPosition.x > colliderPosition.x + colliderSize.x / 2)
+            {
+                spaceship.transform.position = new Vector2(colliderPosition.x - colliderSize.x / 2, playerPosition.y);
+            }
+            else if (playerPosition.y < colliderPosition.y - colliderSize.y / 2)
+            {
+                spaceship.transform.position = new Vector2(playerPosition.x, colliderPosition.y + colliderSize.y / 2);
+            }
+            else if (playerPosition.y > colliderPosition.y + colliderSize.y / 2)
+            {
+                spaceship.transform.position = new Vector2(playerPosition.x, colliderPosition.y - colliderSize.y / 2);
             }
         }
     }

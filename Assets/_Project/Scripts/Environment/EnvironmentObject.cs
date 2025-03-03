@@ -1,6 +1,6 @@
 using System;
 using _Project.Scripts.Configs.EnvironmentConfigs;
-using _Project.Scripts.Player;
+using _Project.Scripts.Spaceship.View;
 using R3;
 using UnityEngine;
 
@@ -37,7 +37,7 @@ namespace _Project.Scripts.Environment
 
         protected void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.gameObject.TryGetComponent(out PlayerMovement movableShip))
+            if (other.gameObject.TryGetComponent(out SpaceshipView movableShip))
             {
                 OnSpaceshipTouched?.OnNext(Unit.Default);
             }
