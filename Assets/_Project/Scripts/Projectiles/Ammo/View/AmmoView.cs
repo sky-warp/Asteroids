@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using _Project.Scripts.Projectile.Ammo.ViewModel;
+using _Project.Scripts.Projectiles.Ammo.ViewModel;
 using _Project.Scripts.SpawnService;
 using R3;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace _Project.Scripts.Projectile.Ammo.View
+namespace _Project.Scripts.Projectiles.Ammo.View
 {
     public class AmmoView : MonoBehaviour
     {
@@ -19,10 +19,12 @@ namespace _Project.Scripts.Projectile.Ammo.View
         [SerializeField] private Sprite _laserSprite;
 
         private AmmoViewModel _ammoViewModel;
-        private List<Image> _cooldownImages = new();
+        private List<Image> _cooldownImages;
 
         public void Init(AmmoViewModel ammoViewModel)
         {
+            _cooldownImages = new List<Image>();
+
             _ammoViewModel = ammoViewModel;
 
             CreateLaserCount(_ammoViewModel.LaserAmmoView.Value);
@@ -73,21 +75,28 @@ namespace _Project.Scripts.Projectile.Ammo.View
             {
                 var firstOrDefault = _cooldownImages.FirstOrDefault(image => image.fillAmount == 0f);
 
-                if (firstOrDefault != null)
+                if (firstOrDefault != null && firstOrDefault.gameObject != null &&
+                    firstOrDefault.gameObject.activeInHierarchy)
                 {
                     firstOrDefault.fillAmount = 1f;
 
                     var startTime = Time.time;
 
                     await Observable.EveryUpdate()
-                        .TakeWhile(_ => Time.time - startTime < cooldown)
+                        .TakeWhile(_ => Time.time - startTime < cooldown && firstOrDefault != null)
                         .ForEachAsync(_ =>
                         {
+                            if (firstOrDefault == null)
+                                return;
+
                             float elapsed = Time.time - startTime;
                             firstOrDefault.fillAmount = 1f - (elapsed / cooldown);
                         });
 
-                    firstOrDefault.fillAmount = 0f;
+                    if (firstOrDefault != null)
+                    {
+                        firstOrDefault.fillAmount = 0f;
+                    }
                 }
             }
             catch (Exception e)

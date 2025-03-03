@@ -1,5 +1,3 @@
-using System;
-using _Project.Scripts.Configs.EnvironmentConfigs;
 using _Project.Scripts.Projectiles.ProjectileTypes;
 using R3;
 using UnityEngine;
@@ -7,48 +5,30 @@ using UnityEngine;
 namespace _Project.Scripts.Environment.EnvironmentUnitTypes
 {
     [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
-    public class AsteroidBig : MonoBehaviour
+    public class AsteroidBig : EnvironmentObject
     {
         public readonly Subject<AsteroidBig> OnBigAsteroidHit = new();
-        
-        public int Score { get; private set; }
-        
-        [SerializeField] private EnvironmentUnitConfig _environmentUnitConfig;
         [field: SerializeField] public int SmallAsteroidsAmountAfterHit { get; private set; }
-        
-        private float _speed;
-        private Rigidbody2D _rigidbody2D;
-        private CompositeDisposable _disposable = new();
-
-        private void Awake()
-        {
-            _speed = _environmentUnitConfig.UnitSpeed;
-            Score = _environmentUnitConfig.UnitScore;
-            _rigidbody2D = GetComponent<Rigidbody2D>();
-        }
-
-        public void AddSubscription(IDisposable subscription)
-        {
-            _disposable.Add(subscription);
-        }
-
-        public void ResetSubscription()
-        {
-            _disposable.Dispose();
-            _disposable = new();
-        }
 
         public void MoveAsteroidBig(Vector2 direction)
         {
-            _rigidbody2D.velocity = direction * _speed;
+            Rigidbody2D.velocity = direction * Speed;
         }
 
-        private void OnTriggerEnter2D(Collider2D other)
+        private new void OnTriggerEnter2D(Collider2D other)
         {
+            base.OnTriggerEnter2D(other);
+            
             if (other.TryGetComponent(out Bullet bullet) || other.TryGetComponent(out Laser laser))
             {
                 OnBigAsteroidHit?.OnNext(gameObject.GetComponent<AsteroidBig>());
             }
+        }
+
+        private void OnCollisionEnter2D(Collision2D other)
+        {
+            if (other.gameObject.TryGetComponent(out UfoChaser ufoChaser))
+                Physics2D.IgnoreCollision(other.collider, gameObject.GetComponent<Collider2D>());
         }
     }
 }

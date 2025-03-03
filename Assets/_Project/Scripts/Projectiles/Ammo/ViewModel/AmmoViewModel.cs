@@ -1,8 +1,8 @@
 using System;
 using R3;
-using AmmoModel = _Project.Scripts.Projectile.Ammo.Model.AmmoModel;
+using AmmoModel = _Project.Scripts.Projectiles.Ammo.Model.AmmoModel;
 
-namespace _Project.Scripts.Projectile.Ammo.ViewModel
+namespace _Project.Scripts.Projectiles.Ammo.ViewModel
 {
     public class AmmoViewModel
     {

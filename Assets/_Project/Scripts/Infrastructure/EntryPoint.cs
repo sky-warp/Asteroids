@@ -1,8 +1,8 @@
 using _Project.Scripts.Configs.AmmoConfigs;
 using _Project.Scripts.Configs.SpaceshipConfigs;
-using _Project.Scripts.Projectile.Ammo.Model;
-using _Project.Scripts.Projectile.Ammo.View;
-using _Project.Scripts.Projectile.Ammo.ViewModel;
+using _Project.Scripts.Projectiles.Ammo.Model;
+using _Project.Scripts.Projectiles.Ammo.View;
+using _Project.Scripts.Projectiles.Ammo.ViewModel;
 using _Project.Scripts.Score.Model;
 using _Project.Scripts.Score.View;
 using _Project.Scripts.Score.ViewModel;

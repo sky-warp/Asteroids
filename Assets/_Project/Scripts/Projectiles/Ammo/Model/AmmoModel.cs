@@ -1,7 +1,7 @@
 using _Project.Scripts.Configs.AmmoConfigs;
 using R3;
 
-namespace _Project.Scripts.Projectile.Ammo.Model
+namespace _Project.Scripts.Projectiles.Ammo.Model
 {
     public class AmmoModel
     {

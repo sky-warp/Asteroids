@@ -11,9 +11,11 @@ namespace _Project.Scripts.SpawnService
     public class EnvironmentUnitSpawnService : MonoBehaviour
     {
         public readonly Subject<int> OnScoreChanged = new();
-        
+        public readonly Subject<Unit> OnGameOver = new();
+
         [Header("Types of environment unit")] [SerializeField]
         private AsteroidBig _asteroidBigPrefab;
+
         [SerializeField] private AsteroidSmall _asteroidSmallPrefab;
         [SerializeField] private UfoChaser _ufoChaserPrefab;
 
@@ -32,7 +34,6 @@ namespace _Project.Scripts.SpawnService
         private CustomPool<AsteroidBig> _bigAsteroidsPool;
         private CustomPool<AsteroidSmall> _smallAsteroidsPool;
         private CustomPool<UfoChaser> _ufoChasersPool;
-        private bool _isEnough;
 
         private void Start()
         {
@@ -53,22 +54,27 @@ namespace _Project.Scripts.SpawnService
             StartCoroutine(SpawnUfoChasers());
         }
 
-        private void Update()
+        public void GameOver()
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
-                _isEnough = true;
+            OnGameOver?.OnNext(Unit.Default);
+            StopAllCoroutines();
         }
 
-        private void CreateAsteroid()
+        private void CreateBigAsteroid()
         {
             var asteroid = _bigAsteroidsPool.Get();
 
             asteroid.ResetSubscription();
 
-            var subscription = asteroid.OnBigAsteroidHit
-                .Subscribe(_ => CreateSmallAsteroids(asteroid, asteroid.transform.position, asteroid.SmallAsteroidsAmountAfterHit));
+            var gameOverSubscription = asteroid.OnSpaceshipTouched
+                .Subscribe(_ => GameOver());
 
-            asteroid.AddSubscription(subscription);
+            var hitSubscription = asteroid.OnBigAsteroidHit
+                .Subscribe(_ =>
+                    CreateSmallAsteroids(asteroid, asteroid.transform.position, asteroid.SmallAsteroidsAmountAfterHit));
+
+            asteroid.AddSubscription(hitSubscription);
+            asteroid.AddSubscription(gameOverSubscription);
 
             var spawnPoint = _spawnPoints[Random.Range(0, _spawnPoints.Length)];
 
@@ -103,45 +109,49 @@ namespace _Project.Scripts.SpawnService
         private void CreateSmallAsteroids(AsteroidBig shootedAsteroid, Vector3 startPosition, int amount)
         {
             OnScoreChanged?.OnNext(shootedAsteroid.Score);
-            
+
             for (int i = 0; i < amount; i++)
             {
                 var asteroidSmall = _smallAsteroidsPool.Get();
-                
+
                 asteroidSmall.ResetSubscription();
-                
-                var subscription = asteroidSmall.OnSmallAsteroidHit
+
+                var hitSubscription = asteroidSmall.OnSmallAsteroidHit
                     .Subscribe(TakeScoreForSmallAsteroidHit)
                     .AddTo(this);
-                
-                asteroidSmall.AddSubscription(subscription);
-                
+
+                var gameOverSubscription = asteroidSmall.OnSpaceshipTouched
+                    .Subscribe(_ => GameOver());
+
+                asteroidSmall.AddSubscription(hitSubscription);
+                asteroidSmall.AddSubscription(gameOverSubscription);
+
                 asteroidSmall.MoveSmallAsteroid(startPosition);
             }
-            
+
             DeleteBigAsteroid(shootedAsteroid);
         }
 
         private void DeleteSmallAsteroid(AsteroidSmall asteroidSmall)
         {
             asteroidSmall.ResetSubscription();
-            
+
             _smallAsteroidsPool.Release(asteroidSmall);
         }
 
         private void TakeScoreForSmallAsteroidHit(AsteroidSmall asteroidSmall)
         {
             DeleteSmallAsteroid(asteroidSmall);
-            
+
             OnScoreChanged?.OnNext(asteroidSmall.Score);
         }
-        
+
         private void CreateUfoChaser()
         {
             var ufoChaser = _ufoChasersPool.Get();
 
             ufoChaser.ResetSubscription();
-            
+
             ufoChaser.MoveTowardsTarget();
 
             Observable
@@ -153,6 +163,10 @@ namespace _Project.Scripts.SpawnService
                 .Subscribe(DeleteUfoChaser)
                 .AddTo(ufoChaser.Disposable);
 
+            ufoChaser.OnSpaceshipTouched
+                .Subscribe(_ => GameOver())
+                .AddTo(ufoChaser.Disposable);
+
             var spawnPoint = _spawnPoints[Random.Range(0, _spawnPoints.Length)];
 
             ufoChaser.transform.SetParent(spawnPoint.transform);
@@ -162,19 +176,19 @@ namespace _Project.Scripts.SpawnService
         private void DeleteUfoChaser(UfoChaser ufoChaser)
         {
             ufoChaser.ResetSubscription();
-            
+
             _ufoChasersPool.Release(ufoChaser);
-            
+
             OnScoreChanged?.OnNext(ufoChaser.Score);
         }
 
         private IEnumerator SpawnBigAsteroids()
         {
-            while (!_isEnough)
+            while (true)
             {
                 float interval = Random.Range(0.5f, 1.5f);
 
-                CreateAsteroid();
+                CreateBigAsteroid();
 
                 yield return new WaitForSeconds(interval);
             }
@@ -182,7 +196,7 @@ namespace _Project.Scripts.SpawnService
 
         private IEnumerator SpawnUfoChasers()
         {
-            while (!_isEnough)
+            while (true)
             {
                 int interval = Random.Range(3, 6);
 
