@@ -11,6 +11,9 @@ namespace _Project.Scripts.Projectiles.Ammo.View
 {
     public class AmmoView : MonoBehaviour
     {
+        [Header("Pause service")] [SerializeField]
+        private PauseGameService.PauseGameService _pauseGameService;
+
         [SerializeField] private ProjectileSpawnService _projectileSpawnService;
 
         [SerializeField] private Transform _ammoParent;
@@ -23,12 +26,15 @@ namespace _Project.Scripts.Projectiles.Ammo.View
 
         public void Init(AmmoViewModel ammoViewModel)
         {
+            _pauseGameService.OnPause
+                .Subscribe(_ => _pauseGameService.PauseService(this))
+                .AddTo(this);
+
             _cooldownImages = new List<Image>();
 
             _ammoViewModel = ammoViewModel;
 
             CreateLaserCount(_ammoViewModel.LaserAmmoView.Value);
-
 
             _projectileSpawnService.OnLaserSpawned
                 .Subscribe(_ => _ammoViewModel.DecreaseLaserAmmo())
@@ -43,7 +49,6 @@ namespace _Project.Scripts.Projectiles.Ammo.View
             _ammoViewModel.IsEnoughLaserView
                 .Subscribe(isReady => _projectileSpawnService.IsReadyToShootLaser.Value = isReady);
 
-            //Apply stats
             _ammoViewModel.LaserAmmoView
                 .Subscribe(_ => _ammoViewModel.ApplyAmmoStats())
                 .AddTo(this);

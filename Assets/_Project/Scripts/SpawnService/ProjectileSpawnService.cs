@@ -8,18 +8,19 @@ namespace _Project.Scripts.SpawnService
 {
     public class ProjectileSpawnService : MonoBehaviour
     {
-        [Header("InputManager")]
-        [SerializeField] private InputService.InputManager _inputManager;
+        [Header("InputManager")] [SerializeField]
+        private InputService.InputManager _inputManager;
 
-        [Header("Projectiles")]
-        [SerializeField] private Bullet _bulletPrefab;
+        [Header("Projectiles")] [SerializeField]
+        private Bullet _bulletPrefab;
+
         [SerializeField] private Laser _laserPrefab;
 
-        [Header("Spaceship position")]
-        [SerializeField] private Transform _shipTransform;
-        
-        [Header("Level's border")]
-        [SerializeField] private LevelColliderBorder _levelBorder;
+        [Header("Spaceship position")] [SerializeField]
+        private Transform _shipTransform;
+
+        [Header("Level's border")] [SerializeField]
+        private LevelColliderBorder _levelBorder;
 
         public Subject<Unit> OnLaserSpawned = new();
         public readonly ReactiveProperty<bool> IsReadyToShootLaser = new();
@@ -54,7 +55,7 @@ namespace _Project.Scripts.SpawnService
             bullet.OnAsteroidHit
                 .Subscribe(projectile => DeleteSpawnedBullet((Bullet)projectile))
                 .AddTo(_disposable);
-            
+
             bullet.MoveProjectile();
         }
 
@@ -63,12 +64,12 @@ namespace _Project.Scripts.SpawnService
             if (IsReadyToShootLaser.Value)
             {
                 var laser = _lasersPool.Get();
-                
+
                 laser.MoveProjectile();
                 OnLaserSpawned?.OnNext(Unit.Default);
             }
         }
-        
+
         private void DeleteSpawnedBullet(Bullet projectile)
         {
             _bulletsPool.Release(projectile);

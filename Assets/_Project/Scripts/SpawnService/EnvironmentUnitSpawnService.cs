@@ -11,7 +11,9 @@ namespace _Project.Scripts.SpawnService
     public class EnvironmentUnitSpawnService : MonoBehaviour
     {
         public readonly Subject<int> OnScoreChanged = new();
-        public readonly Subject<Unit> OnGameOver = new();
+
+        [Header("Pause service")] [SerializeField]
+        private PauseGameService.PauseGameService _pauseGameService;
 
         [Header("Types of environment unit")] [SerializeField]
         private AsteroidBig _asteroidBigPrefab;
@@ -35,7 +37,7 @@ namespace _Project.Scripts.SpawnService
         private CustomPool<AsteroidSmall> _smallAsteroidsPool;
         private CustomPool<UfoChaser> _ufoChasersPool;
 
-        private void Start()
+        private void Awake()
         {
             _bigAsteroidsPool = new CustomPool<AsteroidBig>(_asteroidBigPrefab, 3, _environmentParent);
             _smallAsteroidsPool = new CustomPool<AsteroidSmall>(_asteroidSmallPrefab, 3, _environmentParent);
@@ -59,8 +61,10 @@ namespace _Project.Scripts.SpawnService
             _bigAsteroidsPool.ReleaseAll();
             _smallAsteroidsPool.ReleaseAll();
             _ufoChasersPool.ReleaseAll();
-            
-            OnGameOver?.OnNext(Unit.Default);
+
+            _pauseGameService.OnPause
+                .OnNext(Unit.Default);
+
             StopAllCoroutines();
         }
 
@@ -208,11 +212,6 @@ namespace _Project.Scripts.SpawnService
 
                 yield return new WaitForSeconds(interval);
             }
-        }
-
-        private void OnDestroy()
-        {
-            StopAllCoroutines();
         }
     }
 }

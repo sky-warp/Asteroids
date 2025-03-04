@@ -7,6 +7,9 @@ namespace _Project.Scripts.Player
     [RequireComponent(typeof(Rigidbody2D))]
     public class PlayerMovement : MonoBehaviour
     {
+        [Header("Pause service")]
+        [SerializeField] private PauseGameService.PauseGameService _pauseGameService;
+        
         public readonly ReactiveProperty<float> CurrentSpeed = new();
         public readonly ReactiveProperty<float> CurrentXPosition = new();
         public readonly ReactiveProperty<float> CurrentYPosition = new();
@@ -27,8 +30,12 @@ namespace _Project.Scripts.Player
             _playerSpeed = speed;
         }
         
-        private void Start()
+        private void Awake()
         {
+            _pauseGameService.OnPause
+                .Subscribe(_ => _pauseGameService.PauseService(this))
+                .AddTo(this);
+            
             _rigidbody2D = GetComponent<Rigidbody2D>();
             _rectTransform = GetComponent<RectTransform>();
         }

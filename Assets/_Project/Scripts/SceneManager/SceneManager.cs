@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace _Project.Scripts
+namespace _Project.Scripts.SceneManager
 {
     public class SceneManager : MonoBehaviour
     {
@@ -8,8 +8,6 @@ namespace _Project.Scripts
         {
             string currentSceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
             UnityEngine.SceneManagement.SceneManager.LoadScene(currentSceneName);
-            
-            Time.timeScale = 1;
         }
     }
 }

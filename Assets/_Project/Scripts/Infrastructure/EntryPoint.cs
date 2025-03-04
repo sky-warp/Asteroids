@@ -26,7 +26,7 @@ namespace _Project.Scripts.Infrastructure
         private AmmoViewModel _ammoViewModel;
         private ScoreViewModel _scoreViewModel;
         
-        private void Start()
+        private void Awake()
         {
             SpaceshipModel spaceshipModel = new SpaceshipModel(_spaceshipConfig);
             _spaceshipViewModel = new SpaceshipViewModel(spaceshipModel);

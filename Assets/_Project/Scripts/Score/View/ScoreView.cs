@@ -9,6 +9,9 @@ namespace _Project.Scripts.Score.View
 {
     public class ScoreView : MonoBehaviour
     {
+        [Header("Pause service")] [SerializeField]
+        private PauseGameService.PauseGameService _pauseGameService;
+        
         [SerializeField] private TextMeshProUGUI _scoreText;
         [SerializeField] private TextMeshProUGUI _finalScoreText;
         
@@ -17,7 +20,7 @@ namespace _Project.Scripts.Score.View
         [SerializeField] private GameObject _gameOverWindow;
         [SerializeField] private Button _restartButton;
         
-        [SerializeField] private SceneManager _sceneManager;
+        [SerializeField] private SceneManager.SceneManager _sceneManager;
 
         private ScoreViewModel _scoreViewModel;
 
@@ -28,7 +31,7 @@ namespace _Project.Scripts.Score.View
             _environmentUnitSpawnService.OnScoreChanged
                 .Subscribe(_scoreViewModel.IncreaseScore)
                 .AddTo(this);
-            _environmentUnitSpawnService.OnGameOver
+            _pauseGameService.OnPause
                 .Subscribe(_ => ShowGameOverWindow())
                 .AddTo(this);
             
@@ -49,7 +52,7 @@ namespace _Project.Scripts.Score.View
             _gameOverWindow.SetActive(true);
             _finalScoreText.text = $"FINAL SCORE: {_scoreViewModel.CurrentScoreView.Value.ToString()}";
             
-            Time.timeScale = 0;
+            _pauseGameService.PauseService(_environmentUnitSpawnService);
         }
 
         private void OnRestartGame()
