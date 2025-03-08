@@ -1,15 +1,25 @@
 using R3;
-using UnityEngine;
 
 namespace _Project.Scripts.PauseGameService
 {
-    public class PauseGameService : MonoBehaviour
+    public class PauseGameService
     {
+        public readonly ReactiveProperty<bool> IsPaused = new(false);
         public readonly Subject<Unit> OnPause = new();
+
+        private CompositeDisposable _disposable = new();
         
-        public void PauseService(MonoBehaviour service)
+        public PauseGameService()
         {
-            service.enabled = false;
+            OnPause
+                .Select(_ => true)
+                .Subscribe(isPaused => IsPaused.Value = isPaused)
+                .AddTo(_disposable);
+        }
+
+        public void Dispose()
+        {
+            _disposable.Dispose();
         }
     }
 }

@@ -9,37 +9,36 @@ namespace _Project.Scripts.Score.View
 {
     public class ScoreView : MonoBehaviour
     {
-        [Header("Pause service")] [SerializeField]
-        private PauseGameService.PauseGameService _pauseGameService;
-        
         [SerializeField] private TextMeshProUGUI _scoreText;
         [SerializeField] private TextMeshProUGUI _finalScoreText;
-        
-        [SerializeField] private EnvironmentUnitSpawnService _environmentUnitSpawnService;
-        
+
         [SerializeField] private GameObject _gameOverWindow;
         [SerializeField] private Button _restartButton;
-        
-        [SerializeField] private SceneManager.SceneManager _sceneManager;
+
+        private SceneManager.SceneManager _sceneManager;
 
         private ScoreViewModel _scoreViewModel;
 
-        public void Init(ScoreViewModel scoreViewModel)
+        public void Init(ScoreViewModel scoreViewModel, EnvironmentUnitSpawnService environmentUnitSpawnService,
+            PauseGameService.PauseGameService pauseGameService)
         {
+            _sceneManager = new();
             _scoreViewModel = scoreViewModel;
-            
-            _environmentUnitSpawnService.OnScoreChanged
+
+            environmentUnitSpawnService.OnScoreChanged
                 .Subscribe(_scoreViewModel.IncreaseScore)
                 .AddTo(this);
-            _pauseGameService.OnPause
-                .Subscribe(_ => ShowGameOverWindow())
-                .AddTo(this);
-            
+
             _scoreViewModel.CurrentScoreView
                 .Subscribe(UpdateScoreText)
                 .AddTo(this);
-            
+
+            pauseGameService.OnPause
+                .Subscribe(_ => ShowGameOverWindow())
+                .AddTo(this);
             _restartButton.onClick.AddListener(OnRestartGame);
+            
+            _scoreText.gameObject.SetActive(true);
         }
 
         private void UpdateScoreText(int score)
@@ -49,10 +48,10 @@ namespace _Project.Scripts.Score.View
 
         private void ShowGameOverWindow()
         {
+            gameObject.SetActive(false);
+            _scoreText.gameObject.SetActive(false);
             _gameOverWindow.SetActive(true);
             _finalScoreText.text = $"FINAL SCORE: {_scoreViewModel.CurrentScoreView.Value.ToString()}";
-            
-            _pauseGameService.PauseService(_environmentUnitSpawnService);
         }
 
         private void OnRestartGame()

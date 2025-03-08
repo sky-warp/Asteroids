@@ -7,14 +7,11 @@ namespace _Project.Scripts.Player
     [RequireComponent(typeof(Rigidbody2D))]
     public class PlayerMovement : MonoBehaviour
     {
-        [Header("Pause service")]
-        [SerializeField] private PauseGameService.PauseGameService _pauseGameService;
-        
         public readonly ReactiveProperty<float> CurrentSpeed = new();
         public readonly ReactiveProperty<float> CurrentXPosition = new();
         public readonly ReactiveProperty<float> CurrentYPosition = new();
         public readonly ReactiveProperty<float> CurrentRotationAngle = new();
-        
+
         [SerializeField] private float _rotateSpeed;
         [Range(0, 1)] [SerializeField] private float _moveDecay;
         [SerializeField] private float _acceleration;
@@ -29,13 +26,14 @@ namespace _Project.Scripts.Player
         {
             _playerSpeed = speed;
         }
+
+        public void GameOver()
+        {
+            _playerSpeed = 0;
+        }
         
         private void Awake()
         {
-            _pauseGameService.OnPause
-                .Subscribe(_ => _pauseGameService.PauseService(this))
-                .AddTo(this);
-            
             _rigidbody2D = GetComponent<Rigidbody2D>();
             _rectTransform = GetComponent<RectTransform>();
         }
@@ -44,9 +42,9 @@ namespace _Project.Scripts.Player
         {
             _yInput = Input.GetAxisRaw("Vertical");
             _xInput = Input.GetAxisRaw("Horizontal");
-            
+
             CurrentRotationAngle.Value = transform.eulerAngles.z;
-            
+
             CurrentXPosition.Value = _rectTransform.anchoredPosition.x;
             CurrentYPosition.Value = _rectTransform.anchoredPosition.y;
         }
@@ -55,13 +53,13 @@ namespace _Project.Scripts.Player
         {
             if (_yInput > 0)
             {
-                Vector2 direction = transform.up; 
+                Vector2 direction = transform.up;
                 float increment = _yInput * _acceleration;
-                
+
                 Vector2 newVelocity = _rigidbody2D.velocity + direction * increment;
                 newVelocity = Vector2.ClampMagnitude(newVelocity, _playerSpeed);
                 _rigidbody2D.velocity = newVelocity;
-                
+
                 CurrentSpeed.Value = _rigidbody2D.velocity.y;
             }
             else
@@ -77,7 +75,7 @@ namespace _Project.Scripts.Player
             {
                 _rigidbody2D.angularVelocity *= _moveDecay;
             }
-            
+
             CurrentSpeed.Value = _rigidbody2D.velocity.magnitude;
         }
     }

@@ -1,4 +1,5 @@
 using _Project.Scripts.CustomPool;
+using _Project.Scripts.InputService;
 using _Project.Scripts.LevelBorder;
 using _Project.Scripts.Projectiles.ProjectileTypes;
 using R3;
@@ -6,49 +7,47 @@ using UnityEngine;
 
 namespace _Project.Scripts.SpawnService
 {
-    public class ProjectileSpawnService : MonoBehaviour
+    public class ProjectileSpawnService
     {
-        [Header("InputManager")] [SerializeField]
-        private InputService.InputManager _inputManager;
-
-        [Header("Projectiles")] [SerializeField]
-        private Bullet _bulletPrefab;
-
-        [SerializeField] private Laser _laserPrefab;
-
-        [Header("Spaceship position")] [SerializeField]
-        private Transform _shipTransform;
-
-        [Header("Level's border")] [SerializeField]
-        private LevelColliderBorder _levelBorder;
-
-        public Subject<Unit> OnLaserSpawned = new();
+        public readonly Subject<Unit> OnLaserSpawned = new();
         public readonly ReactiveProperty<bool> IsReadyToShootLaser = new();
 
         private CustomPool<Bullet> _bulletsPool;
         private CustomPool<Laser> _lasersPool;
         private readonly CompositeDisposable _disposable = new();
 
-        private void Awake()
+        public ProjectileSpawnService(InputManager inputManager, Bullet bulletPrefab, Laser laserPrefab,
+            LevelColliderBorder levelBorder, Transform shipTransform,
+            PauseGameService.PauseGameService pauseGameService)
         {
-            _inputManager.OnLeftClick
+            pauseGameService.OnPause
+                .Subscribe(_ => GameOver())
+                .AddTo(_disposable);
+            
+            inputManager.OnLeftClick
                 .Subscribe(_ => CreateBullet())
                 .AddTo(_disposable);
-            _inputManager.OnRightClick
+            inputManager.OnRightClick
                 .Subscribe(_ => CreateLaser())
                 .AddTo(_disposable);
 
-            _levelBorder.OnBulletExit
+            levelBorder.OnBulletExit
                 .Subscribe(DeleteSpawnedBullet)
                 .AddTo(_disposable);
-            _levelBorder.OnLaserExit
+            levelBorder.OnLaserExit
                 .Subscribe(DeleteSpawnedLaser)
                 .AddTo(_disposable);
 
-            _bulletsPool = new CustomPool<Bullet>(_bulletPrefab, 3, _shipTransform);
-            _lasersPool = new CustomPool<Laser>(_laserPrefab, 3, _shipTransform);
+            _bulletsPool = new CustomPool<Bullet>(bulletPrefab, 3, shipTransform);
+            _lasersPool = new CustomPool<Laser>(laserPrefab, 3, shipTransform);
         }
 
+        private void GameOver()
+        {
+            _bulletsPool.ReleaseAll();
+            _lasersPool.ReleaseAll();
+        }
+        
         private void CreateBullet()
         {
             var bullet = _bulletsPool.Get();
@@ -59,7 +58,7 @@ namespace _Project.Scripts.SpawnService
             bullet.MoveProjectile();
         }
 
-        public void CreateLaser()
+        private void CreateLaser()
         {
             if (IsReadyToShootLaser.Value)
             {
@@ -80,7 +79,7 @@ namespace _Project.Scripts.SpawnService
             _lasersPool.Release(projectile);
         }
 
-        private void OnDestroy()
+        public void Dispose()
         {
             _disposable.Dispose();
         }

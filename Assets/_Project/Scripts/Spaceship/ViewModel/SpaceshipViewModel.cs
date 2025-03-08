@@ -9,9 +9,9 @@ namespace _Project.Scripts.Spaceship.ViewModel
         public readonly ReactiveProperty<float> CoordinateXView = new();
         public readonly ReactiveProperty<float> CoordinateYView = new();
         public readonly ReactiveProperty<float> RotationAngleView = new();
-        public readonly CompositeDisposable DisposableSpaceshipViewModel = new();
 
         private SpaceshipModel _spaceshipModel;
+        private CompositeDisposable _disposable = new();
 
         public SpaceshipViewModel(SpaceshipModel spaceshipModel)
         {
@@ -19,24 +19,29 @@ namespace _Project.Scripts.Spaceship.ViewModel
 
             _spaceshipModel.ShipSpeed
                 .Subscribe(x => SpaceshipSpeedView.Value = x)
-                .AddTo(DisposableSpaceshipViewModel);
+                .AddTo(_disposable);
 
             _spaceshipModel.CoordinateX
                 .Subscribe(x => CoordinateXView.Value = x)
-                .AddTo(DisposableSpaceshipViewModel);
+                .AddTo(_disposable);
 
             _spaceshipModel.CoordinateY
                 .Subscribe(x => CoordinateYView.Value = x)
-                .AddTo(DisposableSpaceshipViewModel);
+                .AddTo(_disposable);
 
             _spaceshipModel.RotationAngle
                 .Subscribe(x => RotationAngleView.Value = x)
-                .AddTo(DisposableSpaceshipViewModel);
+                .AddTo(_disposable);
 
             ResetStats();
         }
 
-        public void ResetStats()
+        public void Dispose()
+        {
+            _disposable?.Dispose();
+        }
+        
+        private void ResetStats()
         {
             SpaceshipSpeedView.Value = _spaceshipModel.ShipSpeed.Value;
             CoordinateXView.Value = _spaceshipModel.CoordinateX.Value;

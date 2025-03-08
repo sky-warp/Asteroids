@@ -8,64 +8,53 @@ using Random = UnityEngine.Random;
 
 namespace _Project.Scripts.SpawnService
 {
-    public class EnvironmentUnitSpawnService : MonoBehaviour
+    public class EnvironmentUnitSpawnService
     {
         public readonly Subject<int> OnScoreChanged = new();
 
-        [Header("Pause service")] [SerializeField]
-        private PauseGameService.PauseGameService _pauseGameService;
-
-        [Header("Types of environment unit")] [SerializeField]
-        private AsteroidBig _asteroidBigPrefab;
-
-        [SerializeField] private AsteroidSmall _asteroidSmallPrefab;
-        [SerializeField] private UfoChaser _ufoChaserPrefab;
-
-        [Header("Level area")] [SerializeField]
-        private Transform _environmentParent;
-
-        [Header("Spawn points")] [SerializeField]
         private Transform[] _spawnPoints;
 
-        [Header("Level's border")] [SerializeField]
-        private LevelColliderBorder _levelColliderBorder;
-
-        [Header("Ufo target")] [SerializeField]
         private Transform _ufoTarget;
 
         private CustomPool<AsteroidBig> _bigAsteroidsPool;
         private CustomPool<AsteroidSmall> _smallAsteroidsPool;
         private CustomPool<UfoChaser> _ufoChasersPool;
 
-        private void Awake()
+        private CompositeDisposable _disposable = new();
+
+        private PauseGameService.PauseGameService _pauseGameService;
+
+        public EnvironmentUnitSpawnService(AsteroidBig asteroidBigPrefab, AsteroidSmall asteroidSmallPrefab,
+            UfoChaser ufoChaserPrefab, Transform environmentParent, Transform ufoTarget,
+            LevelColliderBorder levelColliderBorder, Transform[] spawnPoints,
+            PauseGameService.PauseGameService pauseGameService)
         {
-            _bigAsteroidsPool = new CustomPool<AsteroidBig>(_asteroidBigPrefab, 3, _environmentParent);
-            _smallAsteroidsPool = new CustomPool<AsteroidSmall>(_asteroidSmallPrefab, 3, _environmentParent);
+            _pauseGameService = pauseGameService;
+            
+            _spawnPoints = spawnPoints;
+            _ufoTarget = ufoTarget;
 
-            StartCoroutine(SpawnBigAsteroids());
+            _bigAsteroidsPool = new CustomPool<AsteroidBig>(asteroidBigPrefab, 3, environmentParent);
+            _smallAsteroidsPool = new CustomPool<AsteroidSmall>(asteroidSmallPrefab, 3, environmentParent);
 
-            _levelColliderBorder.OnBigAsteroidExit
+            levelColliderBorder.OnBigAsteroidExit
                 .Subscribe(DeleteBigAsteroid)
-                .AddTo(this);
-            _levelColliderBorder.OnSmallAsteroidExit
+                .AddTo(_disposable);
+            levelColliderBorder.OnSmallAsteroidExit
                 .Subscribe(DeleteSmallAsteroid)
-                .AddTo(this);
+                .AddTo(_disposable);
 
-            _ufoChasersPool = new CustomPool<UfoChaser>(_ufoChaserPrefab, 3, _environmentParent);
-
-            StartCoroutine(SpawnUfoChasers());
+            _ufoChasersPool = new CustomPool<UfoChaser>(ufoChaserPrefab, 3, environmentParent);
         }
 
         private void GameOver()
         {
+            _pauseGameService.OnPause?
+                .OnNext(Unit.Default);
+
             _bigAsteroidsPool.ReleaseAll();
             _smallAsteroidsPool.ReleaseAll();
             _ufoChasersPool.ReleaseAll();
-
-            _pauseGameService.OnPause
-                .OnNext(Unit.Default);
-
-            StopAllCoroutines();
         }
 
         private void CreateBigAsteroid()
@@ -126,7 +115,7 @@ namespace _Project.Scripts.SpawnService
 
                 var hitSubscription = asteroidSmall.OnSmallAsteroidHit
                     .Subscribe(TakeScoreForSmallAsteroidHit)
-                    .AddTo(this);
+                    .AddTo(_disposable);
 
                 var gameOverSubscription = asteroidSmall.OnSpaceshipTouched
                     .Subscribe(_ => GameOver());
@@ -190,7 +179,7 @@ namespace _Project.Scripts.SpawnService
             OnScoreChanged?.OnNext(ufoChaser.Score);
         }
 
-        private IEnumerator SpawnBigAsteroids()
+        public IEnumerator SpawnBigAsteroids()
         {
             while (true)
             {
@@ -202,7 +191,7 @@ namespace _Project.Scripts.SpawnService
             }
         }
 
-        private IEnumerator SpawnUfoChasers()
+        public IEnumerator SpawnUfoChasers()
         {
             while (true)
             {
@@ -212,6 +201,11 @@ namespace _Project.Scripts.SpawnService
 
                 yield return new WaitForSeconds(interval);
             }
+        }
+
+        public void Dispose()
+        {
+            _disposable?.Dispose();
         }
     }
 }

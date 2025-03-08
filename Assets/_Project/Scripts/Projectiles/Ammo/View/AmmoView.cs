@@ -11,11 +11,6 @@ namespace _Project.Scripts.Projectiles.Ammo.View
 {
     public class AmmoView : MonoBehaviour
     {
-        [Header("Pause service")] [SerializeField]
-        private PauseGameService.PauseGameService _pauseGameService;
-
-        [SerializeField] private ProjectileSpawnService _projectileSpawnService;
-
         [SerializeField] private Transform _ammoParent;
         [SerializeField] private Image _laserImage;
         [SerializeField] private Image _cooldownImage;
@@ -24,22 +19,23 @@ namespace _Project.Scripts.Projectiles.Ammo.View
         private AmmoViewModel _ammoViewModel;
         private List<Image> _cooldownImages;
 
-        public void Init(AmmoViewModel ammoViewModel)
+        public void Init(AmmoViewModel ammoViewModel, ProjectileSpawnService projectileSpawnService,
+            PauseGameService.PauseGameService pauseGameService)
         {
-            _pauseGameService.OnPause
-                .Subscribe(_ => _pauseGameService.PauseService(this))
+            pauseGameService.OnPause
+                .Subscribe(_ => GameOver())
                 .AddTo(this);
-
+            
             _cooldownImages = new List<Image>();
 
             _ammoViewModel = ammoViewModel;
 
             CreateLaserCount(_ammoViewModel.LaserAmmoView.Value);
 
-            _projectileSpawnService.OnLaserSpawned
+            projectileSpawnService.OnLaserSpawned
                 .Subscribe(_ => _ammoViewModel.DecreaseLaserAmmo())
                 .AddTo(this);
-            _projectileSpawnService.OnLaserSpawned
+            projectileSpawnService.OnLaserSpawned
                 .Subscribe(_ => _ammoViewModel.EvaluateCooldown(_ammoViewModel.LaserCooldownView.Value))
                 .AddTo(this);
 
@@ -47,7 +43,7 @@ namespace _Project.Scripts.Projectiles.Ammo.View
                 .Subscribe(ShowCooldownImage)
                 .AddTo(this);
             _ammoViewModel.IsEnoughLaserView
-                .Subscribe(isReady => _projectileSpawnService.IsReadyToShootLaser.Value = isReady);
+                .Subscribe(isReady => projectileSpawnService.IsReadyToShootLaser.Value = isReady);
 
             _ammoViewModel.LaserAmmoView
                 .Subscribe(_ => _ammoViewModel.ApplyAmmoStats())
@@ -58,6 +54,11 @@ namespace _Project.Scripts.Projectiles.Ammo.View
             _ammoViewModel.IsEnoughLaserView
                 .Subscribe(_ => _ammoViewModel.ApplyAmmoStats())
                 .AddTo(this);
+        }
+
+        private void GameOver()
+        {
+            _ammoParent.gameObject.SetActive(false);
         }
 
         private void CreateLaserCount(int count)

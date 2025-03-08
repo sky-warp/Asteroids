@@ -1,8 +1,6 @@
-using UnityEngine;
-
 namespace _Project.Scripts.SceneManager
 {
-    public class SceneManager : MonoBehaviour
+    public class SceneManager
     {
         public void RestartGame()
         {

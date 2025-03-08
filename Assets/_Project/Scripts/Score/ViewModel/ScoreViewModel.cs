@@ -6,7 +6,6 @@ namespace _Project.Scripts.Score.ViewModel
     public class ScoreViewModel
     {
         public readonly ReactiveProperty<int> CurrentScoreView = new();
-        public readonly CompositeDisposable Disposable = new();
         
         private ScoreModel _scoreModel;
         private CompositeDisposable _disposable = new();
@@ -22,12 +21,17 @@ namespace _Project.Scripts.Score.ViewModel
             ResetScore();
         }
 
+        public void Dispose()
+        {
+            _disposable?.Dispose();
+        }
+        
         public void IncreaseScore(int score)
         {
             CurrentScoreView.Value += score;
         }
         
-        public void ResetScore()
+        private void ResetScore()
         {
             _scoreModel.CurrentScore.Value = 0;
         }
