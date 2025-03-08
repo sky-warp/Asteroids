@@ -16,30 +16,27 @@ namespace _Project.Scripts.LevelBorder
 
         private void OnTriggerExit2D(Collider2D other)
         {
-            if (other.gameObject.TryGetComponent<Projectile>(out Projectile projectile))
+            if (other.TryGetComponent(out Bullet bullet))
             {
-                if (other.TryGetComponent<Bullet>(out Bullet bullet))
-                {
-                    OnBulletExit?.OnNext(bullet);
-                }
-
-                if (other.TryGetComponent<Laser>(out Laser laser))
-                {
-                    OnLaserExit?.OnNext(laser);
-                }
+                OnBulletExit?.OnNext(bullet);
             }
 
-            if (other.gameObject.TryGetComponent<AsteroidBig>(out AsteroidBig asteroidBig))
+            if (other.TryGetComponent(out Laser laser))
+            {
+                OnLaserExit?.OnNext(laser);
+            }
+
+            if (other.TryGetComponent(out AsteroidBig asteroidBig))
             {
                 OnBigAsteroidExit?.OnNext(other.gameObject.GetComponent<AsteroidBig>());
             }
 
-            if (other.gameObject.TryGetComponent<AsteroidSmall>(out AsteroidSmall asteroidSmall))
+            if (other.TryGetComponent(out AsteroidSmall asteroidSmall))
             {
                 OnSmallAsteroidExit?.OnNext(other.gameObject.GetComponent<AsteroidSmall>());
             }
 
-            if (other.gameObject.TryGetComponent<SpaceshipView>(out SpaceshipView playerMovement))
+            if (other.TryGetComponent(out SpaceshipView playerMovement))
             {
                 TeleportSpaceship(other);
             }
