@@ -14,7 +14,7 @@ namespace _Project.Scripts.Score.ViewModel
         private SceneManager.SceneManager _sceneManager;
         
         public ScoreViewModel(ScoreModel scoreModel, EnvironmentUnitSpawnService environmentUnitSpawnService,
-            PauseGameService.PauseGameService pauseGameService)
+            PauseGameService.PauseGame pauseGame)
         {
             _scoreModel = scoreModel;
 
@@ -32,7 +32,7 @@ namespace _Project.Scripts.Score.ViewModel
                 .Subscribe(IncreaseScore)
                 .AddTo(_disposable);
 
-            pauseGameService.OnPause
+            pauseGame.OnPause
                 .Subscribe(_ => IsGameOver.Value = true)
                 .AddTo(_disposable);
             

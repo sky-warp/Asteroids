@@ -26,18 +26,18 @@ namespace _Project.Scripts.SpawnService
 
         private CompositeDisposable _disposable = new();
 
-        private PauseGameService.PauseGameService _pauseGameService;
+        private PauseGameService.PauseGame _pauseGame;
         
         private Canvas _levelCanvas;
 
         public EnvironmentUnitSpawnService(AsteroidBig asteroidBigPrefab, AsteroidSmall asteroidSmallPrefab,
             UfoChaser ufoChaserPrefab, Transform environmentParent, Transform ufoTarget,
             LevelColliderBorder levelColliderBorder, Transform[] spawnPoints,
-            PauseGameService.PauseGameService pauseGameService, Canvas levelCanvas)
+            PauseGameService.PauseGame pauseGame, Canvas levelCanvas)
         {
             _levelCanvas = levelCanvas;
             
-            _pauseGameService = pauseGameService;
+            _pauseGame = pauseGame;
             
             _spawnPoints = spawnPoints;
             _ufoTarget = ufoTarget;
@@ -57,7 +57,7 @@ namespace _Project.Scripts.SpawnService
 
         private void GameOver()
         {
-            _pauseGameService.OnPause?
+            _pauseGame.OnPause?
                 .OnNext(Unit.Default);
 
             _bigAsteroidsPool.ReleaseAll();

@@ -20,11 +20,11 @@ namespace _Project.Scripts.SpawnService
         
         public ProjectileSpawnService(InputManager inputManager, Bullet bulletPrefab, Laser laserPrefab,
             LevelColliderBorder levelBorder, Transform shipTransform,
-            PauseGameService.PauseGameService pauseGameService, Canvas levelCanvas)
+            PauseGameService.PauseGame pauseGame, Canvas levelCanvas)
         {
             _levelCanvas = levelCanvas;
             
-            pauseGameService.OnPause
+            pauseGame.OnPause
                 .Subscribe(_ => GameOver())
                 .AddTo(_disposable);
             

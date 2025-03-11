@@ -19,32 +19,21 @@ namespace _Project.Scripts.Projectiles.Ammo.View
         private AmmoViewModel _ammoViewModel;
         private List<Image> _cooldownImages;
 
-        public void Init(AmmoViewModel ammoViewModel, ProjectileSpawnService projectileSpawnService,
-            PauseGameService.PauseGameService pauseGameService)
+        public void Init(AmmoViewModel ammoViewModel)
         {
-            pauseGameService.OnPause
-                .Subscribe(_ => GameOver())
-                .AddTo(this);
-            
             _cooldownImages = new List<Image>();
 
             _ammoViewModel = ammoViewModel;
 
             CreateLaserCount(_ammoViewModel.LaserAmmoView.Value);
 
-            projectileSpawnService.OnLaserSpawned
-                .Subscribe(_ => _ammoViewModel.DecreaseLaserAmmo())
+            _ammoViewModel.IsGameOver
+                .Where(isGameOver => isGameOver == true)
+                .Subscribe(_ => GameOver())
                 .AddTo(this);
-            projectileSpawnService.OnLaserSpawned
-                .Subscribe(_ => _ammoViewModel.EvaluateCooldown(_ammoViewModel.LaserCooldownView.Value))
-                .AddTo(this);
-
             _ammoViewModel.OnCooldownChanged
                 .Subscribe(ShowCooldownImage)
                 .AddTo(this);
-            _ammoViewModel.IsEnoughLaserView
-                .Subscribe(isReady => projectileSpawnService.IsReadyToShootLaser.Value = isReady);
-
             _ammoViewModel.LaserAmmoView
                 .Subscribe(_ => _ammoViewModel.ApplyAmmoStats())
                 .AddTo(this);

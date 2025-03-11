@@ -22,9 +22,9 @@ namespace _Project.Scripts.Spaceship.View
         private SpaceshipViewModel _spaceshipViewModel;
 
         public void Init(SpaceshipViewModel spaceshipViewModel, Transform statsParent,
-            PauseGameService.PauseGameService pauseService)
+            PauseGameService.PauseGame pause)
         {
-            pauseService.OnPause
+            pause.OnPause
                 .Subscribe(_ => GameOver())
                 .AddTo(this);
             

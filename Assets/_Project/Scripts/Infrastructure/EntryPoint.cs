@@ -55,7 +55,7 @@ namespace _Project.Scripts.Infrastructure
         private ProjectileSpawnService _projectileSpawnService;
         private EnvironmentUnitSpawnService _environmentUnitSpawnService;
 
-        private PauseGameService.PauseGameService _pauseGameService;
+        private PauseGameService.PauseGame _pauseGameService;
 
         private void Awake()
         {
@@ -85,8 +85,8 @@ namespace _Project.Scripts.Infrastructure
             StartCoroutine(_environmentUnitSpawnService.SpawnUfoChasers());
 
             AmmoModel ammoModel = new AmmoModel(_ammoConfig);
-            _ammoViewModel = new AmmoViewModel(ammoModel);
-            _ammoView.Init(_ammoViewModel, _projectileSpawnService, _pauseGameService);
+            _ammoViewModel = new AmmoViewModel(ammoModel, _projectileSpawnService, _pauseGameService);
+            _ammoView.Init(_ammoViewModel);
 
             ScoreModel scoreModel = new();
             _scoreViewModel = new ScoreViewModel(scoreModel, _environmentUnitSpawnService, _pauseGameService);

@@ -1,4 +1,5 @@
 using System;
+using _Project.Scripts.SpawnService;
 using R3;
 using AmmoModel = _Project.Scripts.Projectiles.Ammo.Model.AmmoModel;
 
@@ -6,16 +7,18 @@ namespace _Project.Scripts.Projectiles.Ammo.ViewModel
 {
     public class AmmoViewModel
     {
-        public Subject<float> OnCooldownChanged { get; private set; } = new();
+        public Subject<float> OnCooldownChanged { get; } = new();
 
         public readonly ReactiveProperty<int> LaserAmmoView = new();
         public readonly ReactiveProperty<float> LaserCooldownView = new();
         public readonly ReactiveProperty<bool> IsEnoughLaserView = new();
+        public readonly ReactiveProperty<bool> IsGameOver = new();
 
         private AmmoModel _ammoModel;
         private readonly CompositeDisposable _disposable = new();
 
-        public AmmoViewModel(AmmoModel ammoModel)
+        public AmmoViewModel(AmmoModel ammoModel, ProjectileSpawnService projectileSpawnService,
+            PauseGameService.PauseGame pauseGame)
         {
             _ammoModel = ammoModel;
             _ammoModel.CurrentLaserAmmo
@@ -27,6 +30,20 @@ namespace _Project.Scripts.Projectiles.Ammo.ViewModel
             _ammoModel.IsEnoughLaserAmmo
                 .Subscribe(isEnough => IsEnoughLaserView.Value = isEnough)
                 .AddTo(_disposable);
+
+            pauseGame.OnPause
+                .Subscribe(_ => IsGameOver.Value = true)
+                .AddTo(_disposable);
+
+            projectileSpawnService.OnLaserSpawned
+                .Subscribe(_ => DecreaseLaserAmmo())
+                .AddTo(_disposable);
+            projectileSpawnService.OnLaserSpawned
+                .Subscribe(_ => EvaluateCooldown(LaserCooldownView.Value))
+                .AddTo(_disposable);
+
+            IsEnoughLaserView
+                .Subscribe(isReady => projectileSpawnService.IsReadyToShootLaser.Value = isReady);
 
             ResetAmmoStats();
         }
