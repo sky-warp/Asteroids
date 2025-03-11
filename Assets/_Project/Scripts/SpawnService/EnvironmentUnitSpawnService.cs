@@ -11,6 +11,10 @@ namespace _Project.Scripts.SpawnService
     public class EnvironmentUnitSpawnService
     {
         public readonly Subject<int> OnScoreChanged = new();
+        
+        public readonly ReactiveProperty<int> BigAsteroidScore = new();
+        public readonly ReactiveProperty<int> SmallAsteroidScore = new();
+        public readonly ReactiveProperty<int> UfoScore = new();
 
         private Transform[] _spawnPoints;
 
@@ -105,7 +109,8 @@ namespace _Project.Scripts.SpawnService
 
         private void CreateSmallAsteroids(AsteroidBig shootedAsteroid, Vector3 startPosition, int amount)
         {
-            OnScoreChanged?.OnNext(shootedAsteroid.Score);
+            BigAsteroidScore.Value = 0;
+            BigAsteroidScore.Value = shootedAsteroid.Score;
 
             for (int i = 0; i < amount; i++)
             {
@@ -140,7 +145,8 @@ namespace _Project.Scripts.SpawnService
         {
             DeleteSmallAsteroid(asteroidSmall);
 
-            OnScoreChanged?.OnNext(asteroidSmall.Score);
+            SmallAsteroidScore.Value = 0;
+            SmallAsteroidScore.Value = asteroidSmall.Score;
         }
 
         private void CreateUfoChaser()
@@ -176,7 +182,8 @@ namespace _Project.Scripts.SpawnService
 
             _ufoChasersPool.Release(ufoChaser);
 
-            OnScoreChanged?.OnNext(ufoChaser.Score);
+            UfoScore.Value = 0;
+            UfoScore.Value = ufoChaser.Score;
         }
 
         public IEnumerator SpawnBigAsteroids()

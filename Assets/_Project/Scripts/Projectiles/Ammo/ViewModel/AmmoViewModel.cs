@@ -41,11 +41,6 @@ namespace _Project.Scripts.Projectiles.Ammo.ViewModel
                 .AddTo(_disposable);
         }
 
-        public void Dispose()
-        {
-            _disposable?.Dispose();
-        }
-        
         public void DecreaseLaserAmmo()
         {
             if (LaserAmmoView.Value > 0)
@@ -88,6 +83,11 @@ namespace _Project.Scripts.Projectiles.Ammo.ViewModel
             {
                 IsEnoughLaserView.Value = true;
             }
+        }
+
+        public void Dispose()
+        {
+            _disposable?.Dispose();
         }
     }
 }

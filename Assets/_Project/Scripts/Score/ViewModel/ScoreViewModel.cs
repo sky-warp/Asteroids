@@ -20,11 +20,6 @@ namespace _Project.Scripts.Score.ViewModel
 
             ResetScore();
         }
-
-        public void Dispose()
-        {
-            _disposable?.Dispose();
-        }
         
         public void IncreaseScore(int score)
         {
@@ -34,6 +29,11 @@ namespace _Project.Scripts.Score.ViewModel
         private void ResetScore()
         {
             _scoreModel.CurrentScore.Value = 0;
+        }
+
+        public void Dispose()
+        {
+            _disposable?.Dispose();
         }
     }
 }

@@ -25,7 +25,13 @@ namespace _Project.Scripts.Score.View
             _sceneManager = new();
             _scoreViewModel = scoreViewModel;
 
-            environmentUnitSpawnService.OnScoreChanged
+            environmentUnitSpawnService.BigAsteroidScore
+                .Subscribe(_scoreViewModel.IncreaseScore)
+                .AddTo(this);
+            environmentUnitSpawnService.SmallAsteroidScore
+                .Subscribe(_scoreViewModel.IncreaseScore)
+                .AddTo(this);
+            environmentUnitSpawnService.UfoScore
                 .Subscribe(_scoreViewModel.IncreaseScore)
                 .AddTo(this);
 
@@ -36,7 +42,11 @@ namespace _Project.Scripts.Score.View
             pauseGameService.OnPause
                 .Subscribe(_ => ShowGameOverWindow())
                 .AddTo(this);
-            _restartButton.onClick.AddListener(OnRestartGame);
+            
+            _restartButton.
+                OnClickAsObservable()
+                .Subscribe(_ => OnRestartGame())
+                .AddTo(this);
             
             _scoreText.gameObject.SetActive(true);
         }
@@ -57,11 +67,6 @@ namespace _Project.Scripts.Score.View
         private void OnRestartGame()
         {
             _sceneManager.RestartGame();
-        }
-
-        private void OnDestroy()
-        {
-            _restartButton.onClick.RemoveListener(OnRestartGame);
         }
     }
 }

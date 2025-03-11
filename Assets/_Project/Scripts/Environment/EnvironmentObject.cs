@@ -9,7 +9,7 @@ namespace _Project.Scripts.Environment
     [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
     public abstract class EnvironmentObject : MonoBehaviour
     {
-        public Subject<Unit> OnSpaceshipTouched = new();
+        public readonly Subject<Unit> OnSpaceshipTouched = new();
         public int Score { get; private set; }
         public float Speed { get; private set; }
         public Rigidbody2D Rigidbody2D { get; private set; }
