@@ -9,6 +9,8 @@ namespace _Project.Scripts.LevelBorder
     [RequireComponent(typeof(BoxCollider2D))]
     public class LevelColliderBorder : MonoBehaviour
     {
+        [SerializeField] private Canvas _levelCanvas;
+        
         public readonly Subject<Bullet> OnBulletExit = new();
         public readonly Subject<Laser> OnLaserExit = new();
         public readonly Subject<AsteroidBig> OnBigAsteroidExit = new();
@@ -51,6 +53,8 @@ namespace _Project.Scripts.LevelBorder
             Vector2 colliderPosition = transform.position;
             Vector2 colliderSize = GetComponent<BoxCollider2D>().size;
 
+            colliderSize *= _levelCanvas.scaleFactor;
+            
             if (playerPosition.x < colliderPosition.x - colliderSize.x / 2)
             {
                 spaceship.transform.position = new Vector2(colliderPosition.x + colliderSize.x / 2, playerPosition.y);

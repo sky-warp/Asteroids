@@ -25,7 +25,7 @@ namespace _Project.Scripts.Infrastructure
         [SerializeField] private SpaceshipConfig _spaceshipConfig;
         [SerializeField] private AmmoConfig _ammoConfig;
 
-        [SerializeField] private Transform _levelParent;
+        [SerializeField] private Canvas _levelCanvas;
         [SerializeField] private Transform _spaceshipStatsParent;
 
         [SerializeField] private SpaceshipView _spaceshipViewPrefab;
@@ -64,7 +64,7 @@ namespace _Project.Scripts.Infrastructure
 
             SpaceshipModel spaceshipModel = new SpaceshipModel(_spaceshipConfig);
             _spaceshipViewModel = new SpaceshipViewModel(spaceshipModel);
-            var spaceship = Instantiate(_spaceshipViewPrefab, _levelParent);
+            var spaceship = Instantiate(_spaceshipViewPrefab, _levelCanvas.transform);
             spaceship.Init(_spaceshipViewModel, _spaceshipStatsParent, _pauseGameService);
 
             _pauseGameService.OnPause
@@ -75,11 +75,11 @@ namespace _Project.Scripts.Infrastructure
                 .AddTo(this);
 
             _projectileSpawnService = new(_inputManager, _bulletPrefab, _laserPrefab,
-                _levelColliderBorder, spaceship.transform, _pauseGameService);
+                _levelColliderBorder, spaceship.transform, _pauseGameService, _levelCanvas);
 
             _environmentUnitSpawnService = new(_asteroidBigPrefab, _asteroidSmallPrefab,
-                _ufoChaserPrefab, _levelParent, spaceship.transform, _levelColliderBorder, _spawnPoints,
-                _pauseGameService);
+                _ufoChaserPrefab, _levelCanvas.transform, spaceship.transform, _levelColliderBorder, _spawnPoints,
+                _pauseGameService, _levelCanvas);
 
             StartCoroutine(_environmentUnitSpawnService.SpawnBigAsteroids());
             StartCoroutine(_environmentUnitSpawnService.SpawnUfoChasers());

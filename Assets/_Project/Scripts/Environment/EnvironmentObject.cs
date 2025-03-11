@@ -11,16 +11,27 @@ namespace _Project.Scripts.Environment
     {
         public readonly Subject<Unit> OnSpaceshipTouched = new();
         public int Score { get; private set; }
-        public float Speed { get; private set; }
-        public Rigidbody2D Rigidbody2D { get; private set; }
+        protected float Speed { get; private set; }
+        private float _initialSpeed;
+        protected Rigidbody2D Rigidbody2D { get; private set; }
         public CompositeDisposable Disposable { get; private set; } = new();
         
+        private Canvas _levelCanvas;
+        
         [SerializeField] private EnvironmentUnitConfig _environmentUnitConfig;
-
+        
+        public void Init(Canvas levelCanvas)
+        {
+            _levelCanvas = levelCanvas;
+            Speed *= _levelCanvas.scaleFactor;
+        }
+        
         private void Awake()
         {
             Score = _environmentUnitConfig.UnitScore;
             Speed = _environmentUnitConfig.UnitSpeed;
+            _initialSpeed = Speed;
+            
             Rigidbody2D = GetComponent<Rigidbody2D>();
         }
         
@@ -41,6 +52,11 @@ namespace _Project.Scripts.Environment
             {
                 OnSpaceshipTouched?.OnNext(Unit.Default);
             }
+        }
+
+        private void OnDisable()
+        {
+            Speed = _initialSpeed;
         }
 
         private void OnDestroy()

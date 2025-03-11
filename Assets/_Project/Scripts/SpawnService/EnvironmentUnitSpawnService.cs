@@ -27,12 +27,16 @@ namespace _Project.Scripts.SpawnService
         private CompositeDisposable _disposable = new();
 
         private PauseGameService.PauseGameService _pauseGameService;
+        
+        private Canvas _levelCanvas;
 
         public EnvironmentUnitSpawnService(AsteroidBig asteroidBigPrefab, AsteroidSmall asteroidSmallPrefab,
             UfoChaser ufoChaserPrefab, Transform environmentParent, Transform ufoTarget,
             LevelColliderBorder levelColliderBorder, Transform[] spawnPoints,
-            PauseGameService.PauseGameService pauseGameService)
+            PauseGameService.PauseGameService pauseGameService, Canvas levelCanvas)
         {
+            _levelCanvas = levelCanvas;
+            
             _pauseGameService = pauseGameService;
             
             _spawnPoints = spawnPoints;
@@ -65,6 +69,8 @@ namespace _Project.Scripts.SpawnService
         {
             var asteroid = _bigAsteroidsPool.Get();
 
+            asteroid.Init(_levelCanvas);
+            
             asteroid.ResetSubscription();
 
             var gameOverSubscription = asteroid.OnSpaceshipTouched
@@ -116,6 +122,8 @@ namespace _Project.Scripts.SpawnService
             {
                 var asteroidSmall = _smallAsteroidsPool.Get();
 
+                asteroidSmall.Init(_levelCanvas);
+                
                 asteroidSmall.ResetSubscription();
 
                 var hitSubscription = asteroidSmall.OnSmallAsteroidHit
@@ -153,6 +161,8 @@ namespace _Project.Scripts.SpawnService
         {
             var ufoChaser = _ufoChasersPool.Get();
 
+            ufoChaser.Init(_levelCanvas);
+            
             ufoChaser.ResetSubscription();
 
             ufoChaser.MoveTowardsTarget();
