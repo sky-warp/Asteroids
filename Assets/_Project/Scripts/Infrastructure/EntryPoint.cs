@@ -89,8 +89,8 @@ namespace _Project.Scripts.Infrastructure
             _ammoView.Init(_ammoViewModel, _projectileSpawnService, _pauseGameService);
 
             ScoreModel scoreModel = new();
-            _scoreViewModel = new ScoreViewModel(scoreModel);
-            _scoreView.Init(_scoreViewModel, _environmentUnitSpawnService, _pauseGameService);
+            _scoreViewModel = new ScoreViewModel(scoreModel, _environmentUnitSpawnService, _pauseGameService);
+            _scoreView.Init(_scoreViewModel);
         }
 
         private void Update()
