@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using _Project.Scripts.Projectiles.Ammo.ViewModel;
-using _Project.Scripts.SpawnService;
 using R3;
 using UnityEngine;
 using UnityEngine.UI;
@@ -28,12 +27,13 @@ namespace _Project.Scripts.Projectiles.Ammo.View
             CreateLaserCount(_ammoViewModel.LaserAmmoView.Value);
 
             _ammoViewModel.IsGameOver
-                .Where(isGameOver => isGameOver == true)
+                .Where(isGameOver => isGameOver)
                 .Subscribe(_ => GameOver())
                 .AddTo(this);
             _ammoViewModel.OnCooldownChanged
                 .Subscribe(ShowCooldownImage)
                 .AddTo(this);
+            
             _ammoViewModel.LaserAmmoView
                 .Subscribe(_ => _ammoViewModel.ApplyAmmoStats())
                 .AddTo(this);

@@ -21,13 +21,8 @@ namespace _Project.Scripts.Spaceship.View
         private PlayerMovement _playerMovement;
         private SpaceshipViewModel _spaceshipViewModel;
 
-        public void Init(SpaceshipViewModel spaceshipViewModel, Transform statsParent,
-            PauseGameService.PauseGame pause)
+        public void Init(SpaceshipViewModel spaceshipViewModel, Transform statsParent)
         {
-            pause.OnPause
-                .Subscribe(_ => GameOver())
-                .AddTo(this);
-            
             CreateShip();
 
             _statsParent = statsParent;
@@ -39,23 +34,6 @@ namespace _Project.Scripts.Spaceship.View
 
             _spaceshipViewModel = spaceshipViewModel;
 
-            _playerMovement = GetComponent<PlayerMovement>();
-            _playerMovement.Init(_spaceshipViewModel.SpaceshipSpeedView.Value);
-
-            _playerMovement.CurrentSpeed
-                .Subscribe(currentSpeed =>
-                    _spaceshipViewModel.SpaceshipSpeedView.Value = Mathf.Clamp(currentSpeed, 0, currentSpeed))
-                .AddTo(this);
-            _playerMovement.CurrentXPosition
-                .Subscribe(currentX => _spaceshipViewModel.CoordinateXView.Value = currentX)
-                .AddTo(this);
-            _playerMovement.CurrentYPosition
-                .Subscribe(currentY => _spaceshipViewModel.CoordinateYView.Value = currentY)
-                .AddTo(this);
-            _playerMovement.CurrentRotationAngle
-                .Subscribe(currentRotation => _spaceshipViewModel.RotationAngleView.Value = currentRotation)
-                .AddTo(this);
-
             _spaceshipViewModel.SpaceshipSpeedView
                 .Subscribe(_ => _spaceshipViewModel.ApplyStats())
                 .AddTo(this);
@@ -68,7 +46,7 @@ namespace _Project.Scripts.Spaceship.View
             _spaceshipViewModel.RotationAngleView
                 .Subscribe(_ => _spaceshipViewModel.ApplyStats())
                 .AddTo(this);
-
+            
             _spaceshipViewModel.SpaceshipSpeedView
                 .Subscribe(speed => (currentSpeed).text = $"SPEED: {speed:F2}")
                 .AddTo(this);
@@ -80,6 +58,10 @@ namespace _Project.Scripts.Spaceship.View
                 .AddTo(this);
             _spaceshipViewModel.RotationAngleView
                 .Subscribe(rotation => currentAngle.text = $"ROTATION: {rotation:F2}")
+                .AddTo(this);
+            _spaceshipViewModel.IsGameOver
+                .Where(isGameOver => isGameOver)
+                .Subscribe(_ => GameOver())
                 .AddTo(this);
         }
 

@@ -63,9 +63,13 @@ namespace _Project.Scripts.Infrastructure
             _inputManager = new();
 
             SpaceshipModel spaceshipModel = new SpaceshipModel(_spaceshipConfig);
-            _spaceshipViewModel = new SpaceshipViewModel(spaceshipModel);
+            
             var spaceship = Instantiate(_spaceshipViewPrefab, _levelCanvas.transform);
-            spaceship.Init(_spaceshipViewModel, _spaceshipStatsParent, _pauseGameService);
+            
+            _spaceshipViewModel = new SpaceshipViewModel(spaceshipModel, _pauseGameService,
+                spaceship.GetComponent<PlayerMovement>());
+            
+            spaceship.Init(_spaceshipViewModel, _spaceshipStatsParent);
 
             _pauseGameService.OnPause
                 .Subscribe(_ => spaceship.GetComponent<PlayerMovement>().GameOver())

@@ -24,7 +24,7 @@ namespace _Project.Scripts.Score.View
                 .Subscribe(UpdateScoreText)
                 .AddTo(this);
             _scoreViewModel.IsGameOver
-                .Where(isGameOver => isGameOver == true)
+                .Where(isGameOver => isGameOver)
                 .Subscribe(_ => ShowGameOverWindow())
                 .AddTo(this);
             
