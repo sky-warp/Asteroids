@@ -1,18 +1,14 @@
-using _Project.Scripts.Configs.AmmoConfigs;
-using _Project.Scripts.Configs.SpaceshipConfigs;
-using _Project.Scripts.Environment.EnvironmentUnitTypes;
+using _Project.Scripts.Configs.GameConfigs;
 using _Project.Scripts.InputService;
 using _Project.Scripts.LevelBorder;
 using _Project.Scripts.Player;
 using _Project.Scripts.Projectiles.Ammo.Model;
 using _Project.Scripts.Projectiles.Ammo.View;
 using _Project.Scripts.Projectiles.Ammo.ViewModel;
-using _Project.Scripts.Projectiles.ProjectileTypes;
 using _Project.Scripts.Score.Model;
 using _Project.Scripts.Score.View;
 using _Project.Scripts.Score.ViewModel;
 using _Project.Scripts.Spaceship.Model;
-using _Project.Scripts.Spaceship.View;
 using _Project.Scripts.Spaceship.ViewModel;
 using _Project.Scripts.SpawnService;
 using UnityEngine;
@@ -22,31 +18,19 @@ namespace _Project.Scripts.Infrastructure
 {
     public class EntryPoint : MonoBehaviour
     {
-        [SerializeField] private SpaceshipConfig _spaceshipConfig;
-        [SerializeField] private AmmoConfig _ammoConfig;
+        [SerializeField] private GameConfig _gameConfig;
 
         [SerializeField] private Canvas _levelCanvas;
+        
         [SerializeField] private Transform _spaceshipStatsParent;
-
-        [SerializeField] private SpaceshipView _spaceshipViewPrefab;
+        
         [SerializeField] private AmmoView _ammoView;
         [SerializeField] private ScoreView _scoreView;
-
-        [Header("Projectiles prefabs")] [SerializeField]
-        private Bullet _bulletPrefab;
-
-        [SerializeField] private Laser _laserPrefab;
-
-        [Header("Environment objects prefabs")] [SerializeField]
-        private AsteroidBig _asteroidBigPrefab;
-
-        [SerializeField] private AsteroidSmall _asteroidSmallPrefab;
-        [SerializeField] private UfoChaser _ufoChaserPrefab;
-
+        
         [SerializeField] private Transform[] _spawnPoints;
-
+        
         [SerializeField] private LevelColliderBorder _levelColliderBorder;
-
+        
         private InputManager _inputManager;
         private SpaceshipViewModel _spaceshipViewModel;
         private AmmoViewModel _ammoViewModel;
@@ -62,13 +46,13 @@ namespace _Project.Scripts.Infrastructure
             _pauseGameService = new();
             _inputManager = new();
 
-            SpaceshipModel spaceshipModel = new SpaceshipModel(_spaceshipConfig);
-            
-            var spaceship = Instantiate(_spaceshipViewPrefab, _levelCanvas.transform);
-            
+            SpaceshipModel spaceshipModel = new SpaceshipModel(_gameConfig.SpaceshipConfig);
+
+            var spaceship = Instantiate(_gameConfig.SpaceshipViewPrefab, _levelCanvas.transform);
+
             _spaceshipViewModel = new SpaceshipViewModel(spaceshipModel, _pauseGameService,
                 spaceship.GetComponent<PlayerMovement>());
-            
+
             spaceship.Init(_spaceshipViewModel, _spaceshipStatsParent);
 
             _pauseGameService.OnPause
@@ -78,17 +62,18 @@ namespace _Project.Scripts.Infrastructure
                 .Subscribe(_ => StopAllCoroutines())
                 .AddTo(this);
 
-            _projectileSpawnService = new(_inputManager, _bulletPrefab, _laserPrefab,
+            _projectileSpawnService = new(_inputManager, _gameConfig.BulletPrefab, _gameConfig.LaserPrefab,
                 _levelColliderBorder, spaceship.transform, _pauseGameService, _levelCanvas);
 
-            _environmentUnitSpawnService = new(_asteroidBigPrefab, _asteroidSmallPrefab,
-                _ufoChaserPrefab, _levelCanvas.transform, spaceship.transform, _levelColliderBorder, _spawnPoints,
+            _environmentUnitSpawnService = new(_gameConfig.AsteroidBigPrefab, _gameConfig.AsteroidSmallPrefab,
+                _gameConfig.UfoChaserPrefab, _levelCanvas.transform, spaceship.transform,
+                _levelColliderBorder, _spawnPoints,
                 _pauseGameService, _levelCanvas);
 
             StartCoroutine(_environmentUnitSpawnService.SpawnBigAsteroids());
             StartCoroutine(_environmentUnitSpawnService.SpawnUfoChasers());
 
-            AmmoModel ammoModel = new AmmoModel(_ammoConfig);
+            AmmoModel ammoModel = new AmmoModel(_gameConfig.AmmoConfig);
             _ammoViewModel = new AmmoViewModel(ammoModel, _projectileSpawnService, _pauseGameService);
             _ammoView.Init(_ammoViewModel);
 
