@@ -1,5 +1,4 @@
 using _Project.Scripts.CustomPool;
-using _Project.Scripts.GameOverService;
 using _Project.Scripts.InputService;
 using _Project.Scripts.LevelBorder;
 using _Project.Scripts.Projectiles.ProjectileTypes;
@@ -18,23 +17,21 @@ namespace _Project.Scripts.SpawnService
         private readonly CompositeDisposable _disposable = new();
 
         private Canvas _levelCanvas;
+        private IInputable _inputManager;
         
-        public ProjectileSpawnService(InputManager inputManager, Bullet bulletPrefab, Laser laserPrefab,
+        public ProjectileSpawnService(IInputable inputManager, Bullet bulletPrefab, Laser laserPrefab,
             LevelColliderBorder levelBorder, Transform shipTransform,
             GameOverService.GameOverService gameOverService, Canvas levelCanvas)
         {
             _levelCanvas = levelCanvas;
+            _inputManager = inputManager;
             
             gameOverService.OnGameOver
                 .Subscribe(_ => GameOver())
                 .AddTo(_disposable);
             
-            inputManager.OnLeftClick
-                .Subscribe(_ => CreateBullet())
-                .AddTo(_disposable);
-            inputManager.OnRightClick
-                .Subscribe(_ => CreateLaser())
-                .AddTo(_disposable);
+            _inputManager.OnLeftClick += CreateBullet;
+            _inputManager.OnRightClick += CreateLaser;
 
             levelBorder.OnBulletExit
                 .Subscribe(DeleteSpawnedBullet)
@@ -91,6 +88,9 @@ namespace _Project.Scripts.SpawnService
 
         public void Dispose()
         {
+            _inputManager.OnLeftClick -= CreateBullet;
+            _inputManager.OnRightClick -= CreateLaser;
+            
             _disposable.Dispose();
         }
     }

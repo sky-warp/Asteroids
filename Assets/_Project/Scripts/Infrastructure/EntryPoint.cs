@@ -1,5 +1,4 @@
 using _Project.Scripts.Configs.GameConfigs;
-using _Project.Scripts.GameOverService;
 using _Project.Scripts.InputService;
 using _Project.Scripts.LevelBorder;
 using _Project.Scripts.Player;
@@ -32,7 +31,7 @@ namespace _Project.Scripts.Infrastructure
         
         [SerializeField] private LevelColliderBorder _levelColliderBorder;
         
-        private InputManager _inputManager;
+        private IInputable _inputManager;
         private SpaceshipViewModel _spaceshipViewModel;
         private AmmoViewModel _ammoViewModel;
         private ScoreViewModel _scoreViewModel;
@@ -45,7 +44,7 @@ namespace _Project.Scripts.Infrastructure
         private void Awake()
         {
             _gameOverServiceService = new();
-            _inputManager = new();
+            _inputManager = new InputManager();
 
             SpaceshipModel spaceshipModel = new SpaceshipModel(_gameConfig.SpaceshipConfig);
 
@@ -55,12 +54,16 @@ namespace _Project.Scripts.Infrastructure
                 spaceship.GetComponent<PlayerMovement>());
 
             spaceship.Init(_spaceshipViewModel, _spaceshipStatsParent);
+            spaceship.GetComponent<PlayerMovement>().Init(_spaceshipViewModel.SpaceshipSpeedView.Value, _inputManager);
 
             _gameOverServiceService.OnGameOver
                 .Subscribe(_ => spaceship.GetComponent<PlayerMovement>().GameOver())
                 .AddTo(this);
             _gameOverServiceService.OnGameOver
                 .Subscribe(_ => StopAllCoroutines())
+                .AddTo(this); 
+            _gameOverServiceService.OnGameOver
+                .Subscribe(_ => _inputManager.IsAvailable.Value = false)
                 .AddTo(this);
 
             _projectileSpawnService = new(_inputManager, _gameConfig.BulletPrefab, _gameConfig.LaserPrefab,
@@ -85,13 +88,13 @@ namespace _Project.Scripts.Infrastructure
 
         private void Update()
         {
-            if (_gameOverServiceService.IsGameOver.Value) return;
+            /*if (_gameOverServiceService.IsGameOver.Value) return;
 
             if (Input.GetMouseButtonDown(0))
                 _inputManager.OnLeftClick.OnNext(Unit.Default);
 
             if (Input.GetMouseButtonDown(1))
-                _inputManager.OnRightClick?.OnNext(Unit.Default);
+                _inputManager.OnRightClick?.OnNext(Unit.Default);*/
         }
 
         private void OnDestroy()

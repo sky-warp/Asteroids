@@ -1,4 +1,3 @@
-using _Project.Scripts.GameOverService;
 using _Project.Scripts.Player;
 using _Project.Scripts.Spaceship.Model;
 using R3;
@@ -38,9 +37,7 @@ namespace _Project.Scripts.Spaceship.ViewModel
             pause.OnGameOver
                 .Subscribe(_ => IsGameOver.Value = true)
                 .AddTo(_disposable);
-
-            playerMovement.Init(SpaceshipSpeedView.Value);
-
+            
             playerMovement.CurrentSpeed
                 .Subscribe(currentSpeed =>
                     SpaceshipSpeedView.Value = Mathf.Clamp(currentSpeed, 0, currentSpeed))
