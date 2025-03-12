@@ -1,3 +1,4 @@
+using _Project.Scripts.GameOverService;
 using _Project.Scripts.Player;
 using _Project.Scripts.Spaceship.Model;
 using R3;
@@ -16,7 +17,7 @@ namespace _Project.Scripts.Spaceship.ViewModel
         private SpaceshipModel _spaceshipModel;
         private CompositeDisposable _disposable = new();
 
-        public SpaceshipViewModel(SpaceshipModel spaceshipModel, PauseGameService.PauseGame pause,
+        public SpaceshipViewModel(SpaceshipModel spaceshipModel, GameOverService.GameOverService pause,
             PlayerMovement playerMovement)
         {
             _spaceshipModel = spaceshipModel;
@@ -34,7 +35,7 @@ namespace _Project.Scripts.Spaceship.ViewModel
                 .Subscribe(x => RotationAngleView.Value = x)
                 .AddTo(_disposable);
 
-            pause.OnPause
+            pause.OnGameOver
                 .Subscribe(_ => IsGameOver.Value = true)
                 .AddTo(_disposable);
 

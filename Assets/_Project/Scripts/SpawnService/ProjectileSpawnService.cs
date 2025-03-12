@@ -1,4 +1,5 @@
 using _Project.Scripts.CustomPool;
+using _Project.Scripts.GameOverService;
 using _Project.Scripts.InputService;
 using _Project.Scripts.LevelBorder;
 using _Project.Scripts.Projectiles.ProjectileTypes;
@@ -20,11 +21,11 @@ namespace _Project.Scripts.SpawnService
         
         public ProjectileSpawnService(InputManager inputManager, Bullet bulletPrefab, Laser laserPrefab,
             LevelColliderBorder levelBorder, Transform shipTransform,
-            PauseGameService.PauseGame pauseGame, Canvas levelCanvas)
+            GameOverService.GameOverService gameOverService, Canvas levelCanvas)
         {
             _levelCanvas = levelCanvas;
             
-            pauseGame.OnPause
+            gameOverService.OnGameOver
                 .Subscribe(_ => GameOver())
                 .AddTo(_disposable);
             

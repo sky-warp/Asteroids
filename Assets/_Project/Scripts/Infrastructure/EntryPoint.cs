@@ -1,4 +1,5 @@
 using _Project.Scripts.Configs.GameConfigs;
+using _Project.Scripts.GameOverService;
 using _Project.Scripts.InputService;
 using _Project.Scripts.LevelBorder;
 using _Project.Scripts.Player;
@@ -39,52 +40,52 @@ namespace _Project.Scripts.Infrastructure
         private ProjectileSpawnService _projectileSpawnService;
         private EnvironmentUnitSpawnService _environmentUnitSpawnService;
 
-        private PauseGameService.PauseGame _pauseGameService;
+        private GameOverService.GameOverService _gameOverServiceService;
 
         private void Awake()
         {
-            _pauseGameService = new();
+            _gameOverServiceService = new();
             _inputManager = new();
 
             SpaceshipModel spaceshipModel = new SpaceshipModel(_gameConfig.SpaceshipConfig);
 
             var spaceship = Instantiate(_gameConfig.SpaceshipViewPrefab, _levelCanvas.transform);
 
-            _spaceshipViewModel = new SpaceshipViewModel(spaceshipModel, _pauseGameService,
+            _spaceshipViewModel = new SpaceshipViewModel(spaceshipModel, _gameOverServiceService,
                 spaceship.GetComponent<PlayerMovement>());
 
             spaceship.Init(_spaceshipViewModel, _spaceshipStatsParent);
 
-            _pauseGameService.OnPause
+            _gameOverServiceService.OnGameOver
                 .Subscribe(_ => spaceship.GetComponent<PlayerMovement>().GameOver())
                 .AddTo(this);
-            _pauseGameService.OnPause
+            _gameOverServiceService.OnGameOver
                 .Subscribe(_ => StopAllCoroutines())
                 .AddTo(this);
 
             _projectileSpawnService = new(_inputManager, _gameConfig.BulletPrefab, _gameConfig.LaserPrefab,
-                _levelColliderBorder, spaceship.transform, _pauseGameService, _levelCanvas);
+                _levelColliderBorder, spaceship.transform, _gameOverServiceService, _levelCanvas);
 
             _environmentUnitSpawnService = new(_gameConfig.AsteroidBigPrefab, _gameConfig.AsteroidSmallPrefab,
                 _gameConfig.UfoChaserPrefab, _levelCanvas.transform, spaceship.transform,
                 _levelColliderBorder, _spawnPoints,
-                _pauseGameService, _levelCanvas);
+                _gameOverServiceService, _levelCanvas);
 
             StartCoroutine(_environmentUnitSpawnService.SpawnBigAsteroids());
             StartCoroutine(_environmentUnitSpawnService.SpawnUfoChasers());
 
             AmmoModel ammoModel = new AmmoModel(_gameConfig.AmmoConfig);
-            _ammoViewModel = new AmmoViewModel(ammoModel, _projectileSpawnService, _pauseGameService);
+            _ammoViewModel = new AmmoViewModel(ammoModel, _projectileSpawnService, _gameOverServiceService);
             _ammoView.Init(_ammoViewModel);
 
             ScoreModel scoreModel = new();
-            _scoreViewModel = new ScoreViewModel(scoreModel, _environmentUnitSpawnService, _pauseGameService);
+            _scoreViewModel = new ScoreViewModel(scoreModel, _environmentUnitSpawnService, _gameOverServiceService);
             _scoreView.Init(_scoreViewModel);
         }
 
         private void Update()
         {
-            if (_pauseGameService.IsPaused.Value) return;
+            if (_gameOverServiceService.IsGameOver.Value) return;
 
             if (Input.GetMouseButtonDown(0))
                 _inputManager.OnLeftClick.OnNext(Unit.Default);
@@ -95,7 +96,7 @@ namespace _Project.Scripts.Infrastructure
 
         private void OnDestroy()
         {
-            _pauseGameService.Dispose();
+            _gameOverServiceService.Dispose();
 
             _projectileSpawnService.Dispose();
             _environmentUnitSpawnService.Dispose();

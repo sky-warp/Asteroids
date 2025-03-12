@@ -12,6 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 084a4a4364b04426a7e9ac15cd8d6fd5, type: 3}
   m_Name: SpaceshipConfig
   m_EditorClassIdentifier: 
-  <Speed>k__BackingField: 200
-  <LaserChargesCount>k__BackingField: 3
+  <Speed>k__BackingField: 5
   <LaserCooldown>k__BackingField: 2.5

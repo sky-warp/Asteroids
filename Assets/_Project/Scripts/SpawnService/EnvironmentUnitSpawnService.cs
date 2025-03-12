@@ -1,6 +1,7 @@
 using System.Collections;
 using _Project.Scripts.CustomPool;
 using _Project.Scripts.Environment.EnvironmentUnitTypes;
+using _Project.Scripts.GameOverService;
 using _Project.Scripts.LevelBorder;
 using R3;
 using UnityEngine;
@@ -26,18 +27,18 @@ namespace _Project.Scripts.SpawnService
 
         private CompositeDisposable _disposable = new();
 
-        private PauseGameService.PauseGame _pauseGame;
+        private GameOverService.GameOverService _gameOverService;
         
         private Canvas _levelCanvas;
 
         public EnvironmentUnitSpawnService(AsteroidBig asteroidBigPrefab, AsteroidSmall asteroidSmallPrefab,
             UfoChaser ufoChaserPrefab, Transform environmentParent, Transform ufoTarget,
             LevelColliderBorder levelColliderBorder, Transform[] spawnPoints,
-            PauseGameService.PauseGame pauseGame, Canvas levelCanvas)
+            GameOverService.GameOverService gameOverService, Canvas levelCanvas)
         {
             _levelCanvas = levelCanvas;
             
-            _pauseGame = pauseGame;
+            _gameOverService = gameOverService;
             
             _spawnPoints = spawnPoints;
             _ufoTarget = ufoTarget;
@@ -57,7 +58,7 @@ namespace _Project.Scripts.SpawnService
 
         private void GameOver()
         {
-            _pauseGame.OnPause?
+            _gameOverService.OnGameOver?
                 .OnNext(Unit.Default);
 
             _bigAsteroidsPool.ReleaseAll();
