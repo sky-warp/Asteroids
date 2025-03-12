@@ -86,17 +86,6 @@ namespace _Project.Scripts.Infrastructure
             _scoreView.Init(_scoreViewModel);
         }
 
-        private void Update()
-        {
-            /*if (_gameOverServiceService.IsGameOver.Value) return;
-
-            if (Input.GetMouseButtonDown(0))
-                _inputManager.OnLeftClick.OnNext(Unit.Default);
-
-            if (Input.GetMouseButtonDown(1))
-                _inputManager.OnRightClick?.OnNext(Unit.Default);*/
-        }
-
         private void OnDestroy()
         {
             _gameOverServiceService.Dispose();
