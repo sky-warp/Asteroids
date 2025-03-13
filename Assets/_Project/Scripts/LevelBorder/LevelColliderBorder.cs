@@ -16,6 +16,25 @@ namespace _Project.Scripts.LevelBorder
         public readonly Subject<AsteroidBig> OnBigAsteroidExit = new();
         public readonly Subject<AsteroidSmall> OnSmallAsteroidExit = new();
 
+        private SpaceshipView _spaceship;
+        private RectTransform _canvasRect;
+        private Vector2 _canvasSize;
+        private Vector2 _canvasPosition;
+
+        public void Init(SpaceshipView spaceship)
+        {
+            _spaceship = spaceship;
+            
+            _canvasRect = _levelCanvas.GetComponent<RectTransform>();
+            _canvasSize = _canvasRect.sizeDelta * _levelCanvas.scaleFactor;
+            _canvasPosition = _levelCanvas.transform.position;
+        }
+        
+        private void Update()
+        {
+            CheckCanvasTeleport(_spaceship);
+        }
+
         private void OnTriggerExit2D(Collider2D other)
         {
             if (other.TryGetComponent(out Bullet bullet))
@@ -37,40 +56,46 @@ namespace _Project.Scripts.LevelBorder
             {
                 OnSmallAsteroidExit?.OnNext(other.gameObject.GetComponent<AsteroidSmall>());
             }
+        }
 
-            if (other.TryGetComponent(out SpaceshipView playerMovement))
+        private void CheckCanvasTeleport(SpaceshipView spaceship)
+        {
+            if (spaceship == null) return;
+            
+            Vector2 playerPosition = spaceship.transform.position;
+
+            if (playerPosition.x < _canvasPosition.x - _canvasSize.x / 2 ||
+                playerPosition.x > _canvasPosition.x + _canvasSize.x / 2 ||
+                playerPosition.y < _canvasPosition.y - _canvasSize.y / 2 ||
+                playerPosition.y > _canvasPosition.y + _canvasSize.y / 2)
             {
-                TeleportSpaceship(other);
+                TeleportShip(spaceship.transform, playerPosition, _canvasPosition, _canvasSize);
             }
         }
 
-        private void TeleportSpaceship(Collider2D playerCollider)
+        private void TeleportShip(Transform spaceshipTransform, Vector2 playerPosition, Vector2 canvasPosition, Vector2 canvasSize)
         {
-            var spaceship = playerCollider.GetComponent<SpaceshipView>();
-            if (spaceship == null) return;
-
-            Vector2 playerPosition = playerCollider.transform.position;
-            Vector2 colliderPosition = transform.position;
-            Vector2 colliderSize = GetComponent<BoxCollider2D>().size;
-
-            colliderSize *= _levelCanvas.scaleFactor;
+            Vector2 newPosition = playerPosition;
             
-            if (playerPosition.x < colliderPosition.x - colliderSize.x / 2)
+            if (playerPosition.x < canvasPosition.x - canvasSize.x / 2)
             {
-                spaceship.transform.position = new Vector2(colliderPosition.x + colliderSize.x / 2, playerPosition.y);
+                newPosition.x = canvasPosition.x + canvasSize.x / 2;
             }
-            else if (playerPosition.x > colliderPosition.x + colliderSize.x / 2)
+            else if (playerPosition.x > canvasPosition.x + canvasSize.x / 2)
             {
-                spaceship.transform.position = new Vector2(colliderPosition.x - colliderSize.x / 2, playerPosition.y);
+                newPosition.x = canvasPosition.x - canvasSize.x / 2;
             }
-            else if (playerPosition.y < colliderPosition.y - colliderSize.y / 2)
+
+            if (playerPosition.y < canvasPosition.y - canvasSize.y / 2)
             {
-                spaceship.transform.position = new Vector2(playerPosition.x, colliderPosition.y + colliderSize.y / 2);
+                newPosition.y = canvasPosition.y + canvasSize.y / 2;
             }
-            else if (playerPosition.y > colliderPosition.y + colliderSize.y / 2)
+            else if (playerPosition.y > canvasPosition.y + canvasSize.y / 2)
             {
-                spaceship.transform.position = new Vector2(playerPosition.x, colliderPosition.y - colliderSize.y / 2);
+                newPosition.y = canvasPosition.y - canvasSize.y / 2;
             }
+            
+            spaceshipTransform.position = newPosition;
         }
     }
 }

@@ -46,16 +46,16 @@ namespace _Project.Scripts.Infrastructure
             _gameOverServiceService = new();
             _inputManager = new InputManager();
 
-            SpaceshipModel spaceshipModel = new SpaceshipModel(_gameConfig.SpaceshipConfig);
-
             var spaceship = Instantiate(_gameConfig.SpaceshipViewPrefab, _levelCanvas.transform);
-
+            SpaceshipModel spaceshipModel = new SpaceshipModel(_gameConfig.SpaceshipConfig);
             _spaceshipViewModel = new SpaceshipViewModel(spaceshipModel, _gameOverServiceService,
                 spaceship.GetComponent<PlayerMovement>());
 
             spaceship.Init(_spaceshipViewModel, _spaceshipStatsParent);
             spaceship.GetComponent<PlayerMovement>().Init(_spaceshipViewModel.SpaceshipSpeedView.Value, _inputManager);
 
+            _levelColliderBorder.Init(spaceship);
+            
             _gameOverServiceService.OnGameOver
                 .Subscribe(_ => spaceship.GetComponent<PlayerMovement>().GameOver())
                 .AddTo(this);
