@@ -107,9 +107,7 @@ namespace _Project.Scripts.Infrastructure
         public void Dispose()
         {
             _disposable?.Dispose();
-
-            _gameOverServiceService?.Dispose();
-
+            
             _projectileSpawnService?.Dispose();
             _environmentUnitSpawnService?.Dispose();
 

@@ -1,8 +1,9 @@
+using System;
 using R3;
 
 namespace _Project.Scripts.GameOverService
 {
-    public class GameOverService
+    public class GameOverService : IDisposable
     {
         public readonly ReactiveProperty<bool> IsGameOver = new(false);
         public readonly Subject<Unit> OnGameOver = new();
