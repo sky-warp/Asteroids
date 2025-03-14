@@ -3,7 +3,6 @@ using _Project.Scripts.Configs.GameConfigs;
 using _Project.Scripts.InputService;
 using _Project.Scripts.LevelBorder;
 using _Project.Scripts.Player;
-using _Project.Scripts.Projectiles.Ammo.Model;
 using _Project.Scripts.Projectiles.Ammo.View;
 using _Project.Scripts.Projectiles.Ammo.ViewModel;
 using _Project.Scripts.Score.Model;
@@ -21,8 +20,6 @@ namespace _Project.Scripts.Infrastructure
 {
     public class EntryPoint : IInitializable, IDisposable
     {
-        private GameConfig _gameConfig;
-
         private Transform _spaceshipStatsParent;
 
         private SpaceshipView _spaceship;
@@ -36,8 +33,6 @@ namespace _Project.Scripts.Infrastructure
         private SpaceshipViewModel _spaceshipViewModel;
         private AmmoViewModel _ammoViewModel;
         private ScoreViewModel _scoreViewModel;
-
-        private SpaceshipModel _spaceshipModel;
         
         private ProjectileSpawnService _projectileSpawnService;
         private EnvironmentUnitSpawnService _environmentUnitSpawnService;
@@ -54,7 +49,9 @@ namespace _Project.Scripts.Infrastructure
         private void Construct(
             GameConfig gameConfig, 
             Transform spaceshipStatsParent,
+            AmmoViewModel ammoViewModel,
             AmmoView ammoView, 
+            ScoreViewModel scoreViewModel, 
             ScoreView scoreView, 
             LevelColliderBorder levelColliderBorder,
             PlayerMovement playerMovement,
@@ -67,13 +64,13 @@ namespace _Project.Scripts.Infrastructure
             EnvironmentUnitSpawnService environmentUnitSpawnService,
             ProjectileSpawnService projectileSpawnService)
         {
-            _gameConfig = gameConfig;
             _spaceshipStatsParent = spaceshipStatsParent;
+            _ammoViewModel = ammoViewModel;
             _ammoView = ammoView;
+            _scoreViewModel = scoreViewModel;
             _scoreView = scoreView;
             _levelColliderBorder = levelColliderBorder;
             _playerMovement = playerMovement;
-            _spaceshipModel = spaceshipModel;
             _spaceshipViewModel = spaceshipViewModel;
             _spaceship = spaceship;
             _coroutineManager = coroutineManager;
@@ -103,12 +100,8 @@ namespace _Project.Scripts.Infrastructure
             _coroutineManager.StartCoroutine(_environmentUnitSpawnService.SpawnBigAsteroids());
             _coroutineManager.StartCoroutine(_environmentUnitSpawnService.SpawnUfoChasers());
 
-            AmmoModel ammoModel = new AmmoModel(_gameConfig.AmmoConfig);
-            _ammoViewModel = new AmmoViewModel(ammoModel, _projectileSpawnService, _gameOverServiceService);
             _ammoView.Init(_ammoViewModel);
-
-            ScoreModel scoreModel = new();
-            _scoreViewModel = new ScoreViewModel(scoreModel, _environmentUnitSpawnService, _gameOverServiceService);
+            
             _scoreView.Init(_scoreViewModel);
         }
 

@@ -3,8 +3,12 @@ using _Project.Scripts.Infrastructure;
 using _Project.Scripts.InputService;
 using _Project.Scripts.LevelBorder;
 using _Project.Scripts.Player;
+using _Project.Scripts.Projectiles.Ammo.Model;
 using _Project.Scripts.Projectiles.Ammo.View;
+using _Project.Scripts.Projectiles.Ammo.ViewModel;
+using _Project.Scripts.Score.Model;
 using _Project.Scripts.Score.View;
+using _Project.Scripts.Score.ViewModel;
 using _Project.Scripts.Spaceship.Model;
 using _Project.Scripts.Spaceship.View;
 using _Project.Scripts.Spaceship.ViewModel;
@@ -48,16 +52,6 @@ namespace _Project.Scripts.Installers
             Container
                 .Bind<Transform>()
                 .FromInstance(_spaceshipStatsParent)
-                .AsSingle();
-
-            Container
-                .Bind<AmmoView>()
-                .FromInstance(_ammoView)
-                .AsSingle();
-
-            Container
-                .Bind<ScoreView>()
-                .FromInstance(_scoreView)
                 .AsSingle();
 
             Container
@@ -107,6 +101,29 @@ namespace _Project.Scripts.Installers
             Container
                 .Bind<SpaceshipView>()
                 .FromInstance(spaceship.GetComponent<SpaceshipView>())
+                .AsSingle();
+            
+            Container
+                .Bind<AmmoModel>()
+                .AsSingle()
+                .WithArguments(gameConfig.AmmoConfig);
+            Container
+                .Bind<AmmoViewModel>()
+                .AsSingle();
+            Container
+                .Bind<AmmoView>()
+                .FromInstance(_ammoView)
+                .AsSingle();
+            
+            Container
+                .Bind<ScoreModel>()
+                .AsSingle();
+            Container
+                .Bind<ScoreViewModel>()
+                .AsSingle();
+            Container
+                .Bind<ScoreView>()
+                .FromInstance(_scoreView)
                 .AsSingle();
         }
     }
