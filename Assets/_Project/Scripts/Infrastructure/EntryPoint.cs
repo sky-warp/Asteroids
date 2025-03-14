@@ -5,7 +5,6 @@ using _Project.Scripts.LevelBorder;
 using _Project.Scripts.Player;
 using _Project.Scripts.Projectiles.Ammo.View;
 using _Project.Scripts.Projectiles.Ammo.ViewModel;
-using _Project.Scripts.Score.Model;
 using _Project.Scripts.Score.View;
 using _Project.Scripts.Score.ViewModel;
 using _Project.Scripts.Spaceship.Model;
