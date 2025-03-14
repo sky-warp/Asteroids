@@ -1,3 +1,4 @@
+using System;
 using _Project.Scripts.Configs.GameConfigs;
 using _Project.Scripts.InputService;
 using _Project.Scripts.LevelBorder;
@@ -9,29 +10,33 @@ using _Project.Scripts.Score.Model;
 using _Project.Scripts.Score.View;
 using _Project.Scripts.Score.ViewModel;
 using _Project.Scripts.Spaceship.Model;
+using _Project.Scripts.Spaceship.View;
 using _Project.Scripts.Spaceship.ViewModel;
 using _Project.Scripts.SpawnService;
 using UnityEngine;
 using R3;
+using Zenject;
 
 namespace _Project.Scripts.Infrastructure
 {
-    public class EntryPoint : MonoBehaviour
+    public class EntryPoint : IInitializable, IDisposable
     {
-        [SerializeField] private GameConfig _gameConfig;
+        private GameConfig _gameConfig;
 
-        [SerializeField] private Canvas _levelCanvas;
-        
-        [SerializeField] private Transform _spaceshipStatsParent;
-        
-        [SerializeField] private AmmoView _ammoView;
-        [SerializeField] private ScoreView _scoreView;
-        
-        [SerializeField] private Transform[] _spawnPoints;
-        
-        [SerializeField] private LevelColliderBorder _levelColliderBorder;
-        
+        private Canvas _levelCanvas;
+
+        private Transform _spaceshipStatsParent;
+
+        private SpaceshipView _spaceship;
+        private AmmoView _ammoView;
+        private ScoreView _scoreView;
+
+        private Transform[] _spawnPoints;
+
+        private LevelColliderBorder _levelColliderBorder;
+
         private IInputable _inputManager;
+
         private SpaceshipViewModel _spaceshipViewModel;
         private AmmoViewModel _ammoViewModel;
         private ScoreViewModel _scoreViewModel;
@@ -41,41 +46,62 @@ namespace _Project.Scripts.Infrastructure
 
         private GameOverService.GameOverService _gameOverServiceService;
 
-        private void Awake()
+        private CoroutineManager.CoroutineManager _coroutineManager;
+        
+        private CompositeDisposable _disposable;
+
+        [Inject]
+        private void Construct(GameConfig gameConfig, Canvas levelCanvas, Transform spaceshipStatsParent,
+            AmmoView ammoView, ScoreView scoreView, Transform[] spawnPoints, LevelColliderBorder levelColliderBorder,
+            SpaceshipView spaceship, CoroutineManager.CoroutineManager coroutineManager)
+        {
+            _gameConfig = gameConfig;
+            _levelCanvas = levelCanvas;
+            _spaceshipStatsParent = spaceshipStatsParent;
+            _ammoView = ammoView;
+            _scoreView = scoreView;
+            _spawnPoints = spawnPoints;
+            _levelColliderBorder = levelColliderBorder;
+            _spaceship = spaceship;
+            _coroutineManager = coroutineManager;
+        }
+
+        public void Initialize()
         {
             _gameOverServiceService = new();
             _inputManager = new InputManager();
+            _disposable = new();
 
-            var spaceship = Instantiate(_gameConfig.SpaceshipViewPrefab, _levelCanvas.transform);
+            //var spaceship = Instantiate(_gameConfig.SpaceshipViewPrefab, _levelCanvas.transform);
             SpaceshipModel spaceshipModel = new SpaceshipModel(_gameConfig.SpaceshipConfig);
             _spaceshipViewModel = new SpaceshipViewModel(spaceshipModel, _gameOverServiceService,
-                spaceship.GetComponent<PlayerMovement>());
+                _spaceship.GetComponent<PlayerMovement>());
 
-            spaceship.Init(_spaceshipViewModel, _spaceshipStatsParent);
-            spaceship.GetComponent<PlayerMovement>().Init(_spaceshipViewModel.SpaceshipSpeedView.Value, _inputManager);
+            _spaceship.Init(_spaceshipViewModel, _spaceshipStatsParent);
+            _spaceship.GetComponent<PlayerMovement>().Init(_spaceshipViewModel.SpaceshipSpeedView.Value, _inputManager);
 
-            _levelColliderBorder.Init(spaceship);
-            
+            _levelColliderBorder.Init(_spaceship);
+
             _gameOverServiceService.OnGameOver
-                .Subscribe(_ => spaceship.GetComponent<PlayerMovement>().GameOver())
-                .AddTo(this);
+                .Subscribe(_ => _spaceship.GetComponent<PlayerMovement>().GameOver())
+                .AddTo(_disposable);
             _gameOverServiceService.OnGameOver
-                .Subscribe(_ => StopAllCoroutines())
-                .AddTo(this); 
+                .Subscribe(_ => _coroutineManager.StopAllCoroutines())
+                .AddTo(_disposable);
             _gameOverServiceService.OnGameOver
                 .Subscribe(_ => _inputManager.IsAvailable.Value = false)
-                .AddTo(this);
+                .AddTo(_disposable);
 
             _projectileSpawnService = new(_inputManager, _gameConfig.BulletPrefab, _gameConfig.LaserPrefab,
-                _levelColliderBorder, spaceship.transform, _gameOverServiceService, _levelCanvas);
+                _levelColliderBorder, _spaceship.transform, _gameOverServiceService, _levelCanvas);
 
             _environmentUnitSpawnService = new(_gameConfig.AsteroidBigPrefab, _gameConfig.AsteroidSmallPrefab,
-                _gameConfig.UfoChaserPrefab, _levelCanvas.transform, spaceship.transform,
+                _gameConfig.UfoChaserPrefab, _levelCanvas.transform, _spaceship.transform,
                 _levelColliderBorder, _spawnPoints,
                 _gameOverServiceService, _levelCanvas);
 
-            StartCoroutine(_environmentUnitSpawnService.SpawnBigAsteroids());
-            StartCoroutine(_environmentUnitSpawnService.SpawnUfoChasers());
+            _coroutineManager.StartCoroutine(_environmentUnitSpawnService.SpawnBigAsteroids());
+            _coroutineManager.StartCoroutine(_environmentUnitSpawnService.SpawnUfoChasers());
 
             AmmoModel ammoModel = new AmmoModel(_gameConfig.AmmoConfig);
             _ammoViewModel = new AmmoViewModel(ammoModel, _projectileSpawnService, _gameOverServiceService);
@@ -86,16 +112,18 @@ namespace _Project.Scripts.Infrastructure
             _scoreView.Init(_scoreViewModel);
         }
 
-        private void OnDestroy()
+        public void Dispose()
         {
-            _gameOverServiceService.Dispose();
+            _disposable?.Dispose();
 
-            _projectileSpawnService.Dispose();
-            _environmentUnitSpawnService.Dispose();
+            _gameOverServiceService?.Dispose();
 
-            _spaceshipViewModel.Dispose();
-            _ammoViewModel.Dispose();
-            _scoreViewModel.Dispose();
+            _projectileSpawnService?.Dispose();
+            _environmentUnitSpawnService?.Dispose();
+
+            _spaceshipViewModel?.Dispose();
+            _ammoViewModel?.Dispose();
+            _scoreViewModel?.Dispose();
         }
     }
 }
