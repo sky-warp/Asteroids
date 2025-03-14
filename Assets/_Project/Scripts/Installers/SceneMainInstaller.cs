@@ -2,9 +2,12 @@ using _Project.Scripts.Configs.GameConfigs;
 using _Project.Scripts.Infrastructure;
 using _Project.Scripts.InputService;
 using _Project.Scripts.LevelBorder;
+using _Project.Scripts.Player;
 using _Project.Scripts.Projectiles.Ammo.View;
 using _Project.Scripts.Score.View;
+using _Project.Scripts.Spaceship.Model;
 using _Project.Scripts.Spaceship.View;
+using _Project.Scripts.Spaceship.ViewModel;
 using _Project.Scripts.SpawnService;
 using UnityEngine;
 using Zenject;
@@ -42,14 +45,6 @@ namespace _Project.Scripts.Installers
                 .FromInstance(_levelCanvas)
                 .AsSingle();
 
-            var spaceship = Container
-                .InstantiatePrefab(gameConfig.SpaceshipViewPrefab, _levelCanvas.transform);
-
-            Container
-                .Bind<SpaceshipView>()
-                .FromInstance(spaceship.GetComponent<SpaceshipView>())
-                .AsSingle();
-
             Container
                 .Bind<Transform>()
                 .FromInstance(_spaceshipStatsParent)
@@ -84,6 +79,14 @@ namespace _Project.Scripts.Installers
                 .To<InputManager>()
                 .AsSingle();
 
+            var spaceship = Container
+                .InstantiatePrefab(gameConfig.SpaceshipViewPrefab, _levelCanvas.transform);
+            
+            Container
+                .Bind<PlayerMovement>()
+                .FromInstance(spaceship.GetComponent<PlayerMovement>())
+                .AsSingle();
+            
             Container
                 .Bind<EnvironmentUnitSpawnService>()
                 .AsSingle()
@@ -93,6 +96,18 @@ namespace _Project.Scripts.Installers
                 .Bind<ProjectileSpawnService>()
                 .AsSingle()
                 .WithArguments(spaceship.transform);
+            
+            Container
+                .Bind<SpaceshipModel>()
+                .AsSingle()
+                .WithArguments(gameConfig.SpaceshipConfig);
+            Container
+                .Bind<SpaceshipViewModel>()
+                .AsSingle();
+            Container
+                .Bind<SpaceshipView>()
+                .FromInstance(spaceship.GetComponent<SpaceshipView>())
+                .AsSingle();
         }
     }
 }

@@ -37,12 +37,16 @@ namespace _Project.Scripts.Infrastructure
         private AmmoViewModel _ammoViewModel;
         private ScoreViewModel _scoreViewModel;
 
+        private SpaceshipModel _spaceshipModel;
+        
         private ProjectileSpawnService _projectileSpawnService;
         private EnvironmentUnitSpawnService _environmentUnitSpawnService;
 
         private GameOverService.GameOverService _gameOverServiceService;
 
         private CoroutineManager.CoroutineManager _coroutineManager;
+        
+        private PlayerMovement _playerMovement;
         
         private CompositeDisposable _disposable = new();
 
@@ -53,6 +57,9 @@ namespace _Project.Scripts.Infrastructure
             AmmoView ammoView, 
             ScoreView scoreView, 
             LevelColliderBorder levelColliderBorder,
+            PlayerMovement playerMovement,
+            SpaceshipModel spaceshipModel,
+            SpaceshipViewModel spaceshipViewModel,
             SpaceshipView spaceship, 
             CoroutineManager.CoroutineManager coroutineManager,
             GameOverService.GameOverService gameOverService,
@@ -65,6 +72,9 @@ namespace _Project.Scripts.Infrastructure
             _ammoView = ammoView;
             _scoreView = scoreView;
             _levelColliderBorder = levelColliderBorder;
+            _playerMovement = playerMovement;
+            _spaceshipModel = spaceshipModel;
+            _spaceshipViewModel = spaceshipViewModel;
             _spaceship = spaceship;
             _coroutineManager = coroutineManager;
             _gameOverServiceService = gameOverService;
@@ -75,12 +85,8 @@ namespace _Project.Scripts.Infrastructure
 
         public void Initialize()
         {
-            SpaceshipModel spaceshipModel = new SpaceshipModel(_gameConfig.SpaceshipConfig);
-            _spaceshipViewModel = new SpaceshipViewModel(spaceshipModel, _gameOverServiceService,
-                _spaceship.GetComponent<PlayerMovement>());
-
             _spaceship.Init(_spaceshipViewModel, _spaceshipStatsParent);
-            _spaceship.GetComponent<PlayerMovement>().Init(_spaceshipViewModel.SpaceshipSpeedView.Value, _inputManager);
+            _playerMovement.Init(_spaceshipViewModel.SpaceshipSpeedView.Value, _inputManager);
 
             _levelColliderBorder.Init(_spaceship);
 
