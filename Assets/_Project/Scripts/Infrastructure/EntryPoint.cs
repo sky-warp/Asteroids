@@ -23,16 +23,12 @@ namespace _Project.Scripts.Infrastructure
     {
         private GameConfig _gameConfig;
 
-        private Canvas _levelCanvas;
-
         private Transform _spaceshipStatsParent;
 
         private SpaceshipView _spaceship;
         private AmmoView _ammoView;
         private ScoreView _scoreView;
-
-        private Transform[] _spawnPoints;
-
+        
         private LevelColliderBorder _levelColliderBorder;
 
         private IInputable _inputManager;
@@ -53,11 +49,9 @@ namespace _Project.Scripts.Infrastructure
         [Inject]
         private void Construct(
             GameConfig gameConfig, 
-            Canvas levelCanvas, 
             Transform spaceshipStatsParent,
             AmmoView ammoView, 
             ScoreView scoreView, 
-            Transform[] spawnPoints, 
             LevelColliderBorder levelColliderBorder,
             SpaceshipView spaceship, 
             CoroutineManager.CoroutineManager coroutineManager,
@@ -67,11 +61,9 @@ namespace _Project.Scripts.Infrastructure
             ProjectileSpawnService projectileSpawnService)
         {
             _gameConfig = gameConfig;
-            _levelCanvas = levelCanvas;
             _spaceshipStatsParent = spaceshipStatsParent;
             _ammoView = ammoView;
             _scoreView = scoreView;
-            _spawnPoints = spawnPoints;
             _levelColliderBorder = levelColliderBorder;
             _spaceship = spaceship;
             _coroutineManager = coroutineManager;
