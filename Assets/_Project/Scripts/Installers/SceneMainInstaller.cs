@@ -31,9 +31,11 @@ namespace _Project.Scripts.Installers
 
         [SerializeField] private LevelColliderBorder _levelColliderBorder;
 
+        [Inject]
+        private readonly GameConfig _gameConfig;
+        
         public override void InstallBindings()
         {
-            var gameConfig = Container.Resolve<GameConfig>();
 
             Container
                 .BindInterfacesTo<EntryPoint>()
@@ -41,7 +43,7 @@ namespace _Project.Scripts.Installers
 
             Container
                 .Bind<GameConfig>()
-                .FromInstance(gameConfig)
+                .FromInstance(_gameConfig)
                 .AsSingle();
 
             Container
@@ -74,7 +76,7 @@ namespace _Project.Scripts.Installers
                 .AsSingle();
 
             var spaceship = Container
-                .InstantiatePrefab(gameConfig.SpaceshipViewPrefab, _levelCanvas.transform);
+                .InstantiatePrefab(_gameConfig.SpaceshipViewPrefab, _levelCanvas.transform);
             
             Container
                 .Bind<PlayerMovement>()
@@ -94,7 +96,7 @@ namespace _Project.Scripts.Installers
             Container
                 .Bind<SpaceshipModel>()
                 .AsSingle()
-                .WithArguments(gameConfig.SpaceshipConfig);
+                .WithArguments(_gameConfig.SpaceshipConfig);
             Container
                 .Bind<SpaceshipViewModel>()
                 .AsSingle();
@@ -106,7 +108,7 @@ namespace _Project.Scripts.Installers
             Container
                 .Bind<AmmoModel>()
                 .AsSingle()
-                .WithArguments(gameConfig.AmmoConfig);
+                .WithArguments(_gameConfig.AmmoConfig);
             Container
                 .Bind<AmmoViewModel>()
                 .AsSingle();
