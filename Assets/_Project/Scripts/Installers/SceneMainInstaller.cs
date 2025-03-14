@@ -1,18 +1,18 @@
 using _Project.Scripts.Configs.GameConfigs;
 using _Project.Scripts.Infrastructure;
+using _Project.Scripts.InputService;
 using _Project.Scripts.LevelBorder;
 using _Project.Scripts.Projectiles.Ammo.View;
 using _Project.Scripts.Score.View;
 using _Project.Scripts.Spaceship.View;
+using _Project.Scripts.SpawnService;
 using UnityEngine;
 using Zenject;
 
 namespace _Project.Scripts.Installers
 {
-    public class SceneInstaller : MonoInstaller
+    public class SceneMainInstaller : MonoInstaller
     {
-        [SerializeField] private GameConfig _gameConfig;
-
         [SerializeField] private Canvas _levelCanvas;
 
         [SerializeField] private Transform _spaceshipStatsParent;
@@ -26,26 +26,28 @@ namespace _Project.Scripts.Installers
 
         public override void InstallBindings()
         {
+            var gameConfig = Container.Resolve<GameConfig>();
+
             Container
                 .BindInterfacesTo<EntryPoint>()
                 .AsSingle();
 
-            var spaceship = Container
-                .InstantiatePrefab(_gameConfig.SpaceshipViewPrefab, _levelCanvas.transform);
-            
-            Container
-                .Bind<SpaceshipView>()
-                .FromInstance(spaceship.GetComponent<SpaceshipView>())
-                .AsSingle();
-            
             Container
                 .Bind<GameConfig>()
-                .FromInstance(_gameConfig)
+                .FromInstance(gameConfig)
                 .AsSingle();
 
             Container
                 .Bind<Canvas>()
                 .FromInstance(_levelCanvas)
+                .AsSingle();
+
+            var spaceship = Container
+                .InstantiatePrefab(gameConfig.SpaceshipViewPrefab, _levelCanvas.transform);
+
+            Container
+                .Bind<SpaceshipView>()
+                .FromInstance(spaceship.GetComponent<SpaceshipView>())
                 .AsSingle();
 
             Container
@@ -72,11 +74,25 @@ namespace _Project.Scripts.Installers
                 .Bind<LevelColliderBorder>()
                 .FromInstance(_levelColliderBorder)
                 .AsSingle();
-            
+
             Container
-                .Bind<CoroutineManager.CoroutineManager>()
-                .FromNewComponentOnNewGameObject()
+                .Bind<GameOverService.GameOverService>()
                 .AsSingle();
+
+            Container
+                .Bind<IInputable>()
+                .To<InputManager>()
+                .AsSingle();
+
+            Container
+                .Bind<EnvironmentUnitSpawnService>()
+                .AsSingle()
+                .WithArguments(_levelCanvas.transform, spaceship.transform);
+
+            Container
+                .Bind<ProjectileSpawnService>()
+                .AsSingle()
+                .WithArguments(spaceship.transform);
         }
     }
 }

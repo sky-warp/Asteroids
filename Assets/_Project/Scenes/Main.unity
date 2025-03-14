@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 32928352}
   - component: {fileID: 32928351}
   m_Layer: 0
-  m_Name: SceneContext
+  m_Name: System
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -167,7 +167,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e731446f72ec40e5b1df2d388f4ebb78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gameConfig: {fileID: 11400000, guid: 55859338f2ecc944e813af1f7ec95de3, type: 2}
   _levelCanvas: {fileID: 1500080767}
   _spaceshipStatsParent: {fileID: 258795794}
   _ammoView: {fileID: 1047688885}
@@ -1151,7 +1150,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b35f725c5f4466aac2611be3583c8fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _levelCanvas: {fileID: 1500080767}
 --- !u!1 &1168196435
 GameObject:
   m_ObjectHideFlags: 0

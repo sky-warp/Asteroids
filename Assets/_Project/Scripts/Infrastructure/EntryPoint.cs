@@ -48,12 +48,23 @@ namespace _Project.Scripts.Infrastructure
 
         private CoroutineManager.CoroutineManager _coroutineManager;
         
-        private CompositeDisposable _disposable;
+        private CompositeDisposable _disposable = new();
 
         [Inject]
-        private void Construct(GameConfig gameConfig, Canvas levelCanvas, Transform spaceshipStatsParent,
-            AmmoView ammoView, ScoreView scoreView, Transform[] spawnPoints, LevelColliderBorder levelColliderBorder,
-            SpaceshipView spaceship, CoroutineManager.CoroutineManager coroutineManager)
+        private void Construct(
+            GameConfig gameConfig, 
+            Canvas levelCanvas, 
+            Transform spaceshipStatsParent,
+            AmmoView ammoView, 
+            ScoreView scoreView, 
+            Transform[] spawnPoints, 
+            LevelColliderBorder levelColliderBorder,
+            SpaceshipView spaceship, 
+            CoroutineManager.CoroutineManager coroutineManager,
+            GameOverService.GameOverService gameOverService,
+            IInputable inputManager,
+            EnvironmentUnitSpawnService environmentUnitSpawnService,
+            ProjectileSpawnService projectileSpawnService)
         {
             _gameConfig = gameConfig;
             _levelCanvas = levelCanvas;
@@ -64,15 +75,14 @@ namespace _Project.Scripts.Infrastructure
             _levelColliderBorder = levelColliderBorder;
             _spaceship = spaceship;
             _coroutineManager = coroutineManager;
+            _gameOverServiceService = gameOverService;
+            _inputManager = inputManager;
+            _environmentUnitSpawnService = environmentUnitSpawnService;
+            _projectileSpawnService = projectileSpawnService;
         }
 
         public void Initialize()
         {
-            _gameOverServiceService = new();
-            _inputManager = new InputManager();
-            _disposable = new();
-
-            //var spaceship = Instantiate(_gameConfig.SpaceshipViewPrefab, _levelCanvas.transform);
             SpaceshipModel spaceshipModel = new SpaceshipModel(_gameConfig.SpaceshipConfig);
             _spaceshipViewModel = new SpaceshipViewModel(spaceshipModel, _gameOverServiceService,
                 _spaceship.GetComponent<PlayerMovement>());
@@ -91,14 +101,6 @@ namespace _Project.Scripts.Infrastructure
             _gameOverServiceService.OnGameOver
                 .Subscribe(_ => _inputManager.IsAvailable.Value = false)
                 .AddTo(_disposable);
-
-            _projectileSpawnService = new(_inputManager, _gameConfig.BulletPrefab, _gameConfig.LaserPrefab,
-                _levelColliderBorder, _spaceship.transform, _gameOverServiceService, _levelCanvas);
-
-            _environmentUnitSpawnService = new(_gameConfig.AsteroidBigPrefab, _gameConfig.AsteroidSmallPrefab,
-                _gameConfig.UfoChaserPrefab, _levelCanvas.transform, _spaceship.transform,
-                _levelColliderBorder, _spawnPoints,
-                _gameOverServiceService, _levelCanvas);
 
             _coroutineManager.StartCoroutine(_environmentUnitSpawnService.SpawnBigAsteroids());
             _coroutineManager.StartCoroutine(_environmentUnitSpawnService.SpawnUfoChasers());

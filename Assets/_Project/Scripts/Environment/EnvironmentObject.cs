@@ -48,7 +48,7 @@ namespace _Project.Scripts.Environment
 
         protected void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.gameObject.TryGetComponent(out SpaceshipView movableShip))
+            if (other.TryGetComponent(out SpaceshipView movableShip))
             {
                 OnSpaceshipTouched?.OnNext(Unit.Default);
             }

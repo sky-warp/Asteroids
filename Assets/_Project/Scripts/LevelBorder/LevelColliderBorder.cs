@@ -3,13 +3,14 @@ using _Project.Scripts.Projectiles.ProjectileTypes;
 using _Project.Scripts.Spaceship.View;
 using UnityEngine;
 using R3;
+using Zenject;
 
 namespace _Project.Scripts.LevelBorder
 {
     [RequireComponent(typeof(BoxCollider2D))]
     public class LevelColliderBorder : MonoBehaviour
     {
-        [SerializeField] private Canvas _levelCanvas;
+        private Canvas _levelCanvas;
         
         public readonly Subject<Bullet> OnBulletExit = new();
         public readonly Subject<Laser> OnLaserExit = new();
@@ -21,6 +22,12 @@ namespace _Project.Scripts.LevelBorder
         private Vector2 _canvasSize;
         private Vector2 _canvasPosition;
 
+        [Inject]
+        public void Construct(Canvas canvas)
+        {
+            _levelCanvas = canvas;
+        }
+        
         public void Init(SpaceshipView spaceship)
         {
             _spaceship = spaceship;

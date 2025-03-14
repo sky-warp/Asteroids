@@ -13,7 +13,7 @@ namespace _Project.Scripts.GameOverService
         {
             OnGameOver
                 .Select(_ => true)
-                .Subscribe(isPaused => IsGameOver.Value = isPaused)
+                .Subscribe(isOver => IsGameOver.Value = isOver)
                 .AddTo(_disposable);
         }
 

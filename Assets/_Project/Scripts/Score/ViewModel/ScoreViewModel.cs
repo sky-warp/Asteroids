@@ -1,4 +1,3 @@
-using _Project.Scripts.GameOverService;
 using _Project.Scripts.Score.Model;
 using _Project.Scripts.SpawnService;
 using R3;
@@ -11,14 +10,16 @@ namespace _Project.Scripts.Score.ViewModel
         public readonly ReactiveProperty<bool> IsGameOver = new();
 
         private ScoreModel _scoreModel;
+        
         private CompositeDisposable _disposable = new();
+        
         private SceneManager.SceneManager _sceneManager;
         
         public ScoreViewModel(ScoreModel scoreModel, EnvironmentUnitSpawnService environmentUnitSpawnService,
             GameOverService.GameOverService gameOverService)
         {
             _scoreModel = scoreModel;
-
+            
             _scoreModel.CurrentScore
                 .Subscribe(currentScore => CurrentScoreView.Value = currentScore)
                 .AddTo(_disposable);

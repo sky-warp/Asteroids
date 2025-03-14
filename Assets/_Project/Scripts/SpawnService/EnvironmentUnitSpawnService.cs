@@ -1,7 +1,6 @@
 using System.Collections;
 using _Project.Scripts.CustomPool;
 using _Project.Scripts.Environment.EnvironmentUnitTypes;
-using _Project.Scripts.GameOverService;
 using _Project.Scripts.LevelBorder;
 using R3;
 using UnityEngine;
@@ -11,8 +10,6 @@ namespace _Project.Scripts.SpawnService
 {
     public class EnvironmentUnitSpawnService
     {
-        public readonly Subject<int> OnScoreChanged = new();
-        
         public readonly ReactiveProperty<int> BigAsteroidScore = new();
         public readonly ReactiveProperty<int> SmallAsteroidScore = new();
         public readonly ReactiveProperty<int> UfoScore = new();

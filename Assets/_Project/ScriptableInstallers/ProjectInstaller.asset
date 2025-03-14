@@ -9,8 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 084a4a4364b04426a7e9ac15cd8d6fd5, type: 3}
-  m_Name: SpaceshipConfig
+  m_Script: {fileID: 11500000, guid: 7ba4e7fa547f4e92a5094b6406a430c0, type: 3}
+  m_Name: ProjectInstaller
   m_EditorClassIdentifier: 
-  <Speed>k__BackingField: 100
-  <LaserCooldown>k__BackingField: 2.5
+  _gameConfig: {fileID: 11400000, guid: 55859338f2ecc944e813af1f7ec95de3, type: 2}
