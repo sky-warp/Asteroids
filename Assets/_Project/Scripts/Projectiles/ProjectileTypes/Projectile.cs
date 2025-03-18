@@ -18,14 +18,6 @@ namespace _Project.Scripts.Projectiles.ProjectileTypes
 
         private float _initialSpeed;
         private float _speed;
-
-        private Canvas _levelCanvas;
-
-        public void Init(Canvas levelCanvas)
-        {
-            _levelCanvas = levelCanvas;
-            _speed *= _levelCanvas.scaleFactor;
-        }
         
         private void Awake()
         {

@@ -26,22 +26,18 @@ namespace _Project.Scripts.SpawnService
 
         private GameOverService.GameOverService _gameOverService;
         
-        private Canvas _levelCanvas;
-
         public EnvironmentUnitSpawnService(AsteroidBig asteroidBigPrefab, AsteroidSmall asteroidSmallPrefab,
-            UfoChaser ufoChaserPrefab, Transform environmentParent, Transform ufoTarget,
+            UfoChaser ufoChaserPrefab, Transform ufoTarget,
             LevelColliderBorder levelColliderBorder, Transform[] spawnPoints,
-            GameOverService.GameOverService gameOverService, Canvas levelCanvas)
+            GameOverService.GameOverService gameOverService)
         {
-            _levelCanvas = levelCanvas;
-            
             _gameOverService = gameOverService;
             
             _spawnPoints = spawnPoints;
             _ufoTarget = ufoTarget;
 
-            _bigAsteroidsPool = new CustomPool<AsteroidBig>(asteroidBigPrefab, 3, environmentParent);
-            _smallAsteroidsPool = new CustomPool<AsteroidSmall>(asteroidSmallPrefab, 3, environmentParent);
+            _bigAsteroidsPool = new CustomPool<AsteroidBig>(asteroidBigPrefab, 3, spawnPoints[Random.Range(0, spawnPoints.Length)]);
+            _smallAsteroidsPool = new CustomPool<AsteroidSmall>(asteroidSmallPrefab, 3, spawnPoints[Random.Range(0, spawnPoints.Length)]);
 
             levelColliderBorder.OnBigAsteroidExit
                 .Subscribe(DeleteBigAsteroid)
@@ -50,7 +46,7 @@ namespace _Project.Scripts.SpawnService
                 .Subscribe(DeleteSmallAsteroid)
                 .AddTo(_disposable);
 
-            _ufoChasersPool = new CustomPool<UfoChaser>(ufoChaserPrefab, 3, environmentParent);
+            _ufoChasersPool = new CustomPool<UfoChaser>(ufoChaserPrefab, 3, spawnPoints[Random.Range(0, spawnPoints.Length)]);
         }
 
         private void GameOver()
@@ -66,8 +62,6 @@ namespace _Project.Scripts.SpawnService
         private void CreateBigAsteroid()
         {
             var asteroid = _bigAsteroidsPool.Get();
-
-            asteroid.Init(_levelCanvas);
             
             asteroid.ResetSubscription();
 
@@ -120,8 +114,6 @@ namespace _Project.Scripts.SpawnService
             {
                 var asteroidSmall = _smallAsteroidsPool.Get();
 
-                asteroidSmall.Init(_levelCanvas);
-                
                 asteroidSmall.ResetSubscription();
 
                 var hitSubscription = asteroidSmall.OnSmallAsteroidHit
@@ -158,8 +150,6 @@ namespace _Project.Scripts.SpawnService
         private void CreateUfoChaser()
         {
             var ufoChaser = _ufoChasersPool.Get();
-
-            ufoChaser.Init(_levelCanvas);
             
             ufoChaser.ResetSubscription();
 

@@ -20,7 +20,7 @@ namespace _Project.Scripts.Installers
 {
     public class SceneMainInstaller : MonoInstaller
     {
-        [SerializeField] private Canvas _levelCanvas;
+        //[SerializeField] private Canvas _levelCanvas;
 
         [SerializeField] private Transform _spaceshipStatsParent;
 
@@ -46,10 +46,10 @@ namespace _Project.Scripts.Installers
                 .FromInstance(_gameConfig)
                 .AsSingle();
 
-            Container
+            /*Container
                 .Bind<Canvas>()
                 .FromInstance(_levelCanvas)
-                .AsSingle();
+                .AsSingle();*/
 
             Container
                 .Bind<Transform>()
@@ -76,7 +76,7 @@ namespace _Project.Scripts.Installers
                 .AsSingle();
 
             var spaceship = Container
-                .InstantiatePrefab(_gameConfig.SpaceshipViewPrefab, _levelCanvas.transform);
+                .InstantiatePrefab(_gameConfig.SpaceshipViewPrefab);
             
             Container
                 .Bind<PlayerMovement>()
@@ -86,7 +86,7 @@ namespace _Project.Scripts.Installers
             Container
                 .Bind<EnvironmentUnitSpawnService>()
                 .AsSingle()
-                .WithArguments(_levelCanvas.transform, spaceship.transform);
+                .WithArguments(spaceship.transform);
 
             Container
                 .Bind<ProjectileSpawnService>()

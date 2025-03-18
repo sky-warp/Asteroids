@@ -16,15 +16,7 @@ namespace _Project.Scripts.Environment
         protected Rigidbody2D Rigidbody2D { get; private set; }
         public CompositeDisposable Disposable { get; private set; } = new();
         
-        private Canvas _levelCanvas;
-        
         [SerializeField] private EnvironmentUnitConfig _environmentUnitConfig;
-        
-        public void Init(Canvas levelCanvas)
-        {
-            _levelCanvas = levelCanvas;
-            Speed *= _levelCanvas.scaleFactor;
-        }
         
         private void Awake()
         {

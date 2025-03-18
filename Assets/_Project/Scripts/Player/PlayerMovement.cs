@@ -18,7 +18,6 @@ namespace _Project.Scripts.Player
         [SerializeField] private float _acceleration;
 
         private Rigidbody2D _rigidbody2D;
-        private RectTransform _rectTransform;
         private float _yInput;
         private float _xInput;
         private float _playerSpeed;
@@ -34,22 +33,24 @@ namespace _Project.Scripts.Player
         {
             _playerSpeed = 0;
         }
-        
+
         private void Awake()
         {
             _rigidbody2D = GetComponent<Rigidbody2D>();
-            _rectTransform = GetComponent<RectTransform>();
         }
 
         private void Update()
         {
-            _yInput = _inputManager.GetAxisVertical();
-            _xInput = _inputManager.GetAxisHorizontal();
+            if (_inputManager != null)
+            {
+                _yInput = _inputManager.GetAxisVertical();
+                _xInput = _inputManager.GetAxisHorizontal();
+            }
 
             CurrentRotationAngle.Value = transform.eulerAngles.z;
 
-            CurrentXPosition.Value = _rectTransform.anchoredPosition.x;
-            CurrentYPosition.Value = _rectTransform.anchoredPosition.y;
+            CurrentXPosition.Value = transform.position.x;
+            CurrentYPosition.Value = transform.position.y;
         }
 
         private void FixedUpdate()

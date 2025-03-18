@@ -16,14 +16,12 @@ namespace _Project.Scripts.SpawnService
         private CustomPool<Laser> _lasersPool;
         private readonly CompositeDisposable _disposable = new();
 
-        private Canvas _levelCanvas;
         private IInputable _inputManager;
         
         public ProjectileSpawnService(IInputable inputManager, Bullet bulletPrefab, Laser laserPrefab,
             LevelColliderBorder levelBorder, Transform shipTransform,
-            GameOverService.GameOverService gameOverService, Canvas levelCanvas)
+            GameOverService.GameOverService gameOverService)
         {
-            _levelCanvas = levelCanvas;
             _inputManager = inputManager;
             
             gameOverService.OnGameOver
@@ -54,8 +52,6 @@ namespace _Project.Scripts.SpawnService
         {
             var bullet = _bulletsPool.Get();
             
-            bullet.Init(_levelCanvas);
-            
             bullet.OnAsteroidHit
                 .Subscribe(projectile => DeleteSpawnedBullet((Bullet)projectile))
                 .AddTo(_disposable);
@@ -69,8 +65,6 @@ namespace _Project.Scripts.SpawnService
             {
                 var laser = _lasersPool.Get();
 
-                laser.Init(_levelCanvas);
-                
                 laser.MoveProjectile();
                 OnLaserSpawned?.OnNext(Unit.Default);
             }

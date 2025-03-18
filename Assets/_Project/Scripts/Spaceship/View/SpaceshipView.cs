@@ -3,13 +3,11 @@ using _Project.Scripts.Spaceship.ViewModel;
 using R3;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace _Project.Scripts.Spaceship.View
 {
     public class SpaceshipView : MonoBehaviour
     {
-        [SerializeField] private Image _shipImage;
         [SerializeField] private Sprite _shipSprite;
 
         [SerializeField] private TextMeshProUGUI _currentSpeedText;
@@ -23,8 +21,6 @@ namespace _Project.Scripts.Spaceship.View
 
         public void Init(SpaceshipViewModel spaceshipViewModel, Transform statsParent)
         {
-            CreateShip();
-
             _statsParent = statsParent;
             
             var currentSpeed = Instantiate(_currentSpeedText, _statsParent);
@@ -69,11 +65,6 @@ namespace _Project.Scripts.Spaceship.View
         {
             _statsParent.gameObject.SetActive(false);
             gameObject.SetActive(false);
-        }
-
-        private void CreateShip()
-        {
-            _shipImage.sprite = _shipSprite;
         }
     }
 }

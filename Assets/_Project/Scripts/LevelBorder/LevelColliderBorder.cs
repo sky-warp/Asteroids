@@ -3,45 +3,47 @@ using _Project.Scripts.Projectiles.ProjectileTypes;
 using _Project.Scripts.Spaceship.View;
 using UnityEngine;
 using R3;
-using Zenject;
 
 namespace _Project.Scripts.LevelBorder
 {
     [RequireComponent(typeof(BoxCollider2D))]
     public class LevelColliderBorder : MonoBehaviour
     {
-        private Canvas _levelCanvas;
-        
         public readonly Subject<Bullet> OnBulletExit = new();
         public readonly Subject<Laser> OnLaserExit = new();
         public readonly Subject<AsteroidBig> OnBigAsteroidExit = new();
         public readonly Subject<AsteroidSmall> OnSmallAsteroidExit = new();
 
         private SpaceshipView _spaceship;
-        private RectTransform _canvasRect;
-        private Vector2 _canvasSize;
-        private Vector2 _canvasPosition;
+        private BoxCollider2D _boxCollider;
+        private Camera _camera;
 
-        [Inject]
-        public void Construct(Canvas canvas)
+        private void Awake()
         {
-            _levelCanvas = canvas;
+            _camera = Camera.main;
+            _boxCollider = GetComponent<BoxCollider2D>();
+            AdjustCollider();
         }
-        
+
         public void Init(SpaceshipView spaceship)
         {
             _spaceship = spaceship;
-            
-            _canvasRect = _levelCanvas.GetComponent<RectTransform>();
-            _canvasSize = _canvasRect.sizeDelta * _levelCanvas.scaleFactor;
-            _canvasPosition = _levelCanvas.transform.position;
-        }
-        
-        private void Update()
-        {
-            CheckCanvasTeleport(_spaceship);
         }
 
+        private void AdjustCollider()
+        {
+            Vector2 bottomLeft = _camera.ViewportToWorldPoint(new Vector3(0, 0, _camera.nearClipPlane));
+            Vector2 topRight = _camera.ViewportToWorldPoint(new Vector3(1, 1, _camera.nearClipPlane));
+            
+            float width = topRight.x - bottomLeft.x;
+            float height = topRight.y - bottomLeft.y;
+            
+            _boxCollider.size = new Vector2(width, height);
+            
+            _boxCollider.offset = Vector2.zero;
+            transform.position = _camera.transform.position;
+        }
+        
         private void OnTriggerExit2D(Collider2D other)
         {
             if (other.TryGetComponent(out Bullet bullet))
@@ -63,46 +65,6 @@ namespace _Project.Scripts.LevelBorder
             {
                 OnSmallAsteroidExit?.OnNext(other.gameObject.GetComponent<AsteroidSmall>());
             }
-        }
-
-        private void CheckCanvasTeleport(SpaceshipView spaceship)
-        {
-            if (spaceship == null) return;
-            
-            Vector2 playerPosition = spaceship.transform.position;
-
-            if (playerPosition.x < _canvasPosition.x - _canvasSize.x / 2 ||
-                playerPosition.x > _canvasPosition.x + _canvasSize.x / 2 ||
-                playerPosition.y < _canvasPosition.y - _canvasSize.y / 2 ||
-                playerPosition.y > _canvasPosition.y + _canvasSize.y / 2)
-            {
-                TeleportShip(spaceship.transform, playerPosition, _canvasPosition, _canvasSize);
-            }
-        }
-
-        private void TeleportShip(Transform spaceshipTransform, Vector2 playerPosition, Vector2 canvasPosition, Vector2 canvasSize)
-        {
-            Vector2 newPosition = playerPosition;
-            
-            if (playerPosition.x < canvasPosition.x - canvasSize.x / 2)
-            {
-                newPosition.x = canvasPosition.x + canvasSize.x / 2;
-            }
-            else if (playerPosition.x > canvasPosition.x + canvasSize.x / 2)
-            {
-                newPosition.x = canvasPosition.x - canvasSize.x / 2;
-            }
-
-            if (playerPosition.y < canvasPosition.y - canvasSize.y / 2)
-            {
-                newPosition.y = canvasPosition.y + canvasSize.y / 2;
-            }
-            else if (playerPosition.y > canvasPosition.y + canvasSize.y / 2)
-            {
-                newPosition.y = canvasPosition.y - canvasSize.y / 2;
-            }
-            
-            spaceshipTransform.position = newPosition;
         }
     }
 }
