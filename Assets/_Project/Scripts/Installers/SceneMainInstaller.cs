@@ -20,15 +20,11 @@ namespace _Project.Scripts.Installers
 {
     public class SceneMainInstaller : MonoInstaller
     {
-        //[SerializeField] private Canvas _levelCanvas;
-
         [SerializeField] private Transform _spaceshipStatsParent;
 
         [SerializeField] private AmmoView _ammoView;
         [SerializeField] private ScoreView _scoreView;
-
-        [SerializeField] private Transform[] _spawnPoints;
-
+        
         [SerializeField] private LevelColliderBorder _levelColliderBorder;
 
         [Inject]
@@ -36,7 +32,11 @@ namespace _Project.Scripts.Installers
         
         public override void InstallBindings()
         {
-
+            Container
+                .Bind<Camera>()
+                .FromInstance(Camera.main)
+                .AsSingle();
+            
             Container
                 .BindInterfacesTo<EntryPoint>()
                 .AsSingle();
@@ -46,19 +46,13 @@ namespace _Project.Scripts.Installers
                 .FromInstance(_gameConfig)
                 .AsSingle();
 
-            /*Container
-                .Bind<Canvas>()
-                .FromInstance(_levelCanvas)
-                .AsSingle();*/
-
+            Container
+                .Bind<SpawnRandomizer>()
+                .AsSingle();
+            
             Container
                 .Bind<Transform>()
                 .FromInstance(_spaceshipStatsParent)
-                .AsSingle();
-
-            Container
-                .Bind<Transform[]>()
-                .FromInstance(_spawnPoints)
                 .AsSingle();
 
             Container

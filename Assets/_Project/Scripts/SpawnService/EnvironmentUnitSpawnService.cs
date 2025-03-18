@@ -1,6 +1,7 @@
 using System.Collections;
 using _Project.Scripts.CustomPool;
 using _Project.Scripts.Environment.EnvironmentUnitTypes;
+using _Project.Scripts.Infrastructure;
 using _Project.Scripts.LevelBorder;
 using R3;
 using UnityEngine;
@@ -14,8 +15,6 @@ namespace _Project.Scripts.SpawnService
         public readonly ReactiveProperty<int> SmallAsteroidScore = new();
         public readonly ReactiveProperty<int> UfoScore = new();
 
-        private Transform[] _spawnPoints;
-
         private Transform _ufoTarget;
 
         private CustomPool<AsteroidBig> _bigAsteroidsPool;
@@ -26,18 +25,22 @@ namespace _Project.Scripts.SpawnService
 
         private GameOverService.GameOverService _gameOverService;
         
+        private SpawnRandomizer _spawnRandomizer;
+        
         public EnvironmentUnitSpawnService(AsteroidBig asteroidBigPrefab, AsteroidSmall asteroidSmallPrefab,
             UfoChaser ufoChaserPrefab, Transform ufoTarget,
-            LevelColliderBorder levelColliderBorder, Transform[] spawnPoints,
-            GameOverService.GameOverService gameOverService)
+            LevelColliderBorder levelColliderBorder,
+            GameOverService.GameOverService gameOverService,
+            SpawnRandomizer spawnRandomizer)
         {
+            _spawnRandomizer = spawnRandomizer;
+            
             _gameOverService = gameOverService;
             
-            _spawnPoints = spawnPoints;
             _ufoTarget = ufoTarget;
 
-            _bigAsteroidsPool = new CustomPool<AsteroidBig>(asteroidBigPrefab, 3, spawnPoints[Random.Range(0, spawnPoints.Length)]);
-            _smallAsteroidsPool = new CustomPool<AsteroidSmall>(asteroidSmallPrefab, 3, spawnPoints[Random.Range(0, spawnPoints.Length)]);
+            _bigAsteroidsPool = new CustomPool<AsteroidBig>(asteroidBigPrefab, 3, _spawnRandomizer.GetRandomSpawnTransform());
+            _smallAsteroidsPool = new CustomPool<AsteroidSmall>(asteroidSmallPrefab, 3, _spawnRandomizer.GetRandomSpawnTransform());
 
             levelColliderBorder.OnBigAsteroidExit
                 .Subscribe(DeleteBigAsteroid)
@@ -46,7 +49,7 @@ namespace _Project.Scripts.SpawnService
                 .Subscribe(DeleteSmallAsteroid)
                 .AddTo(_disposable);
 
-            _ufoChasersPool = new CustomPool<UfoChaser>(ufoChaserPrefab, 3, spawnPoints[Random.Range(0, spawnPoints.Length)]);
+            _ufoChasersPool = new CustomPool<UfoChaser>(ufoChaserPrefab, 3, _spawnRandomizer.GetRandomSpawnTransform());
         }
 
         private void GameOver()
@@ -75,7 +78,7 @@ namespace _Project.Scripts.SpawnService
             asteroid.AddSubscription(hitSubscription);
             asteroid.AddSubscription(gameOverSubscription);
 
-            var spawnPoint = _spawnPoints[Random.Range(0, _spawnPoints.Length)];
+            var spawnPoint = _spawnRandomizer.GetRandomSpawnTransform();
 
             asteroid.transform.SetParent(spawnPoint.transform);
             asteroid.transform.position = spawnPoint.position;
@@ -168,7 +171,7 @@ namespace _Project.Scripts.SpawnService
                 .Subscribe(_ => GameOver())
                 .AddTo(ufoChaser.Disposable);
 
-            var spawnPoint = _spawnPoints[Random.Range(0, _spawnPoints.Length)];
+            var spawnPoint = _spawnRandomizer.GetRandomSpawnTransform();
 
             ufoChaser.transform.SetParent(spawnPoint.transform);
             ufoChaser.transform.position = spawnPoint.position;

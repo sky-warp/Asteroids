@@ -1,4 +1,3 @@
-using System;
 using _Project.Scripts.Configs.ProjectilesConfigs;
 using _Project.Scripts.Environment.EnvironmentUnitTypes;
 using R3;

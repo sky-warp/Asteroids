@@ -114,7 +114,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 8566089944462449766}
@@ -147,7 +147,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acbdb8a3546a4fdea3b8a0c6d5859a59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _shipImage: {fileID: 1799222720836823977, guid: 80580dfafae8ab643831baf6b6058c69, type: 3}
   _shipSprite: {fileID: 21300000, guid: 05d75ca55f4cf804388ed21bb7104788, type: 2}
   _currentSpeedText: {fileID: 7253519179874869078, guid: 59cd23f27fcea9f4fab2f4582e424dc7, type: 3}
   _coordinateXText: {fileID: 3683791568123055247, guid: cb0b3825767464f499477bf1e401930e, type: 3}

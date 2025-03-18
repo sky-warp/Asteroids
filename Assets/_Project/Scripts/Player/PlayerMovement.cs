@@ -33,7 +33,7 @@ namespace _Project.Scripts.Player
         {
             _playerSpeed = 0;
         }
-
+        
         private void Awake()
         {
             _rigidbody2D = GetComponent<Rigidbody2D>();
@@ -44,7 +44,7 @@ namespace _Project.Scripts.Player
             if (_inputManager != null)
             {
                 _yInput = _inputManager.GetAxisVertical();
-                _xInput = _inputManager.GetAxisHorizontal();
+            _xInput = _inputManager.GetAxisHorizontal();
             }
 
             CurrentRotationAngle.Value = transform.eulerAngles.z;

@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cba97037c63467d8a22f643713c2612, type: 3}
   m_Name: AsteroidBigConfig
   m_EditorClassIdentifier: 
-  <UnitSpeed>k__BackingField: 1
+  <UnitSpeed>k__BackingField: 2.5
   <UnitScore>k__BackingField: 10
