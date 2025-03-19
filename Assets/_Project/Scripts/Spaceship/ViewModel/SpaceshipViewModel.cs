@@ -1,3 +1,4 @@
+using _Project.Scripts.GameOverServices;
 using _Project.Scripts.Player;
 using _Project.Scripts.Spaceship.Model;
 using R3;
@@ -16,7 +17,7 @@ namespace _Project.Scripts.Spaceship.ViewModel
         private SpaceshipModel _spaceshipModel;
         private CompositeDisposable _disposable = new();
 
-        public SpaceshipViewModel(SpaceshipModel spaceshipModel, GameOverService.GameOverService pause,
+        public SpaceshipViewModel(SpaceshipModel spaceshipModel, DefaultGameOverService pause,
             PlayerMovement playerMovement)
         {
             _spaceshipModel = spaceshipModel;

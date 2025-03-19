@@ -1,5 +1,4 @@
-using System;
-using _Project.Scripts.Environment.EnvironmentUnitTypes;
+using _Project.Scripts.Environment.Units;
 using _Project.Scripts.Projectiles.ProjectileTypes;
 using _Project.Scripts.Spaceship.View;
 using UnityEngine;

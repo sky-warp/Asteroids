@@ -1,3 +1,4 @@
+using _Project.Scripts.GameOverServices;
 using _Project.Scripts.Score.Model;
 using _Project.Scripts.SpawnService;
 using R3;
@@ -16,7 +17,7 @@ namespace _Project.Scripts.Score.ViewModel
         private SceneManager.SceneManager _sceneManager;
         
         public ScoreViewModel(ScoreModel scoreModel, EnvironmentUnitSpawnService environmentUnitSpawnService,
-            GameOverService.GameOverService gameOverService)
+            DefaultGameOverService defaultGameOverService)
         {
             _scoreModel = scoreModel;
             
@@ -34,7 +35,7 @@ namespace _Project.Scripts.Score.ViewModel
                 .Subscribe(IncreaseScore)
                 .AddTo(_disposable);
 
-            gameOverService.OnGameOver
+            defaultGameOverService.OnGameOver
                 .Subscribe(_ => IsGameOver.Value = true)
                 .AddTo(_disposable);
             

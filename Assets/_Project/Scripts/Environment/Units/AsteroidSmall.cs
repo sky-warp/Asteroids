@@ -3,7 +3,7 @@ using R3;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace _Project.Scripts.Environment.EnvironmentUnitTypes
+namespace _Project.Scripts.Environment.Units
 {
     [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
     public class AsteroidSmall : EnvironmentObject

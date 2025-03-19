@@ -1,4 +1,5 @@
 using _Project.Scripts.Configs.GameConfigs;
+using _Project.Scripts.GameOverServices;
 using _Project.Scripts.Infrastructure;
 using _Project.Scripts.InputService;
 using _Project.Scripts.LevelBorder;
@@ -61,7 +62,7 @@ namespace _Project.Scripts.Installers
                 .AsSingle();
 
             Container
-                .Bind<GameOverService.GameOverService>()
+                .Bind<DefaultGameOverService>()
                 .AsSingle();
 
             Container

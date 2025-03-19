@@ -2,7 +2,7 @@ using _Project.Scripts.Projectiles.ProjectileTypes;
 using R3;
 using UnityEngine;
 
-namespace _Project.Scripts.Environment.EnvironmentUnitTypes
+namespace _Project.Scripts.Environment.Units
 {
     [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
     public class AsteroidBig : EnvironmentObject

@@ -1,6 +1,6 @@
 using _Project.Scripts.Configs.AmmoConfigs;
 using _Project.Scripts.Configs.SpaceshipConfigs;
-using _Project.Scripts.Environment.EnvironmentUnitTypes;
+using _Project.Scripts.Environment.Units;
 using _Project.Scripts.Projectiles.ProjectileTypes;
 using _Project.Scripts.Spaceship.View;
 using UnityEngine;

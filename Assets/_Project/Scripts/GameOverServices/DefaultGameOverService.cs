@@ -1,16 +1,16 @@
 using System;
 using R3;
 
-namespace _Project.Scripts.GameOverService
+namespace _Project.Scripts.GameOverServices
 {
-    public class GameOverService : IDisposable
+    public class DefaultGameOverService : IDisposable
     {
         public readonly ReactiveProperty<bool> IsGameOver = new(false);
         public readonly Subject<Unit> OnGameOver = new();
 
         private readonly CompositeDisposable _disposable = new();
         
-        public GameOverService()
+        public DefaultGameOverService()
         {
             OnGameOver
                 .Select(_ => true)

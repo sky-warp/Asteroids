@@ -1,5 +1,5 @@
 using _Project.Scripts.Configs.ProjectilesConfigs;
-using _Project.Scripts.Environment.EnvironmentUnitTypes;
+using _Project.Scripts.Environment.Units;
 using R3;
 using UnityEngine;
 

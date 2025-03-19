@@ -1,7 +1,8 @@
 using System;
 using System.Collections;
 using _Project.Scripts.CustomPool;
-using _Project.Scripts.Environment.EnvironmentUnitTypes;
+using _Project.Scripts.Environment.Units;
+using _Project.Scripts.GameOverServices;
 using _Project.Scripts.Infrastructure;
 using _Project.Scripts.LevelBorder;
 using R3;
@@ -24,19 +25,19 @@ namespace _Project.Scripts.SpawnService
 
         private CompositeDisposable _disposable = new();
 
-        private GameOverService.GameOverService _gameOverService;
+        private DefaultGameOverService _defaultGameOverService;
 
         private SpawnRandomizer _spawnRandomizer;
 
         public EnvironmentUnitSpawnService(AsteroidBig asteroidBigPrefab, AsteroidSmall asteroidSmallPrefab,
             UfoChaser ufoChaserPrefab, Transform ufoTarget,
             LevelColliderBorder levelColliderBorder,
-            GameOverService.GameOverService gameOverService,
+            DefaultGameOverService defaultGameOverService,
             SpawnRandomizer spawnRandomizer)
         {
             _spawnRandomizer = spawnRandomizer;
 
-            _gameOverService = gameOverService;
+            _defaultGameOverService = defaultGameOverService;
 
             _ufoTarget = ufoTarget;
 
@@ -57,7 +58,7 @@ namespace _Project.Scripts.SpawnService
 
         private void GameOver()
         {
-            _gameOverService.OnGameOver?
+            _defaultGameOverService.OnGameOver?
                 .OnNext(Unit.Default);
 
             _bigAsteroidsPool.ReleaseAll();

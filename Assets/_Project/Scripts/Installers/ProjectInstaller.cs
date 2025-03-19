@@ -1,5 +1,5 @@
 using _Project.Scripts.Configs.GameConfigs;
-using _Project.Scripts.Environment.EnvironmentUnitTypes;
+using _Project.Scripts.Environment.Units;
 using _Project.Scripts.Projectiles.ProjectileTypes;
 using UnityEngine;
 using Zenject;
