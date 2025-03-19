@@ -1,3 +1,4 @@
+using System;
 using _Project.Scripts.Environment.EnvironmentUnitTypes;
 using _Project.Scripts.Projectiles.ProjectileTypes;
 using _Project.Scripts.Spaceship.View;
@@ -17,13 +18,20 @@ namespace _Project.Scripts.LevelBorder
 
         private SpaceshipView _spaceship;
         private BoxCollider2D _boxCollider;
-        [Inject]
-        private Camera _camera;
+        [Inject] private Camera _camera;
 
         private void Awake()
         {
             _boxCollider = GetComponent<BoxCollider2D>();
             AdjustCollider();
+        }
+
+        private void Update()
+        {
+            if (_spaceship != null)
+            {
+                AdjustSpaceship();
+            }
         }
 
         public void Init(SpaceshipView spaceship)
@@ -35,16 +43,46 @@ namespace _Project.Scripts.LevelBorder
         {
             Vector2 bottomLeft = _camera.ViewportToWorldPoint(new Vector3(0, 0, _camera.nearClipPlane));
             Vector2 topRight = _camera.ViewportToWorldPoint(new Vector3(1, 1, _camera.nearClipPlane));
-            
+
             float width = topRight.x - bottomLeft.x;
             float height = topRight.y - bottomLeft.y;
-            
+
             _boxCollider.size = new Vector2(width, height);
-            
+
             _boxCollider.offset = Vector2.zero;
             transform.position = _camera.transform.position;
         }
-        
+
+        private void AdjustSpaceship()
+        {
+            Vector3 viewportPosition = _camera.WorldToViewportPoint(_spaceship.transform.position);
+
+            if (viewportPosition.x > 1 || viewportPosition.x < 0 || viewportPosition.y > 1 || viewportPosition.y < 0)
+            {
+                Vector3 newPosition = _spaceship.transform.position;
+
+                if (viewportPosition.x > 1)
+                {
+                    newPosition.x = _camera.ViewportToWorldPoint(new Vector3(0, 0, _camera.nearClipPlane)).x;
+                }
+                else if (viewportPosition.x < 0)
+                {
+                    newPosition.x = _camera.ViewportToWorldPoint(new Vector3(1, 0, _camera.nearClipPlane)).x;
+                }
+
+                if (viewportPosition.y > 1)
+                {
+                    newPosition.y = _camera.ViewportToWorldPoint(new Vector3(0, 0, _camera.nearClipPlane)).y;
+                }
+                else if (viewportPosition.y < 0)
+                {
+                    newPosition.y = _camera.ViewportToWorldPoint(new Vector3(0, 1, _camera.nearClipPlane)).y;
+                }
+
+                _spaceship.transform.position = newPosition;
+            }
+        }
+
         private void OnTriggerExit2D(Collider2D other)
         {
             if (other.TryGetComponent(out Bullet bullet))
