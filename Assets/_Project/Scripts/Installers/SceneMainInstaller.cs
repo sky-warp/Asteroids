@@ -25,19 +25,18 @@ namespace _Project.Scripts.Installers
 
         [SerializeField] private AmmoView _ammoView;
         [SerializeField] private ScoreView _scoreView;
-        
+
         [SerializeField] private LevelColliderBorder _levelColliderBorder;
 
-        [Inject]
-        private readonly GameConfig _gameConfig;
-        
+        [Inject] private readonly GameConfig _gameConfig;
+
         public override void InstallBindings()
         {
             Container
                 .Bind<Camera>()
                 .FromInstance(Camera.main)
                 .AsSingle();
-            
+
             Container
                 .BindInterfacesTo<EntryPoint>()
                 .AsSingle();
@@ -49,11 +48,6 @@ namespace _Project.Scripts.Installers
 
             Container
                 .Bind<SpawnRandomizer>()
-                .AsSingle();
-            
-            Container
-                .Bind<Transform>()
-                .FromInstance(_spaceshipStatsParent)
                 .AsSingle();
 
             Container
@@ -71,13 +65,13 @@ namespace _Project.Scripts.Installers
                 .AsSingle();
 
             var spaceship = Container
-                .InstantiatePrefab(_gameConfig.SpaceshipViewPrefab);
-            
+                .InstantiatePrefabForComponent<SpaceshipView>(_gameConfig.SpaceshipViewPrefab);
+
             Container
                 .Bind<PlayerMovement>()
                 .FromInstance(spaceship.GetComponent<PlayerMovement>())
                 .AsSingle();
-            
+
             Container
                 .Bind<EnvironmentUnitSpawnService>()
                 .AsSingle()
@@ -87,7 +81,12 @@ namespace _Project.Scripts.Installers
                 .Bind<ProjectileSpawnService>()
                 .AsSingle()
                 .WithArguments(spaceship.transform);
-            
+
+            Container
+                .Bind<SpaceShipStats>()
+                .FromMethod(_ => new SpaceShipStats(_spaceshipStatsParent))
+                .AsSingle();
+
             Container
                 .Bind<SpaceshipModel>()
                 .AsSingle()
@@ -97,9 +96,9 @@ namespace _Project.Scripts.Installers
                 .AsSingle();
             Container
                 .Bind<SpaceshipView>()
-                .FromInstance(spaceship.GetComponent<SpaceshipView>())
+                .FromInstance(spaceship)
                 .AsSingle();
-            
+
             Container
                 .Bind<AmmoModel>()
                 .AsSingle()
@@ -111,7 +110,7 @@ namespace _Project.Scripts.Installers
                 .Bind<AmmoView>()
                 .FromInstance(_ammoView)
                 .AsSingle();
-            
+
             Container
                 .Bind<ScoreModel>()
                 .AsSingle();

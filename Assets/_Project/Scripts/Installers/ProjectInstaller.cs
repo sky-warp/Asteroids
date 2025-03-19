@@ -1,4 +1,5 @@
 using _Project.Scripts.Configs.GameConfigs;
+using _Project.Scripts.CoroutineManagers;
 using _Project.Scripts.Environment.Units;
 using _Project.Scripts.Projectiles.ProjectileTypes;
 using UnityEngine;
@@ -19,7 +20,7 @@ namespace _Project.Scripts.Installers
                 .AsSingle();
 
             Container
-                .Bind<CoroutineManager.CoroutineManager>()
+                .Bind<CoroutineManager>()
                 .FromNewComponentOnNewGameObject()
                 .AsSingle();
 

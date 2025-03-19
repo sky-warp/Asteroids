@@ -1,3 +1,4 @@
+using _Project.Scripts.Infrastructure;
 using _Project.Scripts.Player;
 using _Project.Scripts.Spaceship.ViewModel;
 using R3;
@@ -15,18 +16,18 @@ namespace _Project.Scripts.Spaceship.View
         [SerializeField] private TextMeshProUGUI _coordinateYText;
         [SerializeField] private TextMeshProUGUI _rotationRotationText;
 
-        private Transform _statsParent;
+        private SpaceShipStats _statsParent;
         private PlayerMovement _playerMovement;
         private SpaceshipViewModel _spaceshipViewModel;
 
-        public void Init(SpaceshipViewModel spaceshipViewModel, Transform statsParent)
+        public void Init(SpaceshipViewModel spaceshipViewModel, SpaceShipStats statsParent)
         {
             _statsParent = statsParent;
             
-            var currentSpeed = Instantiate(_currentSpeedText, _statsParent);
-            var currentX = Instantiate(_coordinateXText, _statsParent);
-            var currentY = Instantiate(_coordinateYText, _statsParent);
-            var currentAngle = Instantiate(_rotationRotationText, _statsParent);
+            var currentSpeed = Instantiate(_currentSpeedText, _statsParent.SpaceShipStatsTransform);
+            var currentX = Instantiate(_coordinateXText, _statsParent.SpaceShipStatsTransform);
+            var currentY = Instantiate(_coordinateYText, _statsParent.SpaceShipStatsTransform);
+            var currentAngle = Instantiate(_rotationRotationText, _statsParent.SpaceShipStatsTransform);
 
             _spaceshipViewModel = spaceshipViewModel;
 
@@ -63,7 +64,7 @@ namespace _Project.Scripts.Spaceship.View
 
         private void GameOver()
         {
-            _statsParent.gameObject.SetActive(false);
+            _statsParent.SpaceShipStatsTransform.gameObject.SetActive(false);
             gameObject.SetActive(false);
         }
     }

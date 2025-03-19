@@ -1,5 +1,6 @@
 using System;
 using _Project.Scripts.Configs.GameConfigs;
+using _Project.Scripts.CoroutineManagers;
 using _Project.Scripts.GameOverServices;
 using _Project.Scripts.InputService;
 using _Project.Scripts.LevelBorder;
@@ -20,7 +21,7 @@ namespace _Project.Scripts.Infrastructure
 {
     public class EntryPoint : IInitializable, IDisposable
     {
-        private Transform _spaceshipStatsParent;
+        private SpaceShipStats _spaceshipStatsParent;
 
         private SpaceshipView _spaceship;
         private AmmoView _ammoView;
@@ -39,7 +40,7 @@ namespace _Project.Scripts.Infrastructure
 
         private DefaultGameOverService _defaultGameOverServiceService;
 
-        private CoroutineManager.CoroutineManager _coroutineManager;
+        private CoroutineManager _coroutineManager;
         
         private PlayerMovement _playerMovement;
         
@@ -48,7 +49,7 @@ namespace _Project.Scripts.Infrastructure
         [Inject]
         private void Construct(
             GameConfig gameConfig, 
-            Transform spaceshipStatsParent,
+            SpaceShipStats statsParent,
             AmmoViewModel ammoViewModel,
             AmmoView ammoView, 
             ScoreViewModel scoreViewModel, 
@@ -58,13 +59,13 @@ namespace _Project.Scripts.Infrastructure
             SpaceshipModel spaceshipModel,
             SpaceshipViewModel spaceshipViewModel,
             SpaceshipView spaceship, 
-            CoroutineManager.CoroutineManager coroutineManager,
+            CoroutineManager coroutineManager,
             DefaultGameOverService defaultGameOverService,
             IInputable inputManager,
             EnvironmentUnitSpawnService environmentUnitSpawnService,
             ProjectileSpawnService projectileSpawnService)
         {
-            _spaceshipStatsParent = spaceshipStatsParent;
+            _spaceshipStatsParent = statsParent;
             _ammoViewModel = ammoViewModel;
             _ammoView = ammoView;
             _scoreViewModel = scoreViewModel;
