@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using _Project.Scripts.CustomPool;
 using _Project.Scripts.Environment.EnvironmentUnitTypes;
@@ -24,9 +25,9 @@ namespace _Project.Scripts.SpawnService
         private CompositeDisposable _disposable = new();
 
         private GameOverService.GameOverService _gameOverService;
-        
+
         private SpawnRandomizer _spawnRandomizer;
-        
+
         public EnvironmentUnitSpawnService(AsteroidBig asteroidBigPrefab, AsteroidSmall asteroidSmallPrefab,
             UfoChaser ufoChaserPrefab, Transform ufoTarget,
             LevelColliderBorder levelColliderBorder,
@@ -34,13 +35,15 @@ namespace _Project.Scripts.SpawnService
             SpawnRandomizer spawnRandomizer)
         {
             _spawnRandomizer = spawnRandomizer;
-            
+
             _gameOverService = gameOverService;
-            
+
             _ufoTarget = ufoTarget;
 
-            _bigAsteroidsPool = new CustomPool<AsteroidBig>(asteroidBigPrefab, 3, _spawnRandomizer.GetRandomSpawnTransform());
-            _smallAsteroidsPool = new CustomPool<AsteroidSmall>(asteroidSmallPrefab, 3, _spawnRandomizer.GetRandomSpawnTransform());
+            _bigAsteroidsPool =
+                new CustomPool<AsteroidBig>(asteroidBigPrefab, 3, _spawnRandomizer.GetRandomSpawnTransform());
+            _smallAsteroidsPool =
+                new CustomPool<AsteroidSmall>(asteroidSmallPrefab, 3, _spawnRandomizer.GetRandomSpawnTransform());
 
             levelColliderBorder.OnBigAsteroidExit
                 .Subscribe(DeleteBigAsteroid)
@@ -65,7 +68,7 @@ namespace _Project.Scripts.SpawnService
         private void CreateBigAsteroid()
         {
             var asteroid = _bigAsteroidsPool.Get();
-            
+
             asteroid.ResetSubscription();
 
             var gameOverSubscription = asteroid.OnSpaceshipTouched
@@ -80,7 +83,7 @@ namespace _Project.Scripts.SpawnService
 
             var spawnPoint = _spawnRandomizer.GetRandomSpawnTransform();
 
-            asteroid.transform.SetParent(spawnPoint.transform);
+            //asteroid.transform.SetParent(spawnPoint.transform);
             asteroid.transform.position = spawnPoint.position;
 
             float yDirection = (spawnPoint.position.y > 0) ? -1 : 1;
@@ -131,7 +134,7 @@ namespace _Project.Scripts.SpawnService
 
                 asteroidSmall.MoveSmallAsteroid(startPosition);
             }
-
+            
             DeleteBigAsteroid(shootedAsteroid);
         }
 
@@ -153,7 +156,7 @@ namespace _Project.Scripts.SpawnService
         private void CreateUfoChaser()
         {
             var ufoChaser = _ufoChasersPool.Get();
-            
+
             ufoChaser.ResetSubscription();
 
             ufoChaser.MoveTowardsTarget();
@@ -173,7 +176,7 @@ namespace _Project.Scripts.SpawnService
 
             var spawnPoint = _spawnRandomizer.GetRandomSpawnTransform();
 
-            ufoChaser.transform.SetParent(spawnPoint.transform);
+            //ufoChaser.transform.SetParent(spawnPoint.transform);
             ufoChaser.transform.position = spawnPoint.position;
         }
 
