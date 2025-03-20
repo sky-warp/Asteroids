@@ -7,8 +7,8 @@ namespace _Project.Scripts.InputService
     public class InputManager : IInputable
     {
         public ReactiveProperty<bool> IsAvailable { get; }
-        public event Action OnLeftClick;
-        public event Action OnRightClick;
+        public event Action OnBulletRelease;
+        public event Action OnLaserRelease;
         
         private readonly CompositeDisposable _disposable = new();
         
@@ -24,13 +24,13 @@ namespace _Project.Scripts.InputService
             Observable
                 .EveryUpdate()
                 .Where(_ => Input.GetMouseButtonDown(0))
-                .Subscribe(_ => OnLeftClick?.Invoke())
+                .Subscribe(_ => OnBulletRelease?.Invoke())
                 .AddTo(_disposable);
             
             Observable
                 .EveryUpdate()
                 .Where(_ => Input.GetMouseButtonDown(1))
-                .Subscribe(_ => OnRightClick?.Invoke())
+                .Subscribe(_ => OnLaserRelease?.Invoke())
                 .AddTo(_disposable);
         }
 

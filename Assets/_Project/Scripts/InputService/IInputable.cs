@@ -7,8 +7,8 @@ namespace _Project.Scripts.InputService
     {
         ReactiveProperty<bool> IsAvailable { get; }
 
-        event Action OnLeftClick;
-        event Action OnRightClick;
+        event Action OnBulletRelease;
+        event Action OnLaserRelease;
 
         float GetAxisVertical();
         float GetAxisHorizontal();

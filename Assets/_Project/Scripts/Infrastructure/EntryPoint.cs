@@ -1,5 +1,4 @@
 using System;
-using _Project.Scripts.Configs.GameConfigs;
 using _Project.Scripts.CoroutineManagers;
 using _Project.Scripts.GameOverServices;
 using _Project.Scripts.InputService;
@@ -9,11 +8,9 @@ using _Project.Scripts.Projectiles.Ammo.View;
 using _Project.Scripts.Projectiles.Ammo.ViewModel;
 using _Project.Scripts.Score.View;
 using _Project.Scripts.Score.ViewModel;
-using _Project.Scripts.Spaceship.Model;
 using _Project.Scripts.Spaceship.View;
 using _Project.Scripts.Spaceship.ViewModel;
 using _Project.Scripts.SpawnService;
-using UnityEngine;
 using R3;
 using Zenject;
 
@@ -48,7 +45,6 @@ namespace _Project.Scripts.Infrastructure
 
         [Inject]
         private void Construct(
-            GameConfig gameConfig, 
             SpaceShipStats statsParent,
             AmmoViewModel ammoViewModel,
             AmmoView ammoView, 
@@ -56,7 +52,6 @@ namespace _Project.Scripts.Infrastructure
             ScoreView scoreView, 
             LevelColliderBorder levelColliderBorder,
             PlayerMovement playerMovement,
-            SpaceshipModel spaceshipModel,
             SpaceshipViewModel spaceshipViewModel,
             SpaceshipView spaceship, 
             CoroutineManager coroutineManager,

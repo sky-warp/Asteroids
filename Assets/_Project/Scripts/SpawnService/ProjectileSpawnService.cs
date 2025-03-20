@@ -29,8 +29,8 @@ namespace _Project.Scripts.SpawnService
                 .Subscribe(_ => GameOver())
                 .AddTo(_disposable);
             
-            _inputManager.OnLeftClick += CreateBullet;
-            _inputManager.OnRightClick += CreateLaser;
+            _inputManager.OnBulletRelease += CreateBullet;
+            _inputManager.OnLaserRelease += CreateLaser;
 
             levelBorder.OnBulletExit
                 .Subscribe(DeleteSpawnedBullet)
@@ -53,7 +53,7 @@ namespace _Project.Scripts.SpawnService
         {
             var bullet = _bulletsPool.Get();
             
-            bullet.OnAsteroidHit
+            bullet.OnUnitHit
                 .Subscribe(projectile => DeleteSpawnedBullet((Bullet)projectile))
                 .AddTo(_disposable);
 
@@ -83,8 +83,8 @@ namespace _Project.Scripts.SpawnService
 
         public void Dispose()
         {
-            _inputManager.OnLeftClick -= CreateBullet;
-            _inputManager.OnRightClick -= CreateLaser;
+            _inputManager.OnBulletRelease -= CreateBullet;
+            _inputManager.OnLaserRelease -= CreateLaser;
             
             _disposable.Dispose();
         }

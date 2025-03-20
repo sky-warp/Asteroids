@@ -10,7 +10,7 @@ namespace _Project.Scripts.Projectiles.ProjectileTypes
     {
         [field: SerializeField] public ProjectileConfig Config { get; private set; }
 
-        public readonly Subject<Projectile> OnAsteroidHit = new();
+        public readonly Subject<Projectile> OnUnitHit = new();
         
         private Rigidbody2D _rigidbody2D;
         private Transform _sourceObjectPosition;
@@ -39,7 +39,7 @@ namespace _Project.Scripts.Projectiles.ProjectileTypes
                 || other.TryGetComponent(out AsteroidSmall small) 
                 || other.TryGetComponent(out UfoChaser ufo))
             {
-                OnAsteroidHit?.OnNext(gameObject.GetComponent<Projectile>());
+                OnUnitHit?.OnNext(gameObject.GetComponent<Projectile>());
             }
         }
 

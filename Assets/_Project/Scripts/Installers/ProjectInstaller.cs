@@ -1,4 +1,5 @@
 using _Project.Scripts.Configs.GameConfigs;
+using _Project.Scripts.Configs.SpawnerConfigs;
 using _Project.Scripts.CoroutineManagers;
 using _Project.Scripts.Environment.Units;
 using _Project.Scripts.Projectiles.ProjectileTypes;
@@ -11,6 +12,7 @@ namespace _Project.Scripts.Installers
     public class ProjectInstaller : ScriptableObjectInstaller
     {
         [SerializeField] private GameConfig _gameConfig;
+        [SerializeField] private SpawnerConfig _spawnerConfig;
 
         public override void InstallBindings()
         {
@@ -19,6 +21,11 @@ namespace _Project.Scripts.Installers
                 .FromInstance(_gameConfig)
                 .AsSingle();
 
+            Container
+                .Bind<SpawnerConfig>()
+                .FromInstance(_spawnerConfig)
+                .AsSingle();
+            
             Container
                 .Bind<CoroutineManager>()
                 .FromNewComponentOnNewGameObject()

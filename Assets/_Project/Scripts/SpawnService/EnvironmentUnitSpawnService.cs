@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using _Project.Scripts.CustomPool;
 using _Project.Scripts.Environment.Units;
@@ -84,7 +83,6 @@ namespace _Project.Scripts.SpawnService
 
             var spawnPoint = _spawnRandomizer.GetRandomSpawnTransform();
 
-            //asteroid.transform.SetParent(spawnPoint.transform);
             asteroid.transform.position = spawnPoint.position;
 
             float yDirection = (spawnPoint.position.y > 0) ? -1 : 1;
@@ -177,7 +175,6 @@ namespace _Project.Scripts.SpawnService
 
             var spawnPoint = _spawnRandomizer.GetRandomSpawnTransform();
 
-            //ufoChaser.transform.SetParent(spawnPoint.transform);
             ufoChaser.transform.position = spawnPoint.position;
         }
 

@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ba4e7fa547f4e92a5094b6406a430c0, type: 3}
-  m_Name: ProjectInstaller
+  m_Script: {fileID: 11500000, guid: bc423e3214f34f5e80e6c9601fa0fa73, type: 3}
+  m_Name: SpawnerConfig
   m_EditorClassIdentifier: 
-  _gameConfig: {fileID: 11400000, guid: 55859338f2ecc944e813af1f7ec95de3, type: 2}
-  _spawnerConfig: {fileID: 11400000, guid: 295c49de9f2a49d4188a9162cdea120a, type: 2}
+  <MinSpawnSpace>k__BackingField: 1
+  <MaxSpawnSpace>k__BackingField: 2

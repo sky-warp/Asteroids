@@ -1,49 +1,58 @@
+using System;
+using _Project.Scripts.Configs.SpawnerConfigs;
 using UnityEngine;
-using Zenject;
 using Random = UnityEngine.Random;
 
 namespace _Project.Scripts.Infrastructure
 {
     public class SpawnRandomizer
     {
-        [Inject] private Camera _camera;
+        private Camera _camera;
 
-        private float _minSpawnSpace = 1.0f;
-        private float _maxSpawnSpace = 2.0f;
-
+        private float _minSpawnSpace;
+        private float _maxSpawnSpace;
+        
+        public SpawnRandomizer(Camera camera, SpawnerConfig config)
+        {
+            _camera = camera;
+            
+            _minSpawnSpace = config.MinSpawnSpace;
+            _maxSpawnSpace = config.MaxSpawnSpace;
+        }
+        
         public Transform GetRandomSpawnTransform()
         {
             Vector2 bottomLeft = _camera.ViewportToWorldPoint(new Vector3(0, 0, _camera.nearClipPlane));
             Vector2 topRight = _camera.ViewportToWorldPoint(new Vector3(1, 1, _camera.nearClipPlane));
-
-            int side = Random.Range(0, 4);
-
+            
             Vector3 spawnPosition = Vector3.zero;
+            
+            SidesToSpawn randomSideToSpawn = (SidesToSpawn)Random.Range(0, Enum.GetValues(typeof(SidesToSpawn)).Length);
 
-            switch (side)
+            switch (randomSideToSpawn)
             {
-                case 0: 
+                case SidesToSpawn.Left: 
                     spawnPosition = new Vector3(
                         bottomLeft.x - Random.Range(_minSpawnSpace, _maxSpawnSpace),
                         Random.Range(bottomLeft.y, topRight.y),
                         0
                     );
                     break;
-                case 1: 
+                case SidesToSpawn.Right: 
                     spawnPosition = new Vector3(
                         topRight.x + Random.Range(_minSpawnSpace, _maxSpawnSpace),
                         Random.Range(bottomLeft.y, topRight.y),
                         0
                     );
                     break;
-                case 2: 
+                case SidesToSpawn.Top: 
                     spawnPosition = new Vector3(
                         Random.Range(bottomLeft.x, topRight.x),
                         topRight.y + Random.Range(_minSpawnSpace, _maxSpawnSpace),
                         0
                     );
                     break;
-                case 3: 
+                case SidesToSpawn.Bottom: 
                     spawnPosition = new Vector3(
                         Random.Range(bottomLeft.x, topRight.x),
                         bottomLeft.y - Random.Range(_minSpawnSpace, _maxSpawnSpace),
