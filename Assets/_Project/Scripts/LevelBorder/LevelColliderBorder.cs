@@ -1,6 +1,7 @@
 using _Project.Scripts.Environment.Units;
 using _Project.Scripts.Projectiles.ProjectileTypes;
 using _Project.Scripts.Spaceship.View;
+using Cinemachine;
 using UnityEngine;
 using R3;
 using Zenject;
@@ -17,8 +18,14 @@ namespace _Project.Scripts.LevelBorder
 
         private SpaceshipView _spaceship;
         private BoxCollider2D _boxCollider;
-        [Inject] private Camera _camera;
+        private Camera _camera;
 
+        [Inject] 
+        private void Construct(Camera camera)
+        {
+            _camera = camera;
+        }
+        
         private void Awake()
         {
             _boxCollider = GetComponent<BoxCollider2D>();

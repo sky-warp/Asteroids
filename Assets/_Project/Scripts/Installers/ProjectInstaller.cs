@@ -1,8 +1,6 @@
 using _Project.Scripts.Configs.GameConfigs;
 using _Project.Scripts.Configs.SpawnerConfigs;
 using _Project.Scripts.CoroutineManagers;
-using _Project.Scripts.Environment.Units;
-using _Project.Scripts.Projectiles.ProjectileTypes;
 using UnityEngine;
 using Zenject;
 
@@ -29,31 +27,6 @@ namespace _Project.Scripts.Installers
             Container
                 .Bind<CoroutineManager>()
                 .FromNewComponentOnNewGameObject()
-                .AsSingle();
-
-            Container
-                .Bind<AsteroidBig>()
-                .FromInstance(_gameConfig.AsteroidBigPrefab)
-                .AsSingle();
-
-            Container
-                .Bind<AsteroidSmall>()
-                .FromInstance(_gameConfig.AsteroidSmallPrefab)
-                .AsSingle();
-
-            Container
-                .Bind<UfoChaser>()
-                .FromInstance(_gameConfig.UfoChaserPrefab)
-                .AsSingle();
-            
-            Container
-                .Bind<Bullet>()
-                .FromInstance(_gameConfig.BulletPrefab)
-                .AsSingle();
-
-            Container
-                .Bind<Laser>()
-                .FromInstance(_gameConfig.LaserPrefab)
                 .AsSingle();
         }
     }

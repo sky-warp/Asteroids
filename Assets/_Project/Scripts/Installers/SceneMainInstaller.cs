@@ -1,4 +1,6 @@
 using _Project.Scripts.Configs.GameConfigs;
+using _Project.Scripts.Environment.Units;
+using _Project.Scripts.Factories;
 using _Project.Scripts.GameOverServices;
 using _Project.Scripts.Infrastructure;
 using _Project.Scripts.InputService;
@@ -7,6 +9,7 @@ using _Project.Scripts.Player;
 using _Project.Scripts.Projectiles.Ammo.Model;
 using _Project.Scripts.Projectiles.Ammo.View;
 using _Project.Scripts.Projectiles.Ammo.ViewModel;
+using _Project.Scripts.Projectiles.ProjectileTypes;
 using _Project.Scripts.Score.Model;
 using _Project.Scripts.Score.View;
 using _Project.Scripts.Score.ViewModel;
@@ -42,11 +45,6 @@ namespace _Project.Scripts.Installers
                 .AsSingle();
 
             Container
-                .Bind<GameConfig>()
-                .FromInstance(_gameConfig)
-                .AsSingle();
-
-            Container
                 .Bind<SpawnRandomizer>()
                 .AsSingle();
 
@@ -71,16 +69,25 @@ namespace _Project.Scripts.Installers
                 .Bind<PlayerMovement>()
                 .FromInstance(spaceship.GetComponent<PlayerMovement>())
                 .AsSingle();
-
+            
             Container
                 .Bind<EnvironmentUnitSpawnService>()
                 .AsSingle()
-                .WithArguments(spaceship.transform);
+                .WithArguments(
+                    spaceship.transform, 
+                    new MonoFactory<AsteroidBig>(_gameConfig.AsteroidBigPrefab),
+                    new MonoFactory<AsteroidSmall>(_gameConfig.AsteroidSmallPrefab),
+                    new MonoFactory<UfoChaser>(_gameConfig.UfoChaserPrefab)
+                    );
 
             Container
                 .Bind<ProjectileSpawnService>()
                 .AsSingle()
-                .WithArguments(spaceship.transform);
+                .WithArguments(
+                    spaceship.transform,
+                    new MonoFactory<Bullet>(_gameConfig.BulletPrefab),
+                    new MonoFactory<Laser>(_gameConfig.LaserPrefab)
+                    );
 
             Container
                 .Bind<SpaceShipStats>()

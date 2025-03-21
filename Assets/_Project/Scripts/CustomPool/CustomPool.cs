@@ -1,25 +1,26 @@
 using System.Collections.Generic;
 using System.Linq;
+using _Project.Scripts.Factories;
 using UnityEngine;
 
 namespace _Project.Scripts.CustomPool
 {
     public class CustomPool<T> where T : MonoBehaviour
     {
-        private T _prefab;
         private Transform _parent;
+        private MonoFactory<T> _factory;
         private List<T> Pool { get; }
 
-        public CustomPool(T prefab, int prewarnObjects, Transform parent)
+        public CustomPool(int prewarьObjects, Transform parent, MonoFactory<T> factory)
         {
-            _prefab = prefab;
+            _factory = factory;
             _parent = parent;
             Pool = new List<T>();
 
 
-            for (int i = 0; i < prewarnObjects; i++)
+            for (int i = 0; i < prewarьObjects; i++)
             {
-                var obj = GameObject.Instantiate(_prefab, _parent);
+                var obj = _factory.Create(_parent);
                 obj.gameObject.SetActive(false);
                 Pool.Add(obj);
             }
@@ -56,7 +57,7 @@ namespace _Project.Scripts.CustomPool
         
         private T Create()
         {
-            var obj = GameObject.Instantiate(_prefab, _parent);
+            var obj = _factory.Create(_parent);
             Pool.Add(obj);
             return obj;
         }

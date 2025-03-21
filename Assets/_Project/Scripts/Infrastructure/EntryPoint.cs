@@ -43,8 +43,7 @@ namespace _Project.Scripts.Infrastructure
         
         private CompositeDisposable _disposable = new();
 
-        [Inject]
-        private void Construct(
+        private EntryPoint(
             SpaceShipStats statsParent,
             AmmoViewModel ammoViewModel,
             AmmoView ammoView, 

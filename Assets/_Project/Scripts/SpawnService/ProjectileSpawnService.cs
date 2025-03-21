@@ -1,4 +1,5 @@
 using _Project.Scripts.CustomPool;
+using _Project.Scripts.Factories;
 using _Project.Scripts.GameOverServices;
 using _Project.Scripts.InputService;
 using _Project.Scripts.LevelBorder;
@@ -18,17 +19,20 @@ namespace _Project.Scripts.SpawnService
         private readonly CompositeDisposable _disposable = new();
 
         private IInputable _inputManager;
-        
-        public ProjectileSpawnService(IInputable inputManager, Bullet bulletPrefab, Laser laserPrefab,
-            LevelColliderBorder levelBorder, Transform shipTransform,
-            DefaultGameOverService defaultGameOverService)
+
+        public ProjectileSpawnService(IInputable inputManager,
+            LevelColliderBorder levelBorder, 
+            Transform shipTransform,
+            DefaultGameOverService defaultGameOverService, 
+            MonoFactory<Bullet> bulletFactory,
+            MonoFactory<Laser> laserFactory)
         {
             _inputManager = inputManager;
-            
+
             defaultGameOverService.OnGameOver
                 .Subscribe(_ => GameOver())
                 .AddTo(_disposable);
-            
+
             _inputManager.OnBulletRelease += CreateBullet;
             _inputManager.OnLaserRelease += CreateLaser;
 
@@ -39,8 +43,8 @@ namespace _Project.Scripts.SpawnService
                 .Subscribe(DeleteSpawnedLaser)
                 .AddTo(_disposable);
 
-            _bulletsPool = new CustomPool<Bullet>(bulletPrefab, 3, shipTransform);
-            _lasersPool = new CustomPool<Laser>(laserPrefab, 3, shipTransform);
+            _bulletsPool = new CustomPool<Bullet>(3, shipTransform, bulletFactory);
+            _lasersPool = new CustomPool<Laser>(3, shipTransform, laserFactory);
         }
 
         private void GameOver()
@@ -48,11 +52,11 @@ namespace _Project.Scripts.SpawnService
             _bulletsPool.ReleaseAll();
             _lasersPool.ReleaseAll();
         }
-        
+
         private void CreateBullet()
         {
             var bullet = _bulletsPool.Get();
-            
+
             bullet.OnUnitHit
                 .Subscribe(projectile => DeleteSpawnedBullet((Bullet)projectile))
                 .AddTo(_disposable);
@@ -85,7 +89,7 @@ namespace _Project.Scripts.SpawnService
         {
             _inputManager.OnBulletRelease -= CreateBullet;
             _inputManager.OnLaserRelease -= CreateLaser;
-            
+
             _disposable.Dispose();
         }
     }
