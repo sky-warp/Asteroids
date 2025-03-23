@@ -43,6 +43,8 @@ namespace _Project.Scripts.Infrastructure
         private PlayerMovement _playerMovement;
         
         private CompositeDisposable _disposable = new();
+
+        private ScoreSaveSystem _scoreSaveSystem = new();
         
         private EntryPoint(
             SpaceShipStats statsParent,
@@ -58,7 +60,8 @@ namespace _Project.Scripts.Infrastructure
             DefaultGameOverService defaultGameOverService,
             IInputable inputManager,
             EnvironmentUnitSpawnService environmentUnitSpawnService,
-            ProjectileSpawnService projectileSpawnService
+            ProjectileSpawnService projectileSpawnService,
+            ScoreSaveSystem scoreSaveSystem
             )
         {
             _spaceshipStatsParent = statsParent;
@@ -75,6 +78,7 @@ namespace _Project.Scripts.Infrastructure
             _inputManager = inputManager;
             _environmentUnitSpawnService = environmentUnitSpawnService;
             _projectileSpawnService = projectileSpawnService;
+            _scoreSaveSystem = scoreSaveSystem;
         }
 
         public void Initialize()
@@ -100,6 +104,8 @@ namespace _Project.Scripts.Infrastructure
             _ammoView.Init(_ammoViewModel);
             
             _scoreView.Init(_scoreViewModel);
+            
+            _scoreSaveSystem.SubscribeOnHighScore(_scoreViewModel.CurrentScoreView);
         }
 
         public void Dispose()
