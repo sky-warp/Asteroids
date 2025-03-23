@@ -100,10 +100,6 @@ namespace _Project.Scripts.Infrastructure
 
             _coroutineManager.StartCoroutine(_environmentUnitSpawnService.SpawnBigAsteroids());
             _coroutineManager.StartCoroutine(_environmentUnitSpawnService.SpawnUfoChasers());
-
-            _ammoView.Init(_ammoViewModel);
-            
-            _scoreView.Init(_scoreViewModel);
             
             _scoreSaveSystem.SubscribeOnHighScore(_scoreViewModel.CurrentScoreView);
         }

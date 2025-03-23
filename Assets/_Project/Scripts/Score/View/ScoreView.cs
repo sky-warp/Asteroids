@@ -3,6 +3,7 @@ using R3;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace _Project.Scripts.Score.View
 {
@@ -16,6 +17,7 @@ namespace _Project.Scripts.Score.View
         
         private ScoreViewModel _scoreViewModel;
 
+        [Inject]
         public void Init(ScoreViewModel scoreViewModel)
         { 
             _scoreViewModel = scoreViewModel;

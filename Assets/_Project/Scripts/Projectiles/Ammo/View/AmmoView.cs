@@ -5,6 +5,7 @@ using _Project.Scripts.Projectiles.Ammo.ViewModel;
 using R3;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace _Project.Scripts.Projectiles.Ammo.View
 {
@@ -18,6 +19,7 @@ namespace _Project.Scripts.Projectiles.Ammo.View
         private AmmoViewModel _ammoViewModel;
         private List<Image> _cooldownImages;
 
+        [Inject]
         public void Init(AmmoViewModel ammoViewModel)
         {
             _cooldownImages = new List<Image>();

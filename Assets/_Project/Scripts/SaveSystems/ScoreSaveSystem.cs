@@ -6,7 +6,7 @@ namespace _Project.Scripts.SaveSystems
 {
     public class ScoreSaveSystem : IDisposable
     {
-        private static int _highScore;
+        private int _highScore;
         public int HighScore => _highScore;
 
         private CompositeDisposable _disposables;
@@ -14,7 +14,7 @@ namespace _Project.Scripts.SaveSystems
         public void SubscribeOnHighScore(ReactiveProperty<int> score)
         {
             score
-                .Where(score => score > _highScore)
+                .Where(score => score > PlayerPrefs.GetInt("HighScore"))
                 .Do(score => _highScore = score)
                 .Subscribe(_ => UpdateHighScore());
         }
@@ -24,7 +24,6 @@ namespace _Project.Scripts.SaveSystems
             PlayerPrefs.SetInt("HighScore", _highScore);
             Debug.Log(PlayerPrefs.GetInt("HighScore"));
         }
-
         public void Dispose()
         {
             _disposables?.Dispose();
