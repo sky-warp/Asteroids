@@ -20,12 +20,13 @@ namespace _Project.Scripts.LevelBorder
         private BoxCollider2D _boxCollider;
         private Camera _camera;
 
-        [Inject] 
-        private void Construct(Camera camera)
+        [Inject]
+        private void Construct(Camera camera, SpaceshipView spaceship)
         {
             _camera = camera;
+            _spaceship = spaceship;
         }
-        
+
         private void Awake()
         {
             _boxCollider = GetComponent<BoxCollider2D>();
@@ -38,11 +39,6 @@ namespace _Project.Scripts.LevelBorder
             {
                 AdjustSpaceship();
             }
-        }
-
-        public void Init(SpaceshipView spaceship)
-        {
-            _spaceship = spaceship;
         }
 
         private void AdjustCollider()

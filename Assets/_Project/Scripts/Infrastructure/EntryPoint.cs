@@ -85,9 +85,7 @@ namespace _Project.Scripts.Infrastructure
         {
             _spaceship.Init(_spaceshipViewModel, _spaceshipStatsParent);
             _playerMovement.Init(_spaceshipViewModel.SpaceshipSpeedView.Value, _inputManager);
-
-            _levelColliderBorder.Init(_spaceship);
-
+            
             _defaultGameOverServiceService.OnGameOver
                 .Subscribe(_ => _spaceship.GetComponent<PlayerMovement>().GameOver())
                 .AddTo(_disposable);
