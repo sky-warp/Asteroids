@@ -1,9 +1,22 @@
+using _Project.Scripts.SaveSystems;
 using UnityEngine;
+using Zenject;
 
 namespace _Project.Scripts.Bootstrap
 {
-    public class Bootstrapper : MonoBehaviour
+    public class Bootstrapper : IInitializable
     {
-        
+        private ScoreSaveSystem _scoreSaveSystem;
+
+        public Bootstrapper(ScoreSaveSystem scoreSaveSystem)
+        {
+            _scoreSaveSystem = scoreSaveSystem;
+            Debug.Log("Score save system loaded");
+        }
+
+        public void Initialize()
+        {
+            UnityEngine.SceneManagement.SceneManager.LoadScene("Main");
+        }
     }
 }

@@ -13,7 +13,7 @@ namespace _Project.Scripts.SaveSystems
 
         private CompositeDisposable _disposables;
         
-        public ScoreSaveSystem(ScoreModel scoreModel)
+        /*public ScoreSaveSystem(ScoreModel scoreModel)
         {
             _scoreModel = scoreModel;
 
@@ -21,7 +21,7 @@ namespace _Project.Scripts.SaveSystems
                 .Where(score => score > _highScore)
                 .Do(score => _highScore = score)
                 .Subscribe(_ => SetHighScore());
-        }
+        }*/
 
         private void SetHighScore()
         {
@@ -31,7 +31,7 @@ namespace _Project.Scripts.SaveSystems
 
         public void Dispose()
         {
-           _disposables.Dispose(); 
+           _disposables?.Dispose(); 
         }
     }
 }

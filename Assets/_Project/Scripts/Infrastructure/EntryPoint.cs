@@ -6,6 +6,7 @@ using _Project.Scripts.LevelBorder;
 using _Project.Scripts.Player;
 using _Project.Scripts.Projectiles.Ammo.View;
 using _Project.Scripts.Projectiles.Ammo.ViewModel;
+using _Project.Scripts.SaveSystems;
 using _Project.Scripts.Score.View;
 using _Project.Scripts.Score.ViewModel;
 using _Project.Scripts.Spaceship.View;
@@ -42,7 +43,7 @@ namespace _Project.Scripts.Infrastructure
         private PlayerMovement _playerMovement;
         
         private CompositeDisposable _disposable = new();
-
+        
         private EntryPoint(
             SpaceShipStats statsParent,
             AmmoViewModel ammoViewModel,
@@ -57,7 +58,8 @@ namespace _Project.Scripts.Infrastructure
             DefaultGameOverService defaultGameOverService,
             IInputable inputManager,
             EnvironmentUnitSpawnService environmentUnitSpawnService,
-            ProjectileSpawnService projectileSpawnService)
+            ProjectileSpawnService projectileSpawnService
+            )
         {
             _spaceshipStatsParent = statsParent;
             _ammoViewModel = ammoViewModel;
