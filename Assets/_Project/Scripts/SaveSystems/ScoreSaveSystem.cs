@@ -1,39 +1,38 @@
 using System;
 using R3;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace _Project.Scripts.SaveSystems
 {
     public class ScoreSaveSystem : IDisposable
     {
-        public int _highScore;
+        public SaveData SaveData { get; }
 
-        private readonly CompositeDisposable _disposable = new();
-
-        public void SubscribeOnHighScore(ReactiveProperty<int> score)
+        public ScoreSaveSystem(SaveData saveData)
         {
-            score
-                .Where(score => score > PlayerPrefs.GetInt("HighScore"))
-                .Do(score => _highScore = score)
-                .Subscribe(_ => UpdateHighScore())
-                .AddTo(_disposable);
+            SaveData = saveData;
+
+            SaveData.OnHighScoreChanged += UpdateHighScore;
         }
 
         public void ResetHighScore()
         {
-            PlayerPrefs.SetInt("HighScore", 0);
+            SaveData.CleaHighScoreData();
         }
 
         public void Dispose()
         {
-            _disposable?.Dispose();
+            SaveData.OnHighScoreChanged -= UpdateHighScore;
         }
 
         private void UpdateHighScore()
         {
-            PlayerPrefs.SetInt("HighScore", _highScore);
+            var json = JsonUtility.ToJson(SaveData.Serialize());
 
-            Debug.Log($"High Score: {_highScore}");
+            PlayerPrefs.SetString("HighScore", json);
+
+            Debug.Log($"High Score: {PlayerPrefs.GetString("HighScore")}");
         }
     }
 }

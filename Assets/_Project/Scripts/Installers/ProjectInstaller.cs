@@ -24,14 +24,18 @@ namespace _Project.Scripts.Installers
                 .Bind<SpawnerConfig>()
                 .FromInstance(_spawnerConfig)
                 .AsSingle();
-            
+
             Container
                 .Bind<CoroutineManager>()
                 .FromNewComponentOnNewGameObject()
                 .AsSingle();
-            
+
             Container
                 .BindInterfacesAndSelfTo<ScoreSaveSystem>()
+                .AsSingle();
+
+            Container
+                .Bind<SaveData>()
                 .AsSingle();
         }
     }

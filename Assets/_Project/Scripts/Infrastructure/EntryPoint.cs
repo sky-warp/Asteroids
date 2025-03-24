@@ -37,7 +37,7 @@ namespace _Project.Scripts.Infrastructure
         
         private CompositeDisposable _disposable = new();
 
-        private ScoreSaveSystem _scoreSaveSystem = new();
+        private ScoreSaveSystem _scoreSaveSystem;
         
         private EntryPoint(
             SpaceShipStats statsParent,
@@ -83,8 +83,6 @@ namespace _Project.Scripts.Infrastructure
 
             _coroutineManager.StartCoroutine(_environmentUnitSpawnService.SpawnBigAsteroids());
             _coroutineManager.StartCoroutine(_environmentUnitSpawnService.SpawnUfoChasers());
-            
-            _scoreSaveSystem.SubscribeOnHighScore(_scoreViewModel.CurrentScoreView);
         }
 
         public void Dispose()
