@@ -14,12 +14,13 @@ namespace _Project.Scripts.Score.View
 
         [SerializeField] private GameObject _gameOverWindow;
         [SerializeField] private Button _restartButton;
-        
+        [SerializeField] private Button _resetHighScoreButton;
+
         private ScoreViewModel _scoreViewModel;
 
         [Inject]
         public void Init(ScoreViewModel scoreViewModel)
-        { 
+        {
             _scoreViewModel = scoreViewModel;
 
             _scoreViewModel.CurrentScoreView
@@ -29,12 +30,15 @@ namespace _Project.Scripts.Score.View
                 .Where(isGameOver => isGameOver)
                 .Subscribe(_ => ShowGameOverWindow())
                 .AddTo(this);
-            
-            _restartButton.
-                OnClickAsObservable()
+
+            _resetHighScoreButton.OnClickAsObservable()
+                .Subscribe(_ => _scoreViewModel.ResetHighScoreView())
+                .AddTo(this);
+
+            _restartButton.OnClickAsObservable()
                 .Subscribe(_ => _scoreViewModel.OnRestartGame())
                 .AddTo(this);
-            
+
             _scoreText.gameObject.SetActive(true);
         }
 
@@ -49,6 +53,11 @@ namespace _Project.Scripts.Score.View
             _scoreText.gameObject.SetActive(false);
             _gameOverWindow.SetActive(true);
             _finalScoreText.text = $"FINAL SCORE: {_scoreViewModel.CurrentScoreView.Value.ToString()}";
+        }
+
+        private void OnDestroy()
+        {
+            _resetHighScoreButton.onClick.RemoveAllListeners();
         }
     }
 }

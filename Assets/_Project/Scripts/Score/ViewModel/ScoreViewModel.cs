@@ -1,4 +1,5 @@
 using _Project.Scripts.GameOverServices;
+using _Project.Scripts.SaveSystems;
 using _Project.Scripts.Score.Model;
 using _Project.Scripts.SpawnService;
 using R3;
@@ -11,16 +12,19 @@ namespace _Project.Scripts.Score.ViewModel
         public readonly ReactiveProperty<bool> IsGameOver = new();
 
         private ScoreModel _scoreModel;
-        
+
         private CompositeDisposable _disposable = new();
-        
+
         private SceneManager.SceneManager _sceneManager;
-        
+
+        private ScoreSaveSystem _scoreSaveSystem;
+
         public ScoreViewModel(ScoreModel scoreModel, EnvironmentUnitSpawnService environmentUnitSpawnService,
-            DefaultGameOverService defaultGameOverService)
+            DefaultGameOverService defaultGameOverService, ScoreSaveSystem scoreSaveSystem)
         {
             _scoreModel = scoreModel;
-            
+            _scoreSaveSystem = scoreSaveSystem;
+
             _scoreModel.CurrentScore
                 .Subscribe(currentScore => CurrentScoreView.Value = currentScore)
                 .AddTo(_disposable);
@@ -38,9 +42,9 @@ namespace _Project.Scripts.Score.ViewModel
             defaultGameOverService.OnGameOver
                 .Subscribe(_ => IsGameOver.Value = true)
                 .AddTo(_disposable);
-            
-            _sceneManager = new();     
-            
+
+            _sceneManager = new();
+
             ResetScore();
         }
 
@@ -49,19 +53,24 @@ namespace _Project.Scripts.Score.ViewModel
             CurrentScoreView.Value += score;
         }
 
-        private void ResetScore()
+        public void ResetHighScoreView()
         {
-            _scoreModel.CurrentScore.Value = 0;
+            _scoreSaveSystem.ResetHighScore();
         }
 
         public void Dispose()
         {
             _disposable?.Dispose();
         }
-        
+
         public void OnRestartGame()
         {
             _sceneManager.RestartGame();
+        }
+
+        private void ResetScore()
+        {
+            _scoreModel.CurrentScore.Value = 0;
         }
     }
 }

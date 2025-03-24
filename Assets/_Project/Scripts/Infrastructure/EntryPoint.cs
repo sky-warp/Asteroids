@@ -2,12 +2,9 @@ using System;
 using _Project.Scripts.CoroutineManagers;
 using _Project.Scripts.GameOverServices;
 using _Project.Scripts.InputService;
-using _Project.Scripts.LevelBorder;
 using _Project.Scripts.Player;
-using _Project.Scripts.Projectiles.Ammo.View;
 using _Project.Scripts.Projectiles.Ammo.ViewModel;
 using _Project.Scripts.SaveSystems;
-using _Project.Scripts.Score.View;
 using _Project.Scripts.Score.ViewModel;
 using _Project.Scripts.Spaceship.View;
 using _Project.Scripts.Spaceship.ViewModel;
@@ -22,11 +19,7 @@ namespace _Project.Scripts.Infrastructure
         private SpaceShipStats _spaceshipStatsParent;
 
         private SpaceshipView _spaceship;
-        private AmmoView _ammoView;
-        private ScoreView _scoreView;
         
-        private LevelColliderBorder _levelColliderBorder;
-
         private IInputable _inputManager;
 
         private SpaceshipViewModel _spaceshipViewModel;
@@ -49,36 +42,28 @@ namespace _Project.Scripts.Infrastructure
         private EntryPoint(
             SpaceShipStats statsParent,
             AmmoViewModel ammoViewModel,
-            AmmoView ammoView, 
             ScoreViewModel scoreViewModel, 
-            ScoreView scoreView, 
-            LevelColliderBorder levelColliderBorder,
-            PlayerMovement playerMovement,
             SpaceshipViewModel spaceshipViewModel,
+            PlayerMovement playerMovement,
             SpaceshipView spaceship, 
             CoroutineManager coroutineManager,
             DefaultGameOverService defaultGameOverService,
             IInputable inputManager,
             EnvironmentUnitSpawnService environmentUnitSpawnService,
-            ProjectileSpawnService projectileSpawnService,
-            ScoreSaveSystem scoreSaveSystem
+            ProjectileSpawnService projectileSpawnService
             )
         {
             _spaceshipStatsParent = statsParent;
             _ammoViewModel = ammoViewModel;
-            _ammoView = ammoView;
             _scoreViewModel = scoreViewModel;
-            _scoreView = scoreView;
-            _levelColliderBorder = levelColliderBorder;
-            _playerMovement = playerMovement;
             _spaceshipViewModel = spaceshipViewModel;
+            _playerMovement = playerMovement;
             _spaceship = spaceship;
             _coroutineManager = coroutineManager;
             _defaultGameOverServiceService = defaultGameOverService;
             _inputManager = inputManager;
             _environmentUnitSpawnService = environmentUnitSpawnService;
             _projectileSpawnService = projectileSpawnService;
-            _scoreSaveSystem = scoreSaveSystem;
         }
 
         public void Initialize()
