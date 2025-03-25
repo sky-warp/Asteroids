@@ -1,5 +1,4 @@
 using System;
-using R3;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -12,7 +11,8 @@ namespace _Project.Scripts.SaveSystems
         public ScoreSaveSystem(SaveData saveData)
         {
             SaveData = saveData;
-
+            SaveData.SaveHighScoreData(PlayerPrefs.GetInt("highScore", 0));
+                
             SaveData.OnHighScoreChanged += UpdateHighScore;
         }
 
@@ -30,9 +30,10 @@ namespace _Project.Scripts.SaveSystems
         {
             var json = JsonUtility.ToJson(SaveData.Serialize());
 
-            PlayerPrefs.SetString("HighScore", json);
+            PlayerPrefs.SetInt("highScore", SaveData.HighScore);
+            PlayerPrefs.SetString("key", json);
 
-            Debug.Log($"High Score: {PlayerPrefs.GetString("HighScore")}");
+            Debug.Log($"High Score: {PlayerPrefs.GetString("key")}");
         }
     }
 }
