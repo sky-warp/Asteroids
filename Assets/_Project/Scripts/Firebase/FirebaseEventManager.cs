@@ -1,4 +1,3 @@
-using System;
 using _Project.Scripts.Infrastructure;
 using Firebase.Analytics;
 using UnityEngine;
@@ -20,7 +19,8 @@ namespace _Project.Scripts.Firebase
 
         private void SentGameStartEvent()
         {
-            FirebaseAnalytics.LogEvent("GameStart", new Parameter("Game was started", "Game started"));
+            if (!_isReady)
+                FirebaseAnalytics.LogEvent("GameStart", new Parameter("Game was started", "Game started"));
         }
 
         public void ChangeReadyState()

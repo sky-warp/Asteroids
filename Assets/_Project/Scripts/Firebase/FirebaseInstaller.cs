@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Firebase;
+using Firebase.Analytics;
 using Firebase.Extensions;
 using UnityEngine;
 using Zenject;
@@ -21,8 +22,11 @@ namespace _Project.Scripts.Firebase
 
         private void Start()
         {
-            FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(OnFirebaseStatusRecived);
-
+            FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task => {
+                FirebaseAnalytics.SetAnalyticsCollectionEnabled(true);
+                OnFirebaseStatusRecived(task);
+            });
+            
             OnFirebaseInitialized += _firebaseEventManager.ChangeReadyState;
         }
 
