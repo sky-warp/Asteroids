@@ -2,6 +2,7 @@ using _Project.Scripts.Configs.GameConfigs;
 using _Project.Scripts.Configs.SpawnerConfigs;
 using _Project.Scripts.CoroutineManagers;
 using _Project.Scripts.Firebase;
+using _Project.Scripts.Infrastructure;
 using _Project.Scripts.SaveSystems;
 using UnityEngine;
 using Zenject;
@@ -38,6 +39,14 @@ namespace _Project.Scripts.Installers
             Container
                 .Bind<FirebaseInstaller>()
                 .FromNewComponentOnNewGameObject()
+                .AsSingle(); 
+            Container
+                .Bind<FirebaseEventManager>()
+                .FromNewComponentOnNewGameObject()
+                .AsSingle();
+            
+            Container
+                .Bind<GameEventManager>()
                 .AsSingle();
 
             Container

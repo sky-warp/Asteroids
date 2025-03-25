@@ -4,7 +4,6 @@ using _Project.Scripts.GameOverServices;
 using _Project.Scripts.InputService;
 using _Project.Scripts.Player;
 using _Project.Scripts.Projectiles.Ammo.ViewModel;
-using _Project.Scripts.SaveSystems;
 using _Project.Scripts.Score.ViewModel;
 using _Project.Scripts.Spaceship.View;
 using _Project.Scripts.Spaceship.ViewModel;
@@ -36,8 +35,8 @@ namespace _Project.Scripts.Infrastructure
         private PlayerMovement _playerMovement;
         
         private CompositeDisposable _disposable = new();
-
-        private ScoreSaveSystem _scoreSaveSystem;
+        
+        private GameEventManager _gameEventManager;
         
         private EntryPoint(
             SpaceShipStats statsParent,
@@ -50,7 +49,8 @@ namespace _Project.Scripts.Infrastructure
             DefaultGameOverService defaultGameOverService,
             IInputable inputManager,
             EnvironmentUnitSpawnService environmentUnitSpawnService,
-            ProjectileSpawnService projectileSpawnService
+            ProjectileSpawnService projectileSpawnService,
+            GameEventManager gameEventManager
             )
         {
             _spaceshipStatsParent = statsParent;
@@ -64,6 +64,7 @@ namespace _Project.Scripts.Infrastructure
             _inputManager = inputManager;
             _environmentUnitSpawnService = environmentUnitSpawnService;
             _projectileSpawnService = projectileSpawnService;
+            _gameEventManager = gameEventManager;
         }
 
         public void Initialize()
@@ -83,6 +84,8 @@ namespace _Project.Scripts.Infrastructure
 
             _coroutineManager.StartCoroutine(_environmentUnitSpawnService.SpawnBigAsteroids());
             _coroutineManager.StartCoroutine(_environmentUnitSpawnService.SpawnUfoChasers());
+            
+            _gameEventManager.OnStartGame();
         }
 
         public void Dispose()
