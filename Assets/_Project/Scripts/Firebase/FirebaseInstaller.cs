@@ -2,14 +2,13 @@ using System;
 using System.Threading.Tasks;
 using Firebase;
 using Firebase.Extensions;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace _Project.Scripts.Firebase
 {
-    public class FirebaseInstaller : IInitializable
+    public class FirebaseInstaller : MonoBehaviour
     {
-        public void Initialize()
+        private void Start()
         {
             FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(OnFirebaseStatusRecived);
         }

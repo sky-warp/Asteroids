@@ -36,7 +36,8 @@ namespace _Project.Scripts.Installers
                 .AsSingle();
             
             Container
-                .BindInterfacesAndSelfTo<FirebaseInstaller>()
+                .Bind<FirebaseInstaller>()
+                .FromNewComponentOnNewGameObject()
                 .AsSingle();
 
             Container

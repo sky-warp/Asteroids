@@ -13,9 +13,6 @@ namespace _Project.Scripts.Bootstrap
         public Bootstrapper(ScoreSaveSystem scoreSaveSystem,
             FirebaseInstaller firebaseInstaller)
         {
-            _scoreSaveSystem = scoreSaveSystem;
-            _firebaseInstaller = firebaseInstaller;
-            
             Debug.Log("Score save system loaded");
         }
 
