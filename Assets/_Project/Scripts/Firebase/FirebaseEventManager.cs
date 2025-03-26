@@ -19,8 +19,7 @@ namespace _Project.Scripts.Firebase
 
         private void SentGameStartEvent()
         {
-            if (!_isReady)
-                FirebaseAnalytics.LogEvent("GameStart", new Parameter("Game was started", "Game started"));
+            FirebaseAnalytics.LogEvent(FirebaseAnalytics.EventLogin);
         }
 
         public void ChangeReadyState()
