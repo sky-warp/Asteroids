@@ -1,4 +1,5 @@
 using System;
+using _Project.Scripts.AudioSystems;
 using R3;
 using UnityEngine;
 
@@ -11,9 +12,13 @@ namespace _Project.Scripts.InputService
         public event Action OnLaserRelease;
         
         private readonly CompositeDisposable _disposable = new();
+
+        private DefaultAudioManager _audioManager;
         
-        public InputManager()
+        public InputManager(DefaultAudioManager audioManager)
         {
+            _audioManager = audioManager;
+            
             IsAvailable = new(true);
             
             IsAvailable
@@ -32,6 +37,9 @@ namespace _Project.Scripts.InputService
                 .Where(_ => Input.GetMouseButtonDown(1))
                 .Subscribe(_ => OnLaserRelease?.Invoke())
                 .AddTo(_disposable);
+
+            OnBulletRelease += _audioManager.PlayBulletSound;
+            OnLaserRelease += _audioManager.PlayLaserSound;
         }
 
         public float GetAxisVertical()
@@ -47,6 +55,9 @@ namespace _Project.Scripts.InputService
         private void Dispose()
         {
             _disposable.Dispose();
+            
+            OnBulletRelease -= _audioManager.PlayBulletSound;
+            OnLaserRelease -= _audioManager.PlayLaserSound;
         }
     }
 }

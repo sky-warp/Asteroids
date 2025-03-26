@@ -1,3 +1,4 @@
+using _Project.Scripts.AudioSystems;
 using _Project.Scripts.Firebase;
 using _Project.Scripts.SaveSystems;
 using UnityEngine;
@@ -7,11 +8,9 @@ namespace _Project.Scripts.Bootstrap
 {
     public class Bootstrapper : IInitializable
     {
-        private ScoreSaveSystem _scoreSaveSystem;
-        private FirebaseInstaller _firebaseInstaller;
-
         public Bootstrapper(ScoreSaveSystem scoreSaveSystem,
-            FirebaseInstaller firebaseInstaller)
+            FirebaseInstaller firebaseInstaller,
+            DefaultAudioManager defaultAudioManager)
         {
             Debug.Log("Score save system loaded");
         }

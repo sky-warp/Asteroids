@@ -1,3 +1,6 @@
+using _Project.Scripts.AudioSystems;
+using _Project.Scripts.AudioSystems.AudioTypes;
+using _Project.Scripts.Configs.AudioConfigs;
 using _Project.Scripts.Configs.GameConfigs;
 using _Project.Scripts.Configs.SpawnerConfigs;
 using _Project.Scripts.CoroutineManagers;
@@ -14,6 +17,7 @@ namespace _Project.Scripts.Installers
     {
         [SerializeField] private GameConfig _gameConfig;
         [SerializeField] private SpawnerConfig _spawnerConfig;
+        [SerializeField] private AudioSystemConfig _audioSystemConfig;
 
         public override void InstallBindings()
         {
@@ -35,22 +39,36 @@ namespace _Project.Scripts.Installers
             Container
                 .BindInterfacesAndSelfTo<ScoreSaveSystem>()
                 .AsSingle();
-            
+
             Container
                 .Bind<FirebaseInstaller>()
                 .FromNewComponentOnNewGameObject()
-                .AsSingle(); 
+                .AsSingle();
             Container
                 .Bind<FirebaseEventManager>()
                 .FromNewComponentOnNewGameObject()
                 .AsSingle();
-            
+
             Container
                 .Bind<GameEventManager>()
                 .AsSingle();
 
             Container
                 .Bind<SaveData>()
+                .AsSingle();
+
+            Container
+                .Bind<DefaultAudioManager>()
+                .FromNewComponentOnNewGameObject()
+                .AsSingle();
+
+            Container
+                .Bind<BulletSound>()
+                .FromMethod(_ => new BulletSound(_audioSystemConfig.BulletSound))
+                .AsSingle();
+            Container
+                .Bind<LaserSound>()
+                .FromMethod(_ => new LaserSound(_audioSystemConfig.LaserSound))
                 .AsSingle();
         }
     }
