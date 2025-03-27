@@ -63,12 +63,16 @@ namespace _Project.Scripts.Installers
                 .AsSingle();
 
             Container
-                .Bind<BulletSound>()
-                .FromMethod(_ => new BulletSound(_audioSystemConfig.BulletSound))
+                .Bind<BulletSoundSource>()
+                .FromMethod(_ => new BulletSoundSource(_audioSystemConfig.BulletSound))
                 .AsSingle();
             Container
-                .Bind<LaserSound>()
-                .FromMethod(_ => new LaserSound(_audioSystemConfig.LaserSound))
+                .Bind<LaserSoundSource>()
+                .FromMethod(_ => new LaserSoundSource(_audioSystemConfig.LaserSound))
+                .AsSingle();
+            Container
+                .Bind<ScoreEarnSoundSource>()
+                .FromMethod(_ => new ScoreEarnSoundSource(_audioSystemConfig.ScoreEarnScound))
                 .AsSingle();
         }
     }

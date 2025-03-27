@@ -1,3 +1,4 @@
+using _Project.Scripts.AudioSystems;
 using _Project.Scripts.CustomPool;
 using _Project.Scripts.Factories;
 using _Project.Scripts.GameOverServices;
@@ -12,6 +13,7 @@ namespace _Project.Scripts.SpawnService
     public class ProjectileSpawnService
     {
         public readonly Subject<Unit> OnLaserSpawned = new();
+        public readonly Subject<Unit> OnBulletSpawned = new();
         public readonly ReactiveProperty<bool> IsReadyToShootLaser = new();
 
         private CustomPool<Bullet> _bulletsPool;
@@ -19,16 +21,20 @@ namespace _Project.Scripts.SpawnService
         private readonly CompositeDisposable _disposable = new();
 
         private IInputable _inputManager;
+        
+        private DefaultAudioManager _audioManager;
 
         public ProjectileSpawnService(IInputable inputManager,
             LevelColliderBorder levelBorder, 
             Transform shipTransform,
             DefaultGameOverService defaultGameOverService, 
             MonoFactory<Bullet> bulletFactory,
-            MonoFactory<Laser> laserFactory)
+            MonoFactory<Laser> laserFactory,
+            DefaultAudioManager audioManager)
         {
             _inputManager = inputManager;
-
+            _audioManager = audioManager;
+            
             defaultGameOverService.OnGameOver
                 .Subscribe(_ => GameOver())
                 .AddTo(_disposable);
@@ -36,6 +42,13 @@ namespace _Project.Scripts.SpawnService
             _inputManager.OnBulletRelease += CreateBullet;
             _inputManager.OnLaserRelease += CreateLaser;
 
+            OnLaserSpawned
+                .Subscribe(_ => _audioManager.PlayLaserSound())
+                .AddTo(_disposable);
+            OnBulletSpawned
+                .Subscribe(_ => _audioManager.PlayBulletSound())
+                .AddTo(_disposable);
+            
             levelBorder.OnBulletExit
                 .Subscribe(DeleteSpawnedBullet)
                 .AddTo(_disposable);
@@ -62,6 +75,8 @@ namespace _Project.Scripts.SpawnService
                 .AddTo(_disposable);
 
             bullet.MoveProjectile();
+            
+            OnBulletSpawned?.OnNext(Unit.Default);
         }
 
         private void CreateLaser()

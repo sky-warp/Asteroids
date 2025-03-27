@@ -1,3 +1,4 @@
+using System;
 using _Project.Scripts.Projectiles.ProjectileTypes;
 using R3;
 using UnityEngine;
@@ -8,6 +9,7 @@ namespace _Project.Scripts.Environment.Units
     public class UfoChaser : EnvironmentObject
     {
         public readonly Subject<UfoChaser> OnUfoHit = new();
+        public readonly Subject<Unit> OnUfoDeath = new();
         public readonly ReactiveProperty<Vector2> TargetPosition = new();
 
         public void MoveTowardsTarget()
@@ -31,6 +33,7 @@ namespace _Project.Scripts.Environment.Units
             if (other.TryGetComponent(out Bullet bullet) || other.TryGetComponent(out Laser laser))
             {
                 OnUfoHit?.OnNext(this);
+                OnUfoDeath?.OnNext(Unit.Default);
             }
         }
 
