@@ -15,3 +15,4 @@ MonoBehaviour:
   _gameConfig: {fileID: 11400000, guid: 55859338f2ecc944e813af1f7ec95de3, type: 2}
   _spawnerConfig: {fileID: 11400000, guid: 295c49de9f2a49d4188a9162cdea120a, type: 2}
   _audioSystemConfig: {fileID: 11400000, guid: 4a948b299f71fa14e98d9f1cf4416573, type: 2}
+  _visualEffectsConfig: {fileID: 11400000, guid: fbe68ed016db4f249bb3ce8844760331, type: 2}

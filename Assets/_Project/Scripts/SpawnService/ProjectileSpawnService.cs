@@ -4,6 +4,7 @@ using _Project.Scripts.Factories;
 using _Project.Scripts.GameOverServices;
 using _Project.Scripts.InputService;
 using _Project.Scripts.LevelBorder;
+using _Project.Scripts.ParticleSystems;
 using _Project.Scripts.Projectiles.ProjectileTypes;
 using R3;
 using UnityEngine;
@@ -30,7 +31,8 @@ namespace _Project.Scripts.SpawnService
             DefaultGameOverService defaultGameOverService, 
             MonoFactory<Bullet> bulletFactory,
             MonoFactory<Laser> laserFactory,
-            DefaultAudioManager audioManager)
+            DefaultAudioManager audioManager,
+            DefaultVisualEffectSystem visualEffectSystem)
         {
             _inputManager = inputManager;
             _audioManager = audioManager;
@@ -45,8 +47,12 @@ namespace _Project.Scripts.SpawnService
             OnLaserSpawned
                 .Subscribe(_ => _audioManager.PlayLaserSound())
                 .AddTo(_disposable);
+            
             OnBulletSpawned
                 .Subscribe(_ => _audioManager.PlayBulletSound())
+                .AddTo(_disposable);
+            OnBulletSpawned
+                .Subscribe(_ => visualEffectSystem.CreateBulletShootEffect())
                 .AddTo(_disposable);
             
             levelBorder.OnBulletExit

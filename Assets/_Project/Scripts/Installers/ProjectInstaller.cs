@@ -2,12 +2,15 @@ using _Project.Scripts.AudioSystems;
 using _Project.Scripts.AudioSystems.AudioTypes;
 using _Project.Scripts.Configs.AudioConfigs;
 using _Project.Scripts.Configs.GameConfigs;
+using _Project.Scripts.Configs.ParticleConfigs;
 using _Project.Scripts.Configs.SpawnerConfigs;
 using _Project.Scripts.CoroutineManagers;
 using _Project.Scripts.Factories;
 using _Project.Scripts.Firebase;
 using _Project.Scripts.Infrastructure;
+using _Project.Scripts.ParticleSystems;
 using _Project.Scripts.SaveSystems;
+using _Project.Scripts.VisualEffectSystems.ParticleTypes;
 using UnityEngine;
 using Zenject;
 
@@ -19,6 +22,7 @@ namespace _Project.Scripts.Installers
         [SerializeField] private GameConfig _gameConfig;
         [SerializeField] private SpawnerConfig _spawnerConfig;
         [SerializeField] private AudioSystemConfig _audioSystemConfig;
+        [SerializeField] private VisualEffectsConfig _visualEffectsConfig;
 
         public override void InstallBindings()
         {
@@ -66,6 +70,13 @@ namespace _Project.Scripts.Installers
                     new SoundSourceFactory<BulletSoundSource>(new BulletSoundSource(_audioSystemConfig.BulletSound)),
                     new SoundSourceFactory<LaserSoundSource>(new LaserSoundSource(_audioSystemConfig.LaserSound)),
                     new SoundSourceFactory<ScoreEarnSoundSource>(new ScoreEarnSoundSource(_audioSystemConfig.ScoreEarnScound)));
+
+            Container
+                .Bind<DefaultVisualEffectSystem>()
+                .FromNewComponentOnNewGameObject()
+                .AsSingle()
+                .WithArguments(
+                    new VisualEffectFactory<BulletShootEffect>(new BulletShootEffect(_visualEffectsConfig.ShootEffect)));
         }
     }
 }
