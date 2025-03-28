@@ -17,7 +17,6 @@ namespace _Project.Scripts.CustomPool
             _parent = parent;
             Pool = new List<T>();
 
-
             for (int i = 0; i < prewarьObjects; i++)
             {
                 var obj = _factory.Create(_parent);
@@ -29,8 +28,7 @@ namespace _Project.Scripts.CustomPool
         public T Get()
         {
             var obj = Pool.FirstOrDefault(obj => !obj.gameObject.activeSelf);
-
-
+            
             if (obj == null)
                 obj = Create();
 

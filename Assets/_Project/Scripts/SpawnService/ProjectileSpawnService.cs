@@ -37,6 +37,8 @@ namespace _Project.Scripts.SpawnService
             _inputManager = inputManager;
             _audioManager = audioManager;
             
+            visualEffectSystem.CreateBulletShootEffect(shipTransform);
+            
             defaultGameOverService.OnGameOver
                 .Subscribe(_ => GameOver())
                 .AddTo(_disposable);
@@ -47,12 +49,15 @@ namespace _Project.Scripts.SpawnService
             OnLaserSpawned
                 .Subscribe(_ => _audioManager.PlayLaserSound())
                 .AddTo(_disposable);
+            OnLaserSpawned
+                .Subscribe(_ => visualEffectSystem.PlayGunShootEffect())
+                .AddTo(_disposable);
             
             OnBulletSpawned
                 .Subscribe(_ => _audioManager.PlayBulletSound())
                 .AddTo(_disposable);
             OnBulletSpawned
-                .Subscribe(_ => visualEffectSystem.CreateBulletShootEffect())
+                .Subscribe(_ => visualEffectSystem.PlayGunShootEffect())
                 .AddTo(_disposable);
             
             levelBorder.OnBulletExit
