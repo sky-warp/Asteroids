@@ -4,6 +4,7 @@ using _Project.Scripts.Configs.AudioConfigs;
 using _Project.Scripts.Configs.GameConfigs;
 using _Project.Scripts.Configs.SpawnerConfigs;
 using _Project.Scripts.CoroutineManagers;
+using _Project.Scripts.Factories;
 using _Project.Scripts.Firebase;
 using _Project.Scripts.Infrastructure;
 using _Project.Scripts.SaveSystems;
@@ -60,20 +61,11 @@ namespace _Project.Scripts.Installers
             Container
                 .Bind<DefaultAudioManager>()
                 .FromNewComponentOnNewGameObject()
-                .AsSingle();
-
-            Container
-                .Bind<BulletSoundSource>()
-                .FromMethod(_ => new BulletSoundSource(_audioSystemConfig.BulletSound))
-                .AsSingle();
-            Container
-                .Bind<LaserSoundSource>()
-                .FromMethod(_ => new LaserSoundSource(_audioSystemConfig.LaserSound))
-                .AsSingle();
-            Container
-                .Bind<ScoreEarnSoundSource>()
-                .FromMethod(_ => new ScoreEarnSoundSource(_audioSystemConfig.ScoreEarnScound))
-                .AsSingle();
+                .AsSingle()
+                .WithArguments(
+                    new SoundSourceFactory<BulletSoundSource>(new BulletSoundSource(_audioSystemConfig.BulletSound)),
+                    new SoundSourceFactory<LaserSoundSource>(new LaserSoundSource(_audioSystemConfig.LaserSound)),
+                    new SoundSourceFactory<ScoreEarnSoundSource>(new ScoreEarnSoundSource(_audioSystemConfig.ScoreEarnScound)));
         }
     }
 }

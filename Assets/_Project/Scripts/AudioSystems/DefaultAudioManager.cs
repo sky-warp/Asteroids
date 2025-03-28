@@ -1,4 +1,5 @@
 using _Project.Scripts.AudioSystems.AudioTypes;
+using _Project.Scripts.Factories;
 using UnityEngine;
 using Zenject;
 
@@ -11,13 +12,13 @@ namespace _Project.Scripts.AudioSystems
         private AudioSource _scoreEarnSound;
 
         [Inject]
-        private void Construct(BulletSoundSource bulletSoundSource, 
-            LaserSoundSource laserSoundSource,
-            ScoreEarnSoundSource scoreEarnSoundSource)
+        private void Construct(SoundSourceFactory<BulletSoundSource> bulletSoundSourceFactory,
+            SoundSourceFactory<LaserSoundSource> laserSoundSourceFactory,
+            SoundSourceFactory<ScoreEarnSoundSource> scoreSoundSourceFactory)
         {
-            _bulletSound =  Instantiate(bulletSoundSource.SoundSource, transform);
-            _laserSound = Instantiate(laserSoundSource.SoundSource, transform);
-            _scoreEarnSound = Instantiate(scoreEarnSoundSource.SoundSource, transform);
+            _bulletSound =  bulletSoundSourceFactory.CreateSoundSource(transform);
+            _laserSound = laserSoundSourceFactory.CreateSoundSource(transform);
+            _scoreEarnSound = scoreSoundSourceFactory.CreateSoundSource(transform);
         }
 
         public void PlayBulletSound()
