@@ -6,5 +6,6 @@ namespace _Project.Scripts.Configs.ParticleConfigs
     public class VisualEffectsConfig : ScriptableObject
     {
         [field: SerializeField] public ParticleSystem ShootEffect { get; private set; }
+        [field: SerializeField] public ParticleSystem UnitDestroyEffect { get; private set; }
     }
 }

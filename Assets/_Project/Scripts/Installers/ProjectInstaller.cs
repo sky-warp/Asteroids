@@ -82,7 +82,8 @@ namespace _Project.Scripts.Installers
                 .FromNewComponentOnNewGameObject()
                 .AsSingle()
                 .WithArguments(
-                    new VisualEffectFactory<BulletShootEffect>(new BulletShootEffect(_visualEffectsConfig.ShootEffect)));
+                    new VisualEffectFactory<BulletShootEffect>(new BulletShootEffect(_visualEffectsConfig.ShootEffect)),
+                    new VisualEffectFactory<UnitDestroyEffect>(new UnitDestroyEffect(_visualEffectsConfig.UnitDestroyEffect)));
         }
     }
 }

@@ -24,6 +24,8 @@ namespace _Project.Scripts.SpawnService
         private IInputable _inputManager;
         
         private DefaultAudioManager _audioManager;
+        
+        private DefaultVisualEffectSystem _visualEffectSystem;
 
         public ProjectileSpawnService(IInputable inputManager,
             LevelColliderBorder levelBorder, 
@@ -36,8 +38,9 @@ namespace _Project.Scripts.SpawnService
         {
             _inputManager = inputManager;
             _audioManager = audioManager;
+            _visualEffectSystem = visualEffectSystem;
             
-            visualEffectSystem.CreateBulletShootEffect(shipTransform);
+            _visualEffectSystem.CreateVisualEffects(shipTransform);
             
             defaultGameStateService.OnGameOver
                 .Subscribe(_ => GameOver())
@@ -50,14 +53,14 @@ namespace _Project.Scripts.SpawnService
                 .Subscribe(_ => _audioManager.PlayLaserSound())
                 .AddTo(_disposable);
             OnLaserSpawned
-                .Subscribe(_ => visualEffectSystem.PlayGunShootEffect())
+                .Subscribe(_ => _visualEffectSystem.PlayGunShootEffect())
                 .AddTo(_disposable);
             
             OnBulletSpawned
                 .Subscribe(_ => _audioManager.PlayBulletSound())
                 .AddTo(_disposable);
             OnBulletSpawned
-                .Subscribe(_ => visualEffectSystem.PlayGunShootEffect())
+                .Subscribe(_ => _visualEffectSystem.PlayGunShootEffect())
                 .AddTo(_disposable);
             
             levelBorder.OnBulletExit
@@ -82,6 +85,9 @@ namespace _Project.Scripts.SpawnService
             var bullet = _bulletsPool.Get();
 
             bullet.OnUnitHit
+                .Subscribe(unit => _visualEffectSystem.PlayUnitDestroyEffect(unit.transform))
+                .AddTo(_disposable);
+            bullet.OnUnitHit
                 .Subscribe(projectile => DeleteSpawnedBullet((Bullet)projectile))
                 .AddTo(_disposable);
             bullet.OnUnitHit
@@ -101,6 +107,9 @@ namespace _Project.Scripts.SpawnService
 
                 laser.OnUnitHit
                     .Subscribe(_ => _audioManager.PlayScoreEarnSound())
+                    .AddTo(_disposable);
+                laser.OnUnitHit
+                    .Subscribe(unit => _visualEffectSystem.PlayUnitDestroyEffect(unit.transform))
                     .AddTo(_disposable);
                 
                 laser.MoveProjectile();

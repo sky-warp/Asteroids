@@ -15,3 +15,4 @@ MonoBehaviour:
   <BulletSound>k__BackingField: {fileID: 6176317293347289836, guid: 81c423e270d392d4890a30c8cf4571e0, type: 3}
   <LaserSound>k__BackingField: {fileID: 7894742997904682356, guid: 90b14868569c3664bb71a07fcc0ab99f, type: 3}
   <ScoreEarnScound>k__BackingField: {fileID: 7894742997904682356, guid: cd38c20e266a9a340ad4483f8fff7a85, type: 3}
+  <BackgroundMusic>k__BackingField: {fileID: 7894742997904682356, guid: 568494e2d2949234491559bb865aa7f0, type: 3}
