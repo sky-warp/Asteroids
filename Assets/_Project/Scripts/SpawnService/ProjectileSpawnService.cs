@@ -28,7 +28,7 @@ namespace _Project.Scripts.SpawnService
         public ProjectileSpawnService(IInputable inputManager,
             LevelColliderBorder levelBorder, 
             Transform shipTransform,
-            DefaultGameOverService defaultGameOverService, 
+            DefaultGameStateService defaultGameStateService, 
             MonoFactory<Bullet> bulletFactory,
             MonoFactory<Laser> laserFactory,
             DefaultAudioManager audioManager,
@@ -39,7 +39,7 @@ namespace _Project.Scripts.SpawnService
             
             visualEffectSystem.CreateBulletShootEffect(shipTransform);
             
-            defaultGameOverService.OnGameOver
+            defaultGameStateService.OnGameOver
                 .Subscribe(_ => GameOver())
                 .AddTo(_disposable);
 

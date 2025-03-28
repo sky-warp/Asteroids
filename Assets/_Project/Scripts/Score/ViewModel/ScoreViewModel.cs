@@ -20,7 +20,7 @@ namespace _Project.Scripts.Score.ViewModel
         private ScoreSaveSystem _scoreSaveSystem;
 
         public ScoreViewModel(ScoreModel scoreModel, EnvironmentUnitSpawnService environmentUnitSpawnService,
-            DefaultGameOverService defaultGameOverService, ScoreSaveSystem scoreSaveSystem)
+            DefaultGameStateService defaultGameStateService, ScoreSaveSystem scoreSaveSystem)
         {
             _scoreModel = scoreModel;
             _scoreSaveSystem = scoreSaveSystem;
@@ -43,7 +43,7 @@ namespace _Project.Scripts.Score.ViewModel
                 .Subscribe(IncreaseScore)
                 .AddTo(_disposable);
 
-            defaultGameOverService.OnGameOver
+            defaultGameStateService.OnGameOver
                 .Subscribe(_ => IsGameOver.Value = true)
                 .AddTo(_disposable);
 

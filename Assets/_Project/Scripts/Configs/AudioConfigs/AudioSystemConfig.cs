@@ -8,5 +8,6 @@ namespace _Project.Scripts.Configs.AudioConfigs
         [field: SerializeField] public AudioSource BulletSound { get; private set; }
         [field: SerializeField] public AudioSource LaserSound { get; private set; }
         [field: SerializeField] public AudioSource ScoreEarnScound { get; private set; }
+        [field: SerializeField] public AudioSource BackgroundMusic { get; private set; }
     }
 }

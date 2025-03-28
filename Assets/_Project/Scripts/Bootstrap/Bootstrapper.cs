@@ -1,5 +1,6 @@
 using _Project.Scripts.AudioSystems;
 using _Project.Scripts.Firebase;
+using _Project.Scripts.GameOverServices;
 using _Project.Scripts.ParticleSystems;
 using _Project.Scripts.SaveSystems;
 using UnityEngine;
@@ -12,7 +13,8 @@ namespace _Project.Scripts.Bootstrap
         public Bootstrapper(ScoreSaveSystem scoreSaveSystem,
             FirebaseInstaller firebaseInstaller,
             DefaultAudioManager defaultAudioManager,
-            DefaultVisualEffectSystem defaultVisualEffectSystem)
+            DefaultVisualEffectSystem defaultVisualEffectSystem,
+            DefaultGameStateService gameStateService)
         {
             Debug.Log("Score save system loaded");
         }

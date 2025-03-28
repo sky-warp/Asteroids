@@ -1,7 +1,6 @@
 using _Project.Scripts.Configs.GameConfigs;
 using _Project.Scripts.Environment.Units;
 using _Project.Scripts.Factories;
-using _Project.Scripts.GameOverServices;
 using _Project.Scripts.Infrastructure;
 using _Project.Scripts.InputService;
 using _Project.Scripts.LevelBorder;
@@ -51,10 +50,6 @@ namespace _Project.Scripts.Installers
             Container
                 .Bind<LevelColliderBorder>()
                 .FromInstance(_levelColliderBorder)
-                .AsSingle();
-
-            Container
-                .Bind<DefaultGameOverService>()
                 .AsSingle();
 
             Container

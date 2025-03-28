@@ -25,13 +25,13 @@ namespace _Project.Scripts.SpawnService
 
         private CompositeDisposable _disposable = new();
 
-        private DefaultGameOverService _defaultGameOverService;
+        private DefaultGameStateService _defaultGameStateService;
 
         private SpawnRandomizer _spawnRandomizer;
 
         public EnvironmentUnitSpawnService(Transform ufoTarget,
             LevelColliderBorder levelColliderBorder,
-            DefaultGameOverService defaultGameOverService,
+            DefaultGameStateService defaultGameStateService,
             SpawnRandomizer spawnRandomizer,
             MonoFactory<AsteroidBig> asteroidBigFactory,
             MonoFactory<AsteroidSmall> asteroidSmallFactory,
@@ -39,7 +39,7 @@ namespace _Project.Scripts.SpawnService
         {
             _spawnRandomizer = spawnRandomizer;
 
-            _defaultGameOverService = defaultGameOverService;
+            _defaultGameStateService = defaultGameStateService;
 
             _ufoTarget = ufoTarget;
 
@@ -60,7 +60,7 @@ namespace _Project.Scripts.SpawnService
 
         private void GameOver()
         {
-            _defaultGameOverService.OnGameOver?
+            _defaultGameStateService.OnGameOver?
                 .OnNext(Unit.Default);
 
             _bigAsteroidsPool.ReleaseAll();

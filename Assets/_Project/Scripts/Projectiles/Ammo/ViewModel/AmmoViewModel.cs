@@ -19,7 +19,7 @@ namespace _Project.Scripts.Projectiles.Ammo.ViewModel
         private readonly CompositeDisposable _disposable = new();
 
         public AmmoViewModel(AmmoModel ammoModel, ProjectileSpawnService projectileSpawnService,
-            DefaultGameOverService defaultGameOverService)
+            DefaultGameStateService defaultGameStateService)
         {
             _ammoModel = ammoModel;
             _ammoModel.CurrentLaserAmmo
@@ -32,7 +32,7 @@ namespace _Project.Scripts.Projectiles.Ammo.ViewModel
                 .Subscribe(isEnough => IsEnoughLaserView.Value = isEnough)
                 .AddTo(_disposable);
 
-            defaultGameOverService.OnGameOver
+            defaultGameStateService.OnGameOver
                 .Subscribe(_ => IsGameOver.Value = true)
                 .AddTo(_disposable);
 

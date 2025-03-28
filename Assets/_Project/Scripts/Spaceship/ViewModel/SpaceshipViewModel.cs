@@ -17,7 +17,7 @@ namespace _Project.Scripts.Spaceship.ViewModel
         private SpaceshipModel _spaceshipModel;
         private CompositeDisposable _disposable = new();
 
-        public SpaceshipViewModel(SpaceshipModel spaceshipModel, DefaultGameOverService pause,
+        public SpaceshipViewModel(SpaceshipModel spaceshipModel, DefaultGameStateService pause,
             PlayerMovement playerMovement)
         {
             _spaceshipModel = spaceshipModel;

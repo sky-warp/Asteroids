@@ -28,7 +28,7 @@ namespace _Project.Scripts.Infrastructure
         private ProjectileSpawnService _projectileSpawnService;
         private EnvironmentUnitSpawnService _environmentUnitSpawnService;
 
-        private DefaultGameOverService _defaultGameOverServiceService;
+        private DefaultGameStateService _defaultGameStateServiceService;
 
         private CoroutineManager _coroutineManager;
         
@@ -46,7 +46,7 @@ namespace _Project.Scripts.Infrastructure
             PlayerMovement playerMovement,
             SpaceshipView spaceship, 
             CoroutineManager coroutineManager,
-            DefaultGameOverService defaultGameOverService,
+            DefaultGameStateService defaultGameStateService,
             IInputable inputManager,
             EnvironmentUnitSpawnService environmentUnitSpawnService,
             ProjectileSpawnService projectileSpawnService,
@@ -60,7 +60,7 @@ namespace _Project.Scripts.Infrastructure
             _playerMovement = playerMovement;
             _spaceship = spaceship;
             _coroutineManager = coroutineManager;
-            _defaultGameOverServiceService = defaultGameOverService;
+            _defaultGameStateServiceService = defaultGameStateService;
             _inputManager = inputManager;
             _environmentUnitSpawnService = environmentUnitSpawnService;
             _projectileSpawnService = projectileSpawnService;
@@ -69,16 +69,18 @@ namespace _Project.Scripts.Infrastructure
 
         public void Initialize()
         {
+            _defaultGameStateServiceService.OnGameStart.OnNext(Unit.Default);
+            
             _spaceship.Init(_spaceshipViewModel, _spaceshipStatsParent);
             _playerMovement.Init(_spaceshipViewModel.SpaceshipSpeedView.Value, _inputManager);
             
-            _defaultGameOverServiceService.OnGameOver
+            _defaultGameStateServiceService.OnGameOver
                 .Subscribe(_ => _spaceship.GetComponent<PlayerMovement>().GameOver())
                 .AddTo(_disposable);
-            _defaultGameOverServiceService.OnGameOver
+            _defaultGameStateServiceService.OnGameOver
                 .Subscribe(_ => _coroutineManager.StopAllCoroutines())
                 .AddTo(_disposable);
-            _defaultGameOverServiceService.OnGameOver
+            _defaultGameStateServiceService.OnGameOver
                 .Subscribe(_ => _inputManager.IsAvailable.Value = false)
                 .AddTo(_disposable);
 

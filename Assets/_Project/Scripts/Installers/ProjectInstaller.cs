@@ -7,6 +7,7 @@ using _Project.Scripts.Configs.SpawnerConfigs;
 using _Project.Scripts.CoroutineManagers;
 using _Project.Scripts.Factories;
 using _Project.Scripts.Firebase;
+using _Project.Scripts.GameOverServices;
 using _Project.Scripts.Infrastructure;
 using _Project.Scripts.ParticleSystems;
 using _Project.Scripts.SaveSystems;
@@ -31,6 +32,10 @@ namespace _Project.Scripts.Installers
                 .FromInstance(_gameConfig)
                 .AsSingle();
 
+            Container
+                .Bind<DefaultGameStateService>()
+                .AsSingle();
+            
             Container
                 .Bind<SpawnerConfig>()
                 .FromInstance(_spawnerConfig)
@@ -69,7 +74,8 @@ namespace _Project.Scripts.Installers
                 .WithArguments(
                     new SoundSourceFactory<BulletSoundSource>(new BulletSoundSource(_audioSystemConfig.BulletSound)),
                     new SoundSourceFactory<LaserSoundSource>(new LaserSoundSource(_audioSystemConfig.LaserSound)),
-                    new SoundSourceFactory<ScoreEarnSoundSource>(new ScoreEarnSoundSource(_audioSystemConfig.ScoreEarnScound)));
+                    new SoundSourceFactory<ScoreEarnSoundSource>(new ScoreEarnSoundSource(_audioSystemConfig.ScoreEarnScound)),
+                    new SoundSourceFactory<BackgroundMusic>(new BackgroundMusic(_audioSystemConfig.BackgroundMusic)));
 
             Container
                 .Bind<DefaultVisualEffectSystem>()
