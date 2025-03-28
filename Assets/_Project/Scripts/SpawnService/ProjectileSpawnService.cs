@@ -73,6 +73,9 @@ namespace _Project.Scripts.SpawnService
             bullet.OnUnitHit
                 .Subscribe(projectile => DeleteSpawnedBullet((Bullet)projectile))
                 .AddTo(_disposable);
+            bullet.OnUnitHit
+                .Subscribe(_ => _audioManager.PlayScoreEarnSound())
+                .AddTo(_disposable);
 
             bullet.MoveProjectile();
             
@@ -85,6 +88,10 @@ namespace _Project.Scripts.SpawnService
             {
                 var laser = _lasersPool.Get();
 
+                laser.OnUnitHit
+                    .Subscribe(_ => _audioManager.PlayScoreEarnSound())
+                    .AddTo(_disposable);
+                
                 laser.MoveProjectile();
                 OnLaserSpawned?.OnNext(Unit.Default);
             }
