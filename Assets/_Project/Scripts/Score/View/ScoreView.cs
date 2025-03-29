@@ -1,3 +1,4 @@
+using _Project.Scripts.DOTweenAnimations;
 using _Project.Scripts.Score.ViewModel;
 using R3;
 using TMPro;
@@ -18,11 +19,15 @@ namespace _Project.Scripts.Score.View
 
         private ScoreViewModel _scoreViewModel;
 
+        private EndGameWindowAppearAnimation _endGameWindowAppearAnimation;
+        
         [Inject]
-        public void Init(ScoreViewModel scoreViewModel)
+        public void Init(ScoreViewModel scoreViewModel, EndGameWindowAppearAnimation endGameWindowAppearAnimation)
         {
             _scoreViewModel = scoreViewModel;
 
+            _endGameWindowAppearAnimation = endGameWindowAppearAnimation;
+            
             _scoreViewModel.CurrentScoreView
                 .Subscribe(UpdateScoreText)
                 .AddTo(this);
@@ -50,8 +55,11 @@ namespace _Project.Scripts.Score.View
         private void ShowGameOverWindow()
         {
             gameObject.SetActive(false);
-            _scoreText.gameObject.SetActive(false);
+            
             _gameOverWindow.SetActive(true);
+            _endGameWindowAppearAnimation.ShowGameOverWindow();
+            
+            _scoreText.gameObject.SetActive(false);
             _finalScoreText.text = $"FINAL SCORE: {_scoreViewModel.CurrentScoreView.Value.ToString()}";
         }
 

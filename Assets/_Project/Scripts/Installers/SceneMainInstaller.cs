@@ -1,4 +1,5 @@
 using _Project.Scripts.Configs.GameConfigs;
+using _Project.Scripts.DOTweenAnimations;
 using _Project.Scripts.Environment.Units;
 using _Project.Scripts.Factories;
 using _Project.Scripts.Infrastructure;
@@ -30,8 +31,10 @@ namespace _Project.Scripts.Installers
 
         [SerializeField] private LevelColliderBorder _levelColliderBorder;
 
+        [SerializeField] public EndGameWindowAppearAnimation _endGameAnimation;
+        
         [Inject] private readonly GameConfig _gameConfig;
-
+        
         public override void InstallBindings()
         {
             Container
@@ -57,6 +60,11 @@ namespace _Project.Scripts.Installers
                 .To<InputManager>()
                 .AsSingle();
 
+            Container
+                .Bind<EndGameWindowAppearAnimation>()
+                .FromInstance(_endGameAnimation)
+                .AsSingle();
+            
             var spaceship = Container
                 .InstantiatePrefabForComponent<SpaceshipView>(_gameConfig.SpaceshipViewPrefab);
 
