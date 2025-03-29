@@ -5,6 +5,7 @@ using _Project.Scripts.Factories;
 using _Project.Scripts.GameOverServices;
 using _Project.Scripts.Infrastructure;
 using _Project.Scripts.LevelBorder;
+using _Project.Scripts.ParticleSystems;
 using R3;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -29,13 +30,16 @@ namespace _Project.Scripts.SpawnService
 
         private SpawnRandomizer _spawnRandomizer;
 
+        private DefaultVisualEffectSystem _defaultVisualEffectSystem;
+        
         public EnvironmentUnitSpawnService(Transform ufoTarget,
             LevelColliderBorder levelColliderBorder,
             DefaultGameStateService defaultGameStateService,
             SpawnRandomizer spawnRandomizer,
             MonoFactory<AsteroidBig> asteroidBigFactory,
             MonoFactory<AsteroidSmall> asteroidSmallFactory,
-            MonoFactory<UfoChaser> ufoChaserFactory)
+            MonoFactory<UfoChaser> ufoChaserFactory,
+            DefaultVisualEffectSystem visualEffectSystem)
         {
             _spawnRandomizer = spawnRandomizer;
 
@@ -43,6 +47,9 @@ namespace _Project.Scripts.SpawnService
 
             _ufoTarget = ufoTarget;
 
+            _defaultVisualEffectSystem = visualEffectSystem;
+            _defaultVisualEffectSystem.CreateUnitEffects(levelColliderBorder.transform);
+            
             _bigAsteroidsPool =
                 new CustomPool<AsteroidBig>(3, _spawnRandomizer.GetRandomSpawnTransform(), asteroidBigFactory);
             _smallAsteroidsPool =
@@ -80,9 +87,14 @@ namespace _Project.Scripts.SpawnService
             var hitSubscription = asteroid.OnBigAsteroidHit
                 .Subscribe(_ =>
                     CreateSmallAsteroids(asteroid, asteroid.transform.position, asteroid.SmallAsteroidsAmountAfterHit));
+            
+            var playEffectSubscription = asteroid.UnitPositionWhenHit
+                .Subscribe(_defaultVisualEffectSystem.PlayUnitDestroyEffect)
+                .AddTo(_disposable);
 
             asteroid.AddSubscription(hitSubscription);
             asteroid.AddSubscription(gameOverSubscription);
+            asteroid.AddSubscription(playEffectSubscription);
 
             var spawnPoint = _spawnRandomizer.GetRandomSpawnTransform();
 
@@ -131,8 +143,13 @@ namespace _Project.Scripts.SpawnService
                 var gameOverSubscription = asteroidSmall.OnSpaceshipTouched
                     .Subscribe(_ => GameOver());
 
+                var playEffectSubscription = asteroidSmall.UnitPositionWhenHit
+                    .Subscribe(_defaultVisualEffectSystem.PlayUnitDestroyEffect)
+                    .AddTo(_disposable);
+                
                 asteroidSmall.AddSubscription(hitSubscription);
                 asteroidSmall.AddSubscription(gameOverSubscription);
+                asteroidSmall.AddSubscription(playEffectSubscription);
 
                 asteroidSmall.MoveSmallAsteroid(startPosition);
             }
@@ -174,6 +191,10 @@ namespace _Project.Scripts.SpawnService
 
             ufoChaser.OnSpaceshipTouched
                 .Subscribe(_ => GameOver())
+                .AddTo(ufoChaser.Disposable);
+            
+            ufoChaser.UnitPositionWhenHit
+                .Subscribe(_defaultVisualEffectSystem.PlayUnitDestroyEffect)
                 .AddTo(ufoChaser.Disposable);
 
             var spawnPoint = _spawnRandomizer.GetRandomSpawnTransform();

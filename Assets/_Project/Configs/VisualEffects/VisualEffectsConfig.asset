@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: VisualEffectsConfig
   m_EditorClassIdentifier: 
   <ShootEffect>k__BackingField: {fileID: 705743267443350672, guid: c4b883a5476361f40be5adbef02ee862, type: 3}
+  <UnitDestroyEffect>k__BackingField: {fileID: 705743267443350672, guid: 48a858c7d6eb2d849b7988f198583231, type: 3}

@@ -40,7 +40,7 @@ namespace _Project.Scripts.SpawnService
             _audioManager = audioManager;
             _visualEffectSystem = visualEffectSystem;
             
-            _visualEffectSystem.CreateVisualEffects(shipTransform);
+            _visualEffectSystem.CreateProjectileVisualEffects(shipTransform);
             
             defaultGameStateService.OnGameOver
                 .Subscribe(_ => GameOver())
@@ -83,10 +83,7 @@ namespace _Project.Scripts.SpawnService
         private void CreateBullet()
         {
             var bullet = _bulletsPool.Get();
-
-            bullet.OnUnitHit
-                .Subscribe(unit => _visualEffectSystem.PlayUnitDestroyEffect(unit.transform))
-                .AddTo(_disposable);
+            
             bullet.OnUnitHit
                 .Subscribe(projectile => DeleteSpawnedBullet((Bullet)projectile))
                 .AddTo(_disposable);
@@ -107,9 +104,6 @@ namespace _Project.Scripts.SpawnService
 
                 laser.OnUnitHit
                     .Subscribe(_ => _audioManager.PlayScoreEarnSound())
-                    .AddTo(_disposable);
-                laser.OnUnitHit
-                    .Subscribe(unit => _visualEffectSystem.PlayUnitDestroyEffect(unit.transform))
                     .AddTo(_disposable);
                 
                 laser.MoveProjectile();

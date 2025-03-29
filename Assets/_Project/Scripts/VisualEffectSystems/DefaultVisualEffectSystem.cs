@@ -7,8 +7,8 @@ namespace _Project.Scripts.ParticleSystems
 {
     public class DefaultVisualEffectSystem : MonoBehaviour
     {
-        private Transform _visualEffectsParent;
-        
+        private Transform _projectileVisualEffectsParent;
+
         private ParticleSystem _shootParticle;
         private ParticleSystem _unitDestroyParticle;
 
@@ -23,24 +23,28 @@ namespace _Project.Scripts.ParticleSystems
             _unitDestroyFactory = unitDestroyFactory;
         }
 
-        public void CreateVisualEffects(Transform target)
+        public void CreateProjectileVisualEffects(Transform target)
         {
-            _visualEffectsParent = target;
-            
+            _projectileVisualEffectsParent = target;
+
             _shootParticle = _bulletShootFactory.CreateVisualEffect(transform);
+        }
+
+        public void CreateUnitEffects(Transform target)
+        {
             _unitDestroyParticle = _unitDestroyFactory.CreateVisualEffect(transform);
         }
 
-        public void PlayGunShootEffect()
+    public void PlayGunShootEffect()
         {
-            _shootParticle.transform.position = _visualEffectsParent.position;
-            _shootParticle.transform.rotation = _visualEffectsParent.rotation;
+            _shootParticle.transform.position = _projectileVisualEffectsParent.position;
+            _shootParticle.transform.rotation = _projectileVisualEffectsParent.rotation;
             _shootParticle.Play();
         }
 
-        public void PlayUnitDestroyEffect(Transform targetPosition)
+        public void PlayUnitDestroyEffect(Vector3 targetPosition)
         {
-            _unitDestroyParticle.transform.position = targetPosition.position;
+            _unitDestroyParticle.transform.position = targetPosition;
             _unitDestroyParticle.Play();
         }
     }

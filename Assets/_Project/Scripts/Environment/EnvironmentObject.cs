@@ -1,5 +1,6 @@
 using System;
 using _Project.Scripts.Configs.EnvironmentConfigs;
+using _Project.Scripts.Projectiles.ProjectileTypes;
 using _Project.Scripts.Spaceship.View;
 using R3;
 using UnityEngine;
@@ -10,6 +11,7 @@ namespace _Project.Scripts.Environment
     public abstract class EnvironmentObject : MonoBehaviour
     {
         public readonly Subject<Unit> OnSpaceshipTouched = new();
+        public readonly Subject<Vector3> UnitPositionWhenHit = new();
         public int Score { get; private set; }
         protected float Speed { get; private set; }
         private float _initialSpeed;
@@ -43,6 +45,11 @@ namespace _Project.Scripts.Environment
             if (other.TryGetComponent(out SpaceshipView movableShip))
             {
                 OnSpaceshipTouched?.OnNext(Unit.Default);
+            }
+            
+            if (other.TryGetComponent(out Bullet big) || other.TryGetComponent(out Laser small))
+            {
+                UnitPositionWhenHit?.OnNext(transform.position);
             }
         }
 
