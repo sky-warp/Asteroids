@@ -8,7 +8,6 @@ using _Project.Scripts.CoroutineManagers;
 using _Project.Scripts.Factories;
 using _Project.Scripts.Firebase;
 using _Project.Scripts.GameOverServices;
-using _Project.Scripts.Infrastructure;
 using _Project.Scripts.ParticleSystems;
 using _Project.Scripts.SaveSystems;
 using _Project.Scripts.VisualEffectSystems.ParticleTypes;
@@ -57,10 +56,6 @@ namespace _Project.Scripts.Installers
             Container
                 .Bind<FirebaseEventManager>()
                 .FromNewComponentOnNewGameObject()
-                .AsSingle();
-
-            Container
-                .Bind<GameEventManager>()
                 .AsSingle();
 
             Container

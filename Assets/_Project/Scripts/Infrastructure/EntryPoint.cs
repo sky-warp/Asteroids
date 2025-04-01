@@ -1,5 +1,6 @@
 using System;
 using _Project.Scripts.CoroutineManagers;
+using _Project.Scripts.Firebase;
 using _Project.Scripts.GameOverServices;
 using _Project.Scripts.InputService;
 using _Project.Scripts.Player;
@@ -33,10 +34,10 @@ namespace _Project.Scripts.Infrastructure
         private CoroutineManager _coroutineManager;
         
         private PlayerMovement _playerMovement;
+
+        private FirebaseEventManager _firebaseEventManager;
         
         private CompositeDisposable _disposable = new();
-        
-        private GameEventManager _gameEventManager;
         
         private EntryPoint(
             SpaceShipStats statsParent,
@@ -50,8 +51,7 @@ namespace _Project.Scripts.Infrastructure
             IInputable inputManager,
             EnvironmentUnitSpawnService environmentUnitSpawnService,
             ProjectileSpawnService projectileSpawnService,
-            GameEventManager gameEventManager
-            )
+            FirebaseEventManager firebaseEventManager)
         {
             _spaceshipStatsParent = statsParent;
             _ammoViewModel = ammoViewModel;
@@ -64,12 +64,14 @@ namespace _Project.Scripts.Infrastructure
             _inputManager = inputManager;
             _environmentUnitSpawnService = environmentUnitSpawnService;
             _projectileSpawnService = projectileSpawnService;
-            _gameEventManager = gameEventManager;
+            _firebaseEventManager = firebaseEventManager;
         }
 
         public void Initialize()
         {
             _defaultGameStateServiceService.OnGameStart.OnNext(Unit.Default);
+            
+            _firebaseEventManager.SentGameStartEvent();
             
             _spaceship.Init(_spaceshipViewModel, _spaceshipStatsParent);
             _playerMovement.Init(_spaceshipViewModel.SpaceshipSpeedView.Value, _inputManager);
@@ -86,8 +88,6 @@ namespace _Project.Scripts.Infrastructure
 
             _coroutineManager.StartCoroutine(_environmentUnitSpawnService.SpawnBigAsteroids());
             _coroutineManager.StartCoroutine(_environmentUnitSpawnService.SpawnUfoChasers());
-            
-            _gameEventManager.OnStartGame();
         }
 
         public void Dispose()
