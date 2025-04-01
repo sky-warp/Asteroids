@@ -1,3 +1,4 @@
+using _Project.Scripts.Firebase;
 using _Project.Scripts.GameOverServices;
 using _Project.Scripts.SaveSystems;
 using _Project.Scripts.Score.Model;
@@ -20,7 +21,8 @@ namespace _Project.Scripts.Score.ViewModel
         private ScoreSaveSystem _scoreSaveSystem;
 
         public ScoreViewModel(ScoreModel scoreModel, EnvironmentUnitSpawnService environmentUnitSpawnService,
-            DefaultGameStateService defaultGameStateService, ScoreSaveSystem scoreSaveSystem)
+            DefaultGameStateService defaultGameStateService, ScoreSaveSystem scoreSaveSystem,
+            FirebaseEventManager firebaseEventManager)
         {
             _scoreModel = scoreModel;
             _scoreSaveSystem = scoreSaveSystem;
@@ -28,20 +30,37 @@ namespace _Project.Scripts.Score.ViewModel
             _scoreModel.CurrentScore
                 .Subscribe(currentScore => CurrentScoreView.Value = currentScore)
                 .AddTo(_disposable);
-            
+
             CurrentScoreView
                 .Subscribe(scoreSaveSystem.SaveData.SaveHighScoreData)
                 .AddTo(_disposable);
-            
+
             environmentUnitSpawnService.BigAsteroidScore
                 .Subscribe(IncreaseScore)
                 .AddTo(_disposable);
+            environmentUnitSpawnService.BigAsteroidScore
+                .Where(bigAsteroid => bigAsteroid != 0)
+                .Subscribe(_ => firebaseEventManager.IncreaseBigAsteroidDestroyed())
+                .AddTo(_disposable);
+
+
             environmentUnitSpawnService.SmallAsteroidScore
                 .Subscribe(IncreaseScore)
                 .AddTo(_disposable);
+            environmentUnitSpawnService.SmallAsteroidScore
+                .Where(smallAsteroid => smallAsteroid != 0)
+                .Subscribe(_ => firebaseEventManager.IncreaseSmallAsteroidDestroyed())
+                .AddTo(_disposable);
+
+
             environmentUnitSpawnService.UfoScore
                 .Subscribe(IncreaseScore)
                 .AddTo(_disposable);
+            environmentUnitSpawnService.UfoScore
+                .Where(ufoScore => ufoScore != 0)
+                .Subscribe(_ => firebaseEventManager.IncreaseUfoDestroyed())
+                .AddTo(_disposable);
+
 
             defaultGameStateService.OnGameOver
                 .Subscribe(_ => IsGameOver.Value = true)

@@ -70,8 +70,11 @@ namespace _Project.Scripts.Infrastructure
         public void Initialize()
         {
             _defaultGameStateServiceService.OnGameStart.OnNext(Unit.Default);
-            
-            _firebaseEventManager.SentGameStartEvent();
+
+            _defaultGameStateServiceService.OnGameStart
+                .Subscribe(_ => _firebaseEventManager.SentGameStartEvent());
+            _defaultGameStateServiceService.OnGameOver
+                .Subscribe(_ => _firebaseEventManager.SentGameEndEvent());
             
             _spaceship.Init(_spaceshipViewModel, _spaceshipStatsParent);
             _playerMovement.Init(_spaceshipViewModel.SpaceshipSpeedView.Value, _inputManager);

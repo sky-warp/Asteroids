@@ -22,7 +22,9 @@ namespace _Project.Scripts.Firebase
 
         private void Start()
         {
-            FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task => {
+            FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
+            {
+                FirebaseApp app = FirebaseApp.DefaultInstance;
                 FirebaseAnalytics.SetAnalyticsCollectionEnabled(true);
                 OnFirebaseStatusRecived(task);
             });

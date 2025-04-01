@@ -24,10 +24,6 @@ namespace _Project.Scripts.Projectiles.Ammo.ViewModel
         {
             _ammoModel = ammoModel;
 
-            LaserAmmoView
-                .Subscribe(_ => firebaseEventManager.SentLaserUseEvent())
-                .AddTo(_disposable);
-
             IsEnoughLaserView
                 .Subscribe(isReady => projectileSpawnService.IsReadyToShootLaser.Value = isReady);
 
@@ -50,6 +46,16 @@ namespace _Project.Scripts.Projectiles.Ammo.ViewModel
                 .AddTo(_disposable);
             projectileSpawnService.OnLaserSpawned
                 .Subscribe(_ => EvaluateCooldown(LaserCooldownView.Value))
+                .AddTo(_disposable);
+            projectileSpawnService.OnLaserSpawned
+                .Subscribe(_ => firebaseEventManager.SentLaserUseEvent())
+                .AddTo(_disposable);
+            projectileSpawnService.OnLaserSpawned
+                .Subscribe(_ => firebaseEventManager.IncreaseLaserUsage())
+                .AddTo(_disposable);
+            
+            projectileSpawnService.OnBulletSpawned
+                .Subscribe(_ => firebaseEventManager.IncreaseBulletUsage())
                 .AddTo(_disposable);
 
             ResetAmmoStats();
