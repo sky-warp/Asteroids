@@ -1,4 +1,5 @@
 using System;
+using _Project.Scripts.Firebase;
 using _Project.Scripts.GameOverServices;
 using _Project.Scripts.SpawnService;
 using R3;
@@ -19,9 +20,17 @@ namespace _Project.Scripts.Projectiles.Ammo.ViewModel
         private readonly CompositeDisposable _disposable = new();
 
         public AmmoViewModel(AmmoModel ammoModel, ProjectileSpawnService projectileSpawnService,
-            DefaultGameStateService defaultGameStateService)
+            DefaultGameStateService defaultGameStateService, FirebaseEventManager firebaseEventManager)
         {
             _ammoModel = ammoModel;
+
+            LaserAmmoView
+                .Subscribe(_ => firebaseEventManager.SentLaserUseEvent())
+                .AddTo(_disposable);
+
+            IsEnoughLaserView
+                .Subscribe(isReady => projectileSpawnService.IsReadyToShootLaser.Value = isReady);
+
             _ammoModel.CurrentLaserAmmo
                 .Subscribe(count => LaserAmmoView.Value = count)
                 .AddTo(_disposable);
@@ -43,13 +52,10 @@ namespace _Project.Scripts.Projectiles.Ammo.ViewModel
                 .Subscribe(_ => EvaluateCooldown(LaserCooldownView.Value))
                 .AddTo(_disposable);
 
-            IsEnoughLaserView
-                .Subscribe(isReady => projectileSpawnService.IsReadyToShootLaser.Value = isReady);
-
             ResetAmmoStats();
         }
 
-        public void EvaluateCooldown(float cooldown)
+        private void EvaluateCooldown(float cooldown)
         {
             OnCooldownChanged?.OnNext(cooldown);
 
@@ -93,14 +99,7 @@ namespace _Project.Scripts.Projectiles.Ammo.ViewModel
 
         private void CheckLaserAmmo()
         {
-            if (_ammoModel.CurrentLaserAmmo.Value <= 0)
-            {
-                IsEnoughLaserView.Value = false;
-            }
-            else
-            {
-                IsEnoughLaserView.Value = true;
-            }
+            IsEnoughLaserView.Value = _ammoModel.CurrentLaserAmmo.Value > 0;
         }
 
         public void Dispose()

@@ -12,6 +12,11 @@ namespace _Project.Scripts.Firebase
             FirebaseAnalytics.LogEvent(FirebaseAnalytics.EventLogin);
         }
 
+        public void SentLaserUseEvent()
+        {
+            FirebaseAnalytics.LogEvent("LaserUsage", new Parameter("Status", "Was used"));
+        }
+        
         public void ChangeReadyState()
         {
             _isReady = !_isReady;
