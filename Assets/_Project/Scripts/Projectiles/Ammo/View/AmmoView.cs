@@ -23,9 +23,8 @@ namespace _Project.Scripts.Projectiles.Ammo.View
         public void Init(AmmoViewModel ammoViewModel)
         {
             _cooldownImages = new List<Image>();
-
             _ammoViewModel = ammoViewModel;
-
+            
             CreateLaserCount(_ammoViewModel.LaserAmmoView.Value);
 
             _ammoViewModel.IsGameOver
@@ -35,7 +34,7 @@ namespace _Project.Scripts.Projectiles.Ammo.View
             _ammoViewModel.OnCooldownChanged
                 .Subscribe(ShowCooldownImage)
                 .AddTo(this);
-            
+
             _ammoViewModel.LaserAmmoView
                 .Subscribe(_ => _ammoViewModel.ApplyAmmoStats())
                 .AddTo(this);

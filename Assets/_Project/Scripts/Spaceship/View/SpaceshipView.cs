@@ -23,13 +23,12 @@ namespace _Project.Scripts.Spaceship.View
         public void Init(SpaceshipViewModel spaceshipViewModel, SpaceShipStats statsParent)
         {
             _statsParent = statsParent;
+            _spaceshipViewModel = spaceshipViewModel;
             
             var currentSpeed = Instantiate(_currentSpeedText, _statsParent.SpaceShipStatsTransform);
             var currentX = Instantiate(_coordinateXText, _statsParent.SpaceShipStatsTransform);
             var currentY = Instantiate(_coordinateYText, _statsParent.SpaceShipStatsTransform);
             var currentAngle = Instantiate(_rotationRotationText, _statsParent.SpaceShipStatsTransform);
-
-            _spaceshipViewModel = spaceshipViewModel;
 
             _spaceshipViewModel.SpaceshipSpeedView
                 .Subscribe(_ => _spaceshipViewModel.ApplyStats())
@@ -43,7 +42,7 @@ namespace _Project.Scripts.Spaceship.View
             _spaceshipViewModel.RotationAngleView
                 .Subscribe(_ => _spaceshipViewModel.ApplyStats())
                 .AddTo(this);
-            
+
             _spaceshipViewModel.SpaceshipSpeedView
                 .Subscribe(speed => (currentSpeed).text = $"SPEED: {speed:F2}")
                 .AddTo(this);

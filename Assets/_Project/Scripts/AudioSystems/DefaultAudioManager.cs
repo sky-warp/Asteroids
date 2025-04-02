@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using _Project.Scripts.AudioSystems.AudioTypes;
 using _Project.Scripts.Factories;
@@ -17,6 +18,8 @@ namespace _Project.Scripts.AudioSystems
         
         private List<AudioSource> _audioEffects = new();
 
+        private DefaultGameStateService _gameStateService;
+        
         [Inject]
         private void Construct(SoundSourceFactory<BulletSoundSource> bulletSoundSourceFactory,
             SoundSourceFactory<LaserSoundSource> laserSoundSourceFactory,
@@ -24,15 +27,20 @@ namespace _Project.Scripts.AudioSystems
             SoundSourceFactory<BackgroundMusic> backgroundMusic,
             DefaultGameStateService gameStateService)
         {
+            _gameStateService = gameStateService;
+            
             _audioEffects.Add(_bulletSound =  bulletSoundSourceFactory.CreateSoundSource(transform));
             _audioEffects.Add(_laserSound = laserSoundSourceFactory.CreateSoundSource(transform));
             _audioEffects.Add(_scoreEarnSound = scoreSoundSourceFactory.CreateSoundSource(transform));
             _audioEffects.Add(_backgroundMusic = backgroundMusic.CreateSoundSource(transform));
-            
-            gameStateService.OnGameStart
+        }
+
+        private void Start()
+        {
+            _gameStateService.OnGameStart
                 .Subscribe(_ => _backgroundMusic.Play())
                 .AddTo(this);
-            gameStateService.OnGameOver
+            _gameStateService.OnGameOver
                 .Subscribe(_ => StopAllSounds())
                 .AddTo(this);
         }

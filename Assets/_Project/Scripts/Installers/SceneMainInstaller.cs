@@ -74,7 +74,7 @@ namespace _Project.Scripts.Installers
                 .AsSingle();
             
             Container
-                .Bind<EnvironmentUnitSpawnService>()
+                .BindInterfacesAndSelfTo<EnvironmentUnitSpawnService>()
                 .AsSingle()
                 .WithArguments(
                     spaceship.transform, 
@@ -84,7 +84,7 @@ namespace _Project.Scripts.Installers
                     );
 
             Container
-                .Bind<ProjectileSpawnService>()
+                .BindInterfacesAndSelfTo<ProjectileSpawnService>()
                 .AsSingle()
                 .WithArguments(
                     spaceship.transform,
@@ -102,7 +102,7 @@ namespace _Project.Scripts.Installers
                 .AsSingle()
                 .WithArguments(_gameConfig.SpaceshipConfig);
             Container
-                .Bind<SpaceshipViewModel>()
+                .BindInterfacesAndSelfTo<SpaceshipViewModel>()
                 .AsSingle();
             Container
                 .Bind<SpaceshipView>()
@@ -114,7 +114,7 @@ namespace _Project.Scripts.Installers
                 .AsSingle()
                 .WithArguments(_gameConfig.AmmoConfig);
             Container
-                .Bind<AmmoViewModel>()
+                .BindInterfacesAndSelfTo<AmmoViewModel>()
                 .AsSingle();
             Container
                 .Bind<AmmoView>()
@@ -125,7 +125,7 @@ namespace _Project.Scripts.Installers
                 .Bind<ScoreModel>()
                 .AsSingle();
             Container
-                .Bind<ScoreViewModel>()
+                .BindInterfacesAndSelfTo<ScoreViewModel>()
                 .AsSingle();
             Container
                 .Bind<ScoreView>()

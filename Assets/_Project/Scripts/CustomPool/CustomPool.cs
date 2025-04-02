@@ -11,13 +11,13 @@ namespace _Project.Scripts.CustomPool
         private MonoFactory<T> _factory;
         private List<T> Pool { get; }
 
-        public CustomPool(int prewarьObjects, Transform parent, MonoFactory<T> factory)
+        public CustomPool(int prewarmObjects, Transform parent, MonoFactory<T> factory)
         {
             _factory = factory;
             _parent = parent;
             Pool = new List<T>();
 
-            for (int i = 0; i < prewarьObjects; i++)
+            for (int i = 0; i < prewarmObjects; i++)
             {
                 var obj = _factory.Create(_parent);
                 obj.gameObject.SetActive(false);

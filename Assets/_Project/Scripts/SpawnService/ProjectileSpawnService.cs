@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace _Project.Scripts.SpawnService
 {
-    public class ProjectileSpawnService
+    public class ProjectileSpawnService : Zenject.IInitializable
     {
         public readonly Subject<Unit> OnLaserSpawned = new();
         public readonly Subject<Unit> OnBulletSpawned = new();
@@ -19,13 +19,18 @@ namespace _Project.Scripts.SpawnService
 
         private CustomPool<Bullet> _bulletsPool;
         private CustomPool<Laser> _lasersPool;
-        private readonly CompositeDisposable _disposable = new();
 
         private IInputable _inputManager;
         
         private DefaultAudioManager _audioManager;
         
         private DefaultVisualEffectSystem _visualEffectSystem;
+
+        private DefaultGameStateService _gameStateService;
+        
+        private LevelColliderBorder _levelColliderBorder;
+        
+        private readonly CompositeDisposable _disposable = new();
 
         public ProjectileSpawnService(IInputable inputManager,
             LevelColliderBorder levelBorder, 
@@ -39,10 +44,18 @@ namespace _Project.Scripts.SpawnService
             _inputManager = inputManager;
             _audioManager = audioManager;
             _visualEffectSystem = visualEffectSystem;
+            _gameStateService = defaultGameStateService;
+            _levelColliderBorder = levelBorder;
             
             _visualEffectSystem.CreateProjectileVisualEffects(shipTransform);
-            
-            defaultGameStateService.OnGameOver
+
+            _bulletsPool = new CustomPool<Bullet>(3, shipTransform, bulletFactory);
+            _lasersPool = new CustomPool<Laser>(3, shipTransform, laserFactory);
+        }
+
+        public void Initialize()
+        {
+            _gameStateService.OnGameOver
                 .Subscribe(_ => GameOver())
                 .AddTo(_disposable);
 
@@ -63,17 +76,14 @@ namespace _Project.Scripts.SpawnService
                 .Subscribe(_ => _visualEffectSystem.PlayGunShootEffect())
                 .AddTo(_disposable);
             
-            levelBorder.OnBulletExit
+            _levelColliderBorder.OnBulletExit
                 .Subscribe(DeleteSpawnedBullet)
                 .AddTo(_disposable);
-            levelBorder.OnLaserExit
+            _levelColliderBorder.OnLaserExit
                 .Subscribe(DeleteSpawnedLaser)
                 .AddTo(_disposable);
-
-            _bulletsPool = new CustomPool<Bullet>(3, shipTransform, bulletFactory);
-            _lasersPool = new CustomPool<Laser>(3, shipTransform, laserFactory);
         }
-
+        
         private void GameOver()
         {
             _bulletsPool.ReleaseAll();

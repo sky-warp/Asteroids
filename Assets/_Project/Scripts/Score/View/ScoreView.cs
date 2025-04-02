@@ -25,7 +25,6 @@ namespace _Project.Scripts.Score.View
         public void Init(ScoreViewModel scoreViewModel, EndGameWindowAppearAnimation endGameWindowAppearAnimation)
         {
             _scoreViewModel = scoreViewModel;
-
             _endGameWindowAppearAnimation = endGameWindowAppearAnimation;
             
             _scoreViewModel.CurrentScoreView
@@ -46,7 +45,7 @@ namespace _Project.Scripts.Score.View
 
             _scoreText.gameObject.SetActive(true);
         }
-
+        
         private void UpdateScoreText(int score)
         {
             _scoreText.text = $"SCORE: {score.ToString()}";

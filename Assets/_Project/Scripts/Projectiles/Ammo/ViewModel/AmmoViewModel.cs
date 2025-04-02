@@ -7,7 +7,7 @@ using AmmoModel = _Project.Scripts.Projectiles.Ammo.Model.AmmoModel;
 
 namespace _Project.Scripts.Projectiles.Ammo.ViewModel
 {
-    public class AmmoViewModel
+    public class AmmoViewModel : Zenject.IInitializable
     {
         public Subject<float> OnCooldownChanged { get; } = new();
 
@@ -17,15 +17,28 @@ namespace _Project.Scripts.Projectiles.Ammo.ViewModel
         public readonly ReactiveProperty<bool> IsGameOver = new();
 
         private AmmoModel _ammoModel;
+        
+        private ProjectileSpawnService _projectileSpawnService;
+        
+        private DefaultGameStateService _defaultGameStateService;
+        
+        private FirebaseEventManager _firebaseEventManager;
+        
         private readonly CompositeDisposable _disposable = new();
 
         public AmmoViewModel(AmmoModel ammoModel, ProjectileSpawnService projectileSpawnService,
             DefaultGameStateService defaultGameStateService, FirebaseEventManager firebaseEventManager)
         {
             _ammoModel = ammoModel;
+            _projectileSpawnService = projectileSpawnService;
+            _defaultGameStateService = defaultGameStateService;
+            _firebaseEventManager = firebaseEventManager;
+        }
 
+        public void Initialize()
+        {
             IsEnoughLaserView
-                .Subscribe(isReady => projectileSpawnService.IsReadyToShootLaser.Value = isReady);
+                .Subscribe(isReady => _projectileSpawnService.IsReadyToShootLaser.Value = isReady);
 
             _ammoModel.CurrentLaserAmmo
                 .Subscribe(count => LaserAmmoView.Value = count)
@@ -37,30 +50,30 @@ namespace _Project.Scripts.Projectiles.Ammo.ViewModel
                 .Subscribe(isEnough => IsEnoughLaserView.Value = isEnough)
                 .AddTo(_disposable);
 
-            defaultGameStateService.OnGameOver
+            _defaultGameStateService.OnGameOver
                 .Subscribe(_ => IsGameOver.Value = true)
                 .AddTo(_disposable);
 
-            projectileSpawnService.OnLaserSpawned
+            _projectileSpawnService.OnLaserSpawned
                 .Subscribe(_ => DecreaseLaserAmmo())
                 .AddTo(_disposable);
-            projectileSpawnService.OnLaserSpawned
+            _projectileSpawnService.OnLaserSpawned
                 .Subscribe(_ => EvaluateCooldown(LaserCooldownView.Value))
                 .AddTo(_disposable);
-            projectileSpawnService.OnLaserSpawned
-                .Subscribe(_ => firebaseEventManager.SentLaserUseEvent())
+            _projectileSpawnService.OnLaserSpawned
+                .Subscribe(_ => _firebaseEventManager.SentLaserUseEvent())
                 .AddTo(_disposable);
-            projectileSpawnService.OnLaserSpawned
-                .Subscribe(_ => firebaseEventManager.IncreaseLaserUsage())
+            _projectileSpawnService.OnLaserSpawned
+                .Subscribe(_ => _firebaseEventManager.IncreaseLaserUsage())
                 .AddTo(_disposable);
             
-            projectileSpawnService.OnBulletSpawned
-                .Subscribe(_ => firebaseEventManager.IncreaseBulletUsage())
+            _projectileSpawnService.OnBulletSpawned
+                .Subscribe(_ => _firebaseEventManager.IncreaseBulletUsage())
                 .AddTo(_disposable);
 
             ResetAmmoStats();
         }
-
+        
         private void EvaluateCooldown(float cooldown)
         {
             OnCooldownChanged?.OnNext(cooldown);

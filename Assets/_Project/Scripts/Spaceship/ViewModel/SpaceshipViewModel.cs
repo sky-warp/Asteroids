@@ -1,3 +1,4 @@
+using System;
 using _Project.Scripts.GameOverServices;
 using _Project.Scripts.Player;
 using _Project.Scripts.Spaceship.Model;
@@ -6,7 +7,7 @@ using UnityEngine;
 
 namespace _Project.Scripts.Spaceship.ViewModel
 {
-    public class SpaceshipViewModel
+    public class SpaceshipViewModel : Zenject.IInitializable
     {
         public readonly ReactiveProperty<float> SpaceshipSpeedView = new();
         public readonly ReactiveProperty<float> CoordinateXView = new();
@@ -15,13 +16,16 @@ namespace _Project.Scripts.Spaceship.ViewModel
         public readonly ReactiveProperty<bool> IsGameOver = new();
 
         private SpaceshipModel _spaceshipModel;
+        
+        private DefaultGameStateService _defaultGameStateService;
+        
         private CompositeDisposable _disposable = new();
 
-        public SpaceshipViewModel(SpaceshipModel spaceshipModel, DefaultGameStateService pause,
+        public SpaceshipViewModel(SpaceshipModel spaceshipModel, DefaultGameStateService defaultGameStateService,
             PlayerMovement playerMovement)
         {
             _spaceshipModel = spaceshipModel;
-
+            
             _spaceshipModel.ShipSpeed
                 .Subscribe(x => SpaceshipSpeedView.Value = x)
                 .AddTo(_disposable);
@@ -35,7 +39,7 @@ namespace _Project.Scripts.Spaceship.ViewModel
                 .Subscribe(x => RotationAngleView.Value = x)
                 .AddTo(_disposable);
 
-            pause.OnGameOver
+            defaultGameStateService.OnGameOver
                 .Subscribe(_ => IsGameOver.Value = true)
                 .AddTo(_disposable);
             
@@ -56,6 +60,11 @@ namespace _Project.Scripts.Spaceship.ViewModel
             ResetStats();
         }
 
+        public void Initialize()
+        {
+           
+        }
+        
         public void Dispose()
         {
             _disposable?.Dispose();

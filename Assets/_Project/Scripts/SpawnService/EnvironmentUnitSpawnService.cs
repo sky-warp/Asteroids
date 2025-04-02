@@ -12,7 +12,7 @@ using Random = UnityEngine.Random;
 
 namespace _Project.Scripts.SpawnService
 {
-    public class EnvironmentUnitSpawnService
+    public class EnvironmentUnitSpawnService : Zenject.IInitializable
     {
         public readonly ReactiveProperty<int> BigAsteroidScore = new();
         public readonly ReactiveProperty<int> SmallAsteroidScore = new();
@@ -24,13 +24,15 @@ namespace _Project.Scripts.SpawnService
         private CustomPool<AsteroidSmall> _smallAsteroidsPool;
         private CustomPool<UfoChaser> _ufoChasersPool;
 
-        private CompositeDisposable _disposable = new();
-
         private DefaultGameStateService _defaultGameStateService;
 
         private SpawnRandomizer _spawnRandomizer;
 
         private DefaultVisualEffectSystem _defaultVisualEffectSystem;
+        
+        private LevelColliderBorder _levelColliderBorder;
+        
+        private CompositeDisposable _disposable = new();
         
         public EnvironmentUnitSpawnService(Transform ufoTarget,
             LevelColliderBorder levelColliderBorder,
@@ -47,6 +49,8 @@ namespace _Project.Scripts.SpawnService
 
             _ufoTarget = ufoTarget;
 
+            _levelColliderBorder = levelColliderBorder;
+            
             _defaultVisualEffectSystem = visualEffectSystem;
             _defaultVisualEffectSystem.CreateUnitEffects(levelColliderBorder.transform);
             
@@ -56,15 +60,18 @@ namespace _Project.Scripts.SpawnService
                 new CustomPool<AsteroidSmall>(3, _spawnRandomizer.GetRandomSpawnTransform(), asteroidSmallFactory);
             _ufoChasersPool =
                 new CustomPool<UfoChaser>(3, _spawnRandomizer.GetRandomSpawnTransform(), ufoChaserFactory);
+        }
 
-            levelColliderBorder.OnBigAsteroidExit
+        public void Initialize()
+        {
+            _levelColliderBorder.OnBigAsteroidExit
                 .Subscribe(DeleteBigAsteroid)
                 .AddTo(_disposable);
-            levelColliderBorder.OnSmallAsteroidExit
+            _levelColliderBorder.OnSmallAsteroidExit
                 .Subscribe(DeleteSmallAsteroid)
                 .AddTo(_disposable);
         }
-
+        
         private void GameOver()
         {
             _defaultGameStateService.OnGameOver?
