@@ -3,7 +3,6 @@ using _Project.Scripts.Firebase;
 using _Project.Scripts.GameOverServices;
 using _Project.Scripts.ParticleSystems;
 using _Project.Scripts.SaveSystems;
-using UnityEngine;
 using Zenject;
 
 namespace _Project.Scripts.Bootstrap
@@ -16,7 +15,6 @@ namespace _Project.Scripts.Bootstrap
             DefaultVisualEffectSystem defaultVisualEffectSystem,
             DefaultGameStateService gameStateService)
         {
-            Debug.Log("Score save system loaded");
         }
 
         public void Initialize()

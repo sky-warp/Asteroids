@@ -1,18 +1,27 @@
 using System;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace _Project.Scripts.SaveSystems
 {
-    public class ScoreSaveSystem : IDisposable
+    public class ScoreSaveSystem : Zenject.IInitializable, IDisposable
     {
         public SaveData SaveData { get; }
 
         public ScoreSaveSystem(SaveData saveData)
         {
             SaveData = saveData;
-            SaveData.SaveHighScoreData(PlayerPrefs.GetInt("highScore", 0));
-                
+        }
+
+        public void Initialize()
+        {
+            string tempJson = PlayerPrefs.GetString("key", "");
+
+            if (!string.IsNullOrEmpty(tempJson))
+            {
+                var data = JsonUtility.FromJson<SaveData>(tempJson);
+                SaveData.SaveHighScoreData(data.HighScore);
+            }
+
             SaveData.OnHighScoreChanged += UpdateHighScore;
         }
 
@@ -28,9 +37,8 @@ namespace _Project.Scripts.SaveSystems
 
         private void UpdateHighScore()
         {
-            var json = JsonUtility.ToJson(SaveData.Serialize());
+            string json = JsonUtility.ToJson(SaveData);
 
-            PlayerPrefs.SetInt("highScore", SaveData.HighScore);
             PlayerPrefs.SetString("key", json);
 
             Debug.Log($"High Score: {PlayerPrefs.GetString("key")}");
