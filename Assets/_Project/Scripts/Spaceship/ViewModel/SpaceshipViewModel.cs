@@ -1,4 +1,3 @@
-using System;
 using _Project.Scripts.GameOverServices;
 using _Project.Scripts.Player;
 using _Project.Scripts.Spaceship.Model;
@@ -16,16 +15,27 @@ namespace _Project.Scripts.Spaceship.ViewModel
         public readonly ReactiveProperty<bool> IsGameOver = new();
 
         private SpaceshipModel _spaceshipModel;
-        
+
         private DefaultGameStateService _defaultGameStateService;
-        
+
+        private DefaultGameStateService _defaultGameOverService;
+
+        private PlayerMovement _playerMovement;
+
         private CompositeDisposable _disposable = new();
 
         public SpaceshipViewModel(SpaceshipModel spaceshipModel, DefaultGameStateService defaultGameStateService,
             PlayerMovement playerMovement)
         {
             _spaceshipModel = spaceshipModel;
-            
+            _defaultGameStateService = defaultGameStateService;
+            _playerMovement = playerMovement;
+
+            ResetStats();
+        }
+
+        public void Initialize()
+        {
             _spaceshipModel.ShipSpeed
                 .Subscribe(x => SpaceshipSpeedView.Value = x)
                 .AddTo(_disposable);
@@ -39,32 +49,25 @@ namespace _Project.Scripts.Spaceship.ViewModel
                 .Subscribe(x => RotationAngleView.Value = x)
                 .AddTo(_disposable);
 
-            defaultGameStateService.OnGameOver
+            _defaultGameStateService.OnGameOver
                 .Subscribe(_ => IsGameOver.Value = true)
                 .AddTo(_disposable);
-            
-            playerMovement.CurrentSpeed
+
+            _playerMovement.CurrentSpeed
                 .Subscribe(currentSpeed =>
                     SpaceshipSpeedView.Value = Mathf.Clamp(currentSpeed, 0, currentSpeed))
                 .AddTo(_disposable);
-            playerMovement.CurrentXPosition
+            _playerMovement.CurrentXPosition
                 .Subscribe(currentX => CoordinateXView.Value = currentX)
                 .AddTo(_disposable);
-            playerMovement.CurrentYPosition
+            _playerMovement.CurrentYPosition
                 .Subscribe(currentY => CoordinateYView.Value = currentY)
                 .AddTo(_disposable);
-            playerMovement.CurrentRotationAngle
+            _playerMovement.CurrentRotationAngle
                 .Subscribe(currentRotation => RotationAngleView.Value = currentRotation)
                 .AddTo(_disposable);
-
-            ResetStats();
         }
 
-        public void Initialize()
-        {
-           
-        }
-        
         public void Dispose()
         {
             _disposable?.Dispose();
