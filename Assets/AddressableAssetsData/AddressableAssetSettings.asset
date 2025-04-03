@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 468a46d0ae32c3544b7d98094e6448a9, type: 3}
   m_Name: AddressableAssetSettings
   m_EditorClassIdentifier: 
-  m_DefaultGroup: 4abd7c7bf8990c0449d4f08fe428baf3
+  m_DefaultGroup: 66bf4d4eff9f0cc429d320f3eab3b7c8
   m_currentHash:
     serializedVersion: 2
-    Hash: 00000000000000000000000000000000
+    Hash: 13155f43a797b5904b07d4dbe6a12103
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
   m_BundleLocalCatalog: 0
@@ -44,9 +44,8 @@ MonoBehaviour:
   m_BuildAddressablesWithPlayerBuild: 0
   m_overridePlayerVersion: '[UnityEditor.PlayerSettings.bundleVersion]'
   m_GroupAssets:
-  - {fileID: 11400000, guid: 335fc52425080a449b891f0aad29dc50, type: 2}
   - {fileID: 11400000, guid: f2aa975b142125342b50b9aa9c0bd4c3, type: 2}
-  - {fileID: 11400000, guid: a01ad34345a06864ca39e3817b10714b, type: 2}
+  - {fileID: 11400000, guid: 1bd4fb692a44efe4889070611883cdda, type: 2}
   m_BuildSettings:
     m_CompileScriptsInVirtualMode: 0
     m_CleanupStreamingAssetsAfterBuilds: 1

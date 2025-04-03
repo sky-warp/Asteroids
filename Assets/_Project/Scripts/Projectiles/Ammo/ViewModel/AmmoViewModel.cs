@@ -33,6 +33,8 @@ namespace _Project.Scripts.Projectiles.Ammo.ViewModel
             _projectileSpawnService = projectileSpawnService;
             _defaultGameStateService = defaultGameStateService;
             _firebaseEventManager = firebaseEventManager;
+            
+            ResetAmmoStats();
         }
 
         public void Initialize()
@@ -70,8 +72,6 @@ namespace _Project.Scripts.Projectiles.Ammo.ViewModel
             _projectileSpawnService.OnBulletSpawned
                 .Subscribe(_ => _firebaseEventManager.IncreaseBulletUsage())
                 .AddTo(_disposable);
-
-            ResetAmmoStats();
         }
         
         private void EvaluateCooldown(float cooldown)

@@ -36,6 +36,8 @@ namespace _Project.Scripts.Score.ViewModel
             _scoreSaveSystem = scoreSaveSystem;
             _firebaseEventManager = firebaseEventManager;
             _sceneManager = new();
+            
+            ResetScore();
         }
 
         public void Initialize()
@@ -78,8 +80,6 @@ namespace _Project.Scripts.Score.ViewModel
             _defaultGameStateService.OnGameOver
                 .Subscribe(_ => IsGameOver.Value = true)
                 .AddTo(_disposable);
-            
-            ResetScore();
         }
         
         public void IncreaseScore(int score)
