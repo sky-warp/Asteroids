@@ -8,6 +8,7 @@ using _Project.Scripts.CoroutineManagers;
 using _Project.Scripts.Factories;
 using _Project.Scripts.Firebase;
 using _Project.Scripts.GameOverServices;
+using _Project.Scripts.LocalAssetLoaders;
 using _Project.Scripts.ParticleSystems;
 using _Project.Scripts.SaveSystems;
 using _Project.Scripts.VisualEffectSystems.ParticleTypes;
@@ -26,6 +27,14 @@ namespace _Project.Scripts.Installers
 
         public override void InstallBindings()
         {
+            Container
+                .Bind<LocalAssetLoader>()
+                .AsSingle();
+            
+            Container
+                .Bind<ResourcesLoader>()
+                .AsSingle();
+            
             Container
                 .Bind<GameConfig>()
                 .FromInstance(_gameConfig)

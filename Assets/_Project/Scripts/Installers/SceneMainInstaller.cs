@@ -5,6 +5,7 @@ using _Project.Scripts.Factories;
 using _Project.Scripts.Infrastructure;
 using _Project.Scripts.InputService;
 using _Project.Scripts.LevelBorder;
+using _Project.Scripts.LocalAssetLoaders;
 using _Project.Scripts.Player;
 using _Project.Scripts.Projectiles.Ammo.Model;
 using _Project.Scripts.Projectiles.Ammo.View;
@@ -35,13 +36,15 @@ namespace _Project.Scripts.Installers
         
         [Inject] private readonly GameConfig _gameConfig;
         
+        [Inject] private readonly ResourcesLoader _resourcesLoader;
+
         public override void InstallBindings()
         {
             Container
                 .Bind<Camera>()
                 .FromInstance(Camera.main)
                 .AsSingle();
-
+            
             Container
                 .BindInterfacesTo<EntryPoint>()
                 .AsSingle();
@@ -89,7 +92,7 @@ namespace _Project.Scripts.Installers
                 .WithArguments(
                     spaceship.transform,
                     new MonoFactory<Bullet>(_gameConfig.BulletPrefab),
-                    new MonoFactory<Laser>(_gameConfig.LaserPrefab)
+                    new MonoFactory<Laser>(_resourcesLoader.Laser.GetComponent<Laser>())
                     );
 
             Container
