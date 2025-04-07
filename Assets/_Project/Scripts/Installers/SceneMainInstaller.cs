@@ -91,7 +91,7 @@ namespace _Project.Scripts.Installers
                 .AsSingle()
                 .WithArguments(
                     spaceship.transform,
-                    new MonoFactory<Bullet>(_gameConfig.BulletPrefab),
+                    new MonoFactory<Bullet>(_resourcesLoader.Bullet),
                     new MonoFactory<Laser>(_resourcesLoader.Laser)
                     );
 

@@ -13,7 +13,7 @@ namespace _Project.Scripts.Bootstrap
     {
         private ILocalAssetLoadable _localAssetLoader;
         private ResourcesLoader _resourcesLoader;
-        
+
         public Bootstrapper(ScoreSaveSystem scoreSaveSystem,
             FirebaseInstaller firebaseInstaller,
             DefaultAudioManager defaultAudioManager,
@@ -28,8 +28,9 @@ namespace _Project.Scripts.Bootstrap
 
         public async void Initialize()
         {
-            _resourcesLoader.Laser = await _localAssetLoader.LoadAsset<Laser>("Laser");
-            
+            _resourcesLoader.GetAsset(await _localAssetLoader.LoadAsset<Laser>("Laser"), out _resourcesLoader.Laser);
+            _resourcesLoader.GetAsset(await _localAssetLoader.LoadAsset<Bullet>("Bullet"), out _resourcesLoader.Bullet);
+
             UnityEngine.SceneManagement.SceneManager.LoadScene("Main");
         }
     }

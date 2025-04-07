@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using _Project.Scripts.Projectiles.ProjectileTypes;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -9,7 +8,7 @@ namespace _Project.Scripts.LocalAssetLoaders
     public class LocalAssetLoader : ILocalAssetLoadable
     {
         private GameObject _cachedGameObject;
-        
+
         public async Task<T> LoadAsset<T>(string key)
         {
             var op = Addressables.LoadAssetAsync<GameObject>(key);
@@ -24,16 +23,5 @@ namespace _Project.Scripts.LocalAssetLoaders
 
             return _cachedGameObject.GetComponent<T>();
         }
-    }
-
-    public class ResourcesLoader
-    {
-        public Laser Laser { get; set; }
-        public Bullet Bullet { get; private set; }
-    }
-
-    public interface ILocalAssetLoadable
-    {
-        Task<T> LoadAsset<T>(string key);
     }
 }
