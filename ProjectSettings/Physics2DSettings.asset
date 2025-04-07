@@ -4,53 +4,74 @@
 Physics2DSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 5
-  m_Gravity: {x: 0, y: -9.81}
-  m_DefaultMaterial: {fileID: 0}
-  m_VelocityIterations: 8
-  m_PositionIterations: 3
-  m_VelocityThreshold: 1
-  m_MaxLinearCorrection: 0.2
-  m_MaxAngularCorrection: 8
-  m_MaxTranslationSpeed: 100
-  m_MaxRotationSpeed: 360
-  m_BaumgarteScale: 0.2
-  m_BaumgarteTimeOfImpactScale: 0.75
-  m_TimeToSleep: 0.5
-  m_LinearSleepTolerance: 0.01
-  m_AngularSleepTolerance: 2
-  m_DefaultContactOffset: 0.01
+  
+  # Core Physics Settings
+  m_Gravity: {x: 0, y: -9.81}              # Default downward gravity (Earth-like)
+  m_DefaultMaterial: {fileID: 0}           # No default physics material (custom per-object)
+  m_VelocityIterations: 10                 # Increased for more accurate velocity resolution
+  m_PositionIterations: 4                  # Slightly increased for better positional accuracy
+  m_VelocityThreshold: 0.8                 # Lowered for more responsive collision detection
+  m_MaxLinearCorrection: 0.25              # Slightly increased for smoother corrections
+  m_MaxAngularCorrection: 10               # Increased for better rotational stability
+  m_MaxTranslationSpeed: 150               # Higher cap for fast-moving objects
+  m_MaxRotationSpeed: 450                  # Higher cap for dynamic spinning objects
+  
+  # Solver Tuning
+  m_BaumgarteScale: 0.3                    # Increased for less jitter in joints/contacts
+  m_BaumgarteTimeOfImpactScale: 0.85       # Improved TOI for fast collisions
+  m_TimeToSleep: 0.3                       # Faster sleep for performance optimization
+  m_LinearSleepTolerance: 0.015            # Tighter tolerance for sleep detection
+  m_AngularSleepTolerance: 2.5             # Slightly stricter angular sleep
+  
+  # Collision Settings
+  m_DefaultContactOffset: 0.005            # Reduced for tighter collision precision
+  m_QueriesHitTriggers: 1                  # Triggers can be hit by raycasts/queries
+  m_QueriesStartInColliders: 0             # Prevent queries from starting inside colliders
+  m_CallbacksOnDisable: 1                  # Preserve callbacks when objects are disabled
+  m_ReuseCollisionCallbacks: 1             # Optimize by reusing collision data
+  
+  # Performance and Multithreading
   m_JobOptions:
     serializedVersion: 2
-    useMultithreading: 0
-    useConsistencySorting: 0
-    m_InterpolationPosesPerJob: 100
-    m_NewContactsPerJob: 30
-    m_CollideContactsPerJob: 100
-    m_ClearFlagsPerJob: 200
-    m_ClearBodyForcesPerJob: 200
-    m_SyncDiscreteFixturesPerJob: 50
-    m_SyncContinuousFixturesPerJob: 50
-    m_FindNearestContactsPerJob: 100
-    m_UpdateTriggerContactsPerJob: 100
-    m_IslandSolverCostThreshold: 100
-    m_IslandSolverBodyCostScale: 1
-    m_IslandSolverContactCostScale: 10
-    m_IslandSolverJointCostScale: 10
-    m_IslandSolverBodiesPerJob: 50
-    m_IslandSolverContactsPerJob: 50
-  m_SimulationMode: 0
-  m_QueriesHitTriggers: 1
-  m_QueriesStartInColliders: 1
-  m_CallbacksOnDisable: 1
-  m_ReuseCollisionCallbacks: 1
-  m_AutoSyncTransforms: 0
-  m_AlwaysShowColliders: 0
-  m_ShowColliderSleep: 1
-  m_ShowColliderContacts: 0
-  m_ShowColliderAABB: 0
-  m_ContactArrowScale: 0.2
-  m_ColliderAwakeColor: {r: 0.5686275, g: 0.95686275, b: 0.54509807, a: 0.7529412}
-  m_ColliderAsleepColor: {r: 0.5686275, g: 0.95686275, b: 0.54509807, a: 0.36078432}
-  m_ColliderContactColor: {r: 1, g: 0, b: 1, a: 0.6862745}
-  m_ColliderAABBColor: {r: 1, g: 1, b: 0, a: 0.2509804}
+    useMultithreading: 1                   # Enable multithreading for modern CPUs
+    useConsistencySorting: 1               # Ensure consistent collision order
+    m_InterpolationPosesPerJob: 120        # Increased for smoother interpolation
+    m_NewContactsPerJob: 40                # Higher for complex scenes
+    m_CollideContactsPerJob: 120           # Increased for better contact handling
+    m_ClearFlagsPerJob: 250                # Optimized for frequent updates
+    m_ClearBodyForcesPerJob: 250           # Optimized force clearing
+    m_SyncDiscreteFixturesPerJob: 60       # Higher sync rate for discrete physics
+    m_SyncContinuousFixturesPerJob: 60     # Higher sync rate for continuous physics
+    m_FindNearestContactsPerJob: 120       # Improved nearest-contact detection
+    m_UpdateTriggerContactsPerJob: 120     # Faster trigger updates
+    m_IslandSolverCostThreshold: 150       # Higher threshold for complex islands
+    m_IslandSolverBodyCostScale: 1.2       # Slightly higher body cost for accuracy
+    m_IslandSolverContactCostScale: 12     # Increased contact cost for stability
+    m_IslandSolverJointCostScale: 12       # Increased joint cost for robustness
+    m_IslandSolverBodiesPerJob: 60         # More bodies per job for efficiency
+    m_IslandSolverContactsPerJob: 60       # More contacts per job
+  
+  # Simulation Mode (0=FixedUpdate, 1=Update, 2=Script)
+  m_SimulationMode: 0                     # Stick with FixedUpdate for physics stability
+  
+  # Visualization and Debugging
+  m_AutoSyncTransforms: 1                 # Auto-sync transforms for easier debugging
+  m_AlwaysShowColliders: 1                # Always display colliders in editor
+  m_ShowColliderSleep: 1                  # Visualize sleeping bodies
+  m_ShowColliderContacts: 1               # Show contact points for debugging
+  m_ShowColliderAABB: 1                   # Display AABB for collision bounds
+  m_ContactArrowScale: 0.25               # Larger arrows for clearer contact visuals
+  m_ColliderAwakeColor: {r: 0.2, g: 0.8, b: 0.4, a: 0.8}      # Vibrant green for awake
+  m_ColliderAsleepColor: {r: 0.3, g: 0.3, b: 0.3, a: 0.5}     # Dim gray for asleep
+  m_ColliderContactColor: {r: 1, g: 0.5, b: 0, a: 0.7}        # Orange for contacts
+  m_ColliderAABBColor: {r: 0.8, g: 0.8, b: 0, a: 0.4}         # Yellow for AABB
+  
+  # Layer Collision Matrix (unchanged for simplicity)
   m_LayerCollisionMatrix: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+  
+  # Custom Extensions (non-standard Unity fields; requires custom scripting)
+  m_VariableGravityZones:                 # Support for dynamic gravity areas
+    enabled: 1
+    maxZones: 10
+  m_WindForce: {x: 0, y: 0}               # Global wind effect (requires script)
+  m_PhysicsDebugLevel: 2                  # 0=Off, 1=Basic, 2=Verbose (custom)
