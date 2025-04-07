@@ -10,6 +10,7 @@ using _Project.Scripts.Firebase;
 using _Project.Scripts.GameOverServices;
 using _Project.Scripts.LocalAssetLoaders;
 using _Project.Scripts.ParticleSystems;
+using _Project.Scripts.Projectiles.ProjectileTypes;
 using _Project.Scripts.SaveSystems;
 using _Project.Scripts.VisualEffectSystems.ParticleTypes;
 using UnityEngine;
@@ -28,7 +29,8 @@ namespace _Project.Scripts.Installers
         public override void InstallBindings()
         {
             Container
-                .Bind<LocalAssetLoader>()
+                .Bind<ILocalAssetLoadable>()
+                .To<LocalAssetLoader>()
                 .AsSingle();
             
             Container

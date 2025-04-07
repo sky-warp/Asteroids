@@ -92,7 +92,7 @@ namespace _Project.Scripts.Installers
                 .WithArguments(
                     spaceship.transform,
                     new MonoFactory<Bullet>(_gameConfig.BulletPrefab),
-                    new MonoFactory<Laser>(_resourcesLoader.Laser.GetComponent<Laser>())
+                    new MonoFactory<Laser>(_resourcesLoader.Laser)
                     );
 
             Container
