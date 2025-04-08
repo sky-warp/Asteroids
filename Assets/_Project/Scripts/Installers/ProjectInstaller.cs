@@ -10,7 +10,6 @@ using _Project.Scripts.Firebase;
 using _Project.Scripts.GameOverServices;
 using _Project.Scripts.LocalAssetLoaders;
 using _Project.Scripts.ParticleSystems;
-using _Project.Scripts.Projectiles.ProjectileTypes;
 using _Project.Scripts.SaveSystems;
 using _Project.Scripts.VisualEffectSystems.ParticleTypes;
 using UnityEngine;
