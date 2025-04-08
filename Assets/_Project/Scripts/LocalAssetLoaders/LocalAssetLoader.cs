@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -7,6 +8,8 @@ namespace _Project.Scripts.LocalAssetLoaders
 {
     public class LocalAssetLoader : ILocalAssetLoadable
     {
+        private List<AsyncOperationHandle> _loadedAssets = new();
+        
         private GameObject _cachedGameObject;
 
         public async Task<T> LoadAsset<T>(string key)
@@ -21,7 +24,17 @@ namespace _Project.Scripts.LocalAssetLoaders
                 Debug.LogError($"Failed to load asset with key: {key}");
             }
 
+            _loadedAssets.Add(op);
+            
             return _cachedGameObject.GetComponent<T>();
+        }
+
+        public void UnloadAsset()
+        {
+            for (int i = 0; i < _loadedAssets.Count; i++)
+            {
+                Addressables.Release(_loadedAssets[i]);
+            }
         }
     }
 }

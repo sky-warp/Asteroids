@@ -69,7 +69,7 @@ namespace _Project.Scripts.Installers
                 .AsSingle();
             
             var spaceship = Container
-                .InstantiatePrefabForComponent<SpaceshipView>(_gameConfig.SpaceshipViewPrefab);
+                .InstantiatePrefabForComponent<SpaceshipView>(_resourcesLoader.Spaceship);
 
             Container
                 .Bind<PlayerMovement>()
@@ -81,9 +81,9 @@ namespace _Project.Scripts.Installers
                 .AsSingle()
                 .WithArguments(
                     spaceship.transform, 
-                    new MonoFactory<AsteroidBig>(_gameConfig.AsteroidBigPrefab),
-                    new MonoFactory<AsteroidSmall>(_gameConfig.AsteroidSmallPrefab),
-                    new MonoFactory<UfoChaser>(_gameConfig.UfoChaserPrefab)
+                    new MonoFactory<AsteroidBig>(_resourcesLoader.AsteroidBig),
+                    new MonoFactory<AsteroidSmall>(_resourcesLoader.AsteroidSmall),
+                    new MonoFactory<UfoChaser>(_resourcesLoader.UfoChaser)
                     );
 
             Container
