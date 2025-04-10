@@ -1,6 +1,7 @@
 using _Project.Scripts.Environment.Units;
 using _Project.Scripts.LocalAssetLoaders;
 using _Project.Scripts.Projectiles.ProjectileTypes;
+using _Project.Scripts.SceneManagers;
 using _Project.Scripts.Spaceship.View;
 using Zenject;
 
@@ -10,12 +11,15 @@ namespace _Project.Scripts.Bootstrap
     {
         private IAssetLoadable _assetLoader;
         private MainLevelResources _mainLevelResources;
+        private SceneManager _sceneManager;
 
         public Bootstrapper(IAssetLoadable assetLoader,
-            MainLevelResources mainLevelResources)
+            MainLevelResources mainLevelResources,
+            SceneManager sceneManager)
         {
             _assetLoader = assetLoader;
             _mainLevelResources = mainLevelResources;
+            _sceneManager = sceneManager;
         }
 
         public async void Initialize()
@@ -29,7 +33,7 @@ namespace _Project.Scripts.Bootstrap
 
             _assetLoader.UnloadAsset();
 
-            UnityEngine.SceneManagement.SceneManager.LoadScene("Main");
+            _sceneManager.LoadMainScene();
         }
     }
 }

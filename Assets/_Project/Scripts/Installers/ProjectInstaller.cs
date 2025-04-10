@@ -12,6 +12,7 @@ using _Project.Scripts.GameOverServices;
 using _Project.Scripts.LocalAssetLoaders;
 using _Project.Scripts.ParticleSystems;
 using _Project.Scripts.SaveSystems;
+using _Project.Scripts.SceneManagers;
 using _Project.Scripts.UnityAds;
 using _Project.Scripts.VisualEffectSystems.ParticleTypes;
 using UnityEngine;
@@ -90,6 +91,10 @@ namespace _Project.Scripts.Installers
                 .Bind<SaveData>()
                 .AsSingle();
 
+            Container
+                .Bind<SceneManager>()
+                .AsSingle();
+            
             Container
                 .Bind<DefaultAudioManager>()
                 .FromNewComponentOnNewGameObject()

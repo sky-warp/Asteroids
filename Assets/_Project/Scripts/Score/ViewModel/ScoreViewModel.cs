@@ -1,6 +1,7 @@
 using _Project.Scripts.Firebase;
 using _Project.Scripts.GameOverServices;
 using _Project.Scripts.SaveSystems;
+using _Project.Scripts.SceneManagers;
 using _Project.Scripts.Score.Model;
 using _Project.Scripts.SpawnService;
 using R3;
@@ -16,7 +17,7 @@ namespace _Project.Scripts.Score.ViewModel
 
         private CompositeDisposable _disposable = new();
 
-        private SceneManager.SceneManager _sceneManager;
+        private SceneManager _sceneManager;
 
         private ScoreSaveSystem _scoreSaveSystem;
         
@@ -28,14 +29,14 @@ namespace _Project.Scripts.Score.ViewModel
 
         public ScoreViewModel(ScoreModel scoreModel, EnvironmentUnitSpawnService environmentUnitSpawnService,
             DefaultGameStateService defaultGameStateService, ScoreSaveSystem scoreSaveSystem,
-            FirebaseEventManager firebaseEventManager)
+            FirebaseEventManager firebaseEventManager, SceneManager sceneManager)
         {
             _scoreModel = scoreModel;
             _environmentUnitSpawnService = environmentUnitSpawnService;
             _defaultGameStateService = defaultGameStateService;
             _scoreSaveSystem = scoreSaveSystem;
             _firebaseEventManager = firebaseEventManager;
-            _sceneManager = new();
+            _sceneManager = sceneManager;
             
             ResetScore();
         }
