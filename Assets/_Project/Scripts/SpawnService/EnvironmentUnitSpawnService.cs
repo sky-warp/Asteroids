@@ -6,6 +6,7 @@ using _Project.Scripts.GameOverServices;
 using _Project.Scripts.Infrastructure;
 using _Project.Scripts.LevelBorder;
 using _Project.Scripts.ParticleSystems;
+using _Project.Scripts.UnityAds;
 using R3;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -34,6 +35,8 @@ namespace _Project.Scripts.SpawnService
         
         private CompositeDisposable _disposable = new();
         
+        private FullscreenUnityAdUnit _fullscreenUnityAdUnit;
+        
         public EnvironmentUnitSpawnService(Transform ufoTarget,
             LevelColliderBorder levelColliderBorder,
             DefaultGameStateService defaultGameStateService,
@@ -41,8 +44,11 @@ namespace _Project.Scripts.SpawnService
             MonoFactory<AsteroidBig> asteroidBigFactory,
             MonoFactory<AsteroidSmall> asteroidSmallFactory,
             MonoFactory<UfoChaser> ufoChaserFactory,
-            DefaultVisualEffectSystem visualEffectSystem)
+            DefaultVisualEffectSystem visualEffectSystem,
+            FullscreenUnityAdUnit fullscreenUnityAdUnit)
         {
+            _fullscreenUnityAdUnit = fullscreenUnityAdUnit;
+            
             _spawnRandomizer = spawnRandomizer;
 
             _defaultGameStateService = defaultGameStateService;
@@ -74,6 +80,8 @@ namespace _Project.Scripts.SpawnService
         
         private void GameOver()
         {
+            _fullscreenUnityAdUnit.ShowAd();
+            
             _defaultGameStateService.OnGameOver?
                 .OnNext(Unit.Default);
 

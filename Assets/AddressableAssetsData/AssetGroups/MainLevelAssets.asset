@@ -17,6 +17,26 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 66bf4d4eff9f0cc429d320f3eab3b7c8
   m_SerializeEntries:
+  - m_GUID: 13634ad1735b2134aacce95367bbd1d1
+    m_Address: Spaceship
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 65f8ff121e79c004db2ea13f48e2ecdc
+    m_Address: AsteroidBig
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b00e382cede7c10419cab21e7e5e95eb
+    m_Address: AsteroidSmall
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bd5d401fb466cd140a5467c86f4fcf44
+    m_Address: UfoChaser
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c274a1a4eebd73945b39488e2095e9fd
     m_Address: Laser
     m_ReadOnly: 0

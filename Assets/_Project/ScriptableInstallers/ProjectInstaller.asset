@@ -16,3 +16,4 @@ MonoBehaviour:
   _spawnerConfig: {fileID: 11400000, guid: 295c49de9f2a49d4188a9162cdea120a, type: 2}
   _audioSystemConfig: {fileID: 11400000, guid: 4a948b299f71fa14e98d9f1cf4416573, type: 2}
   _visualEffectsConfig: {fileID: 11400000, guid: fbe68ed016db4f249bb3ce8844760331, type: 2}
+  _adsConfig: {fileID: 11400000, guid: 3dd217f478dfd554a98ebe07afedcd4b, type: 2}

@@ -1,5 +1,6 @@
 using _Project.Scripts.AudioSystems;
 using _Project.Scripts.AudioSystems.AudioTypes;
+using _Project.Scripts.Configs.Ads;
 using _Project.Scripts.Configs.AudioConfigs;
 using _Project.Scripts.Configs.GameConfigs;
 using _Project.Scripts.Configs.ParticleConfigs;
@@ -11,6 +12,7 @@ using _Project.Scripts.GameOverServices;
 using _Project.Scripts.LocalAssetLoaders;
 using _Project.Scripts.ParticleSystems;
 using _Project.Scripts.SaveSystems;
+using _Project.Scripts.UnityAds;
 using _Project.Scripts.VisualEffectSystems.ParticleTypes;
 using UnityEngine;
 using Zenject;
@@ -24,9 +26,20 @@ namespace _Project.Scripts.Installers
         [SerializeField] private SpawnerConfig _spawnerConfig;
         [SerializeField] private AudioSystemConfig _audioSystemConfig;
         [SerializeField] private VisualEffectsConfig _visualEffectsConfig;
+        [SerializeField] private AdsConfig _adsConfig;
 
         public override void InstallBindings()
         {
+            Container
+                .BindInterfacesAndSelfTo<AdsInitializer>()
+                .AsSingle()
+                .WithArguments(_adsConfig);
+            
+            Container
+                .BindInterfacesAndSelfTo<FullscreenUnityAdUnit>()
+                .AsSingle()
+                .WithArguments(_adsConfig);
+            
             Container
                 .Bind<ILocalAssetLoadable>()
                 .To<LocalAssetLoader>()

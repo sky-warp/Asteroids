@@ -7,6 +7,7 @@ using _Project.Scripts.ParticleSystems;
 using _Project.Scripts.Projectiles.ProjectileTypes;
 using _Project.Scripts.SaveSystems;
 using _Project.Scripts.Spaceship.View;
+using _Project.Scripts.UnityAds;
 using Zenject;
 
 namespace _Project.Scripts.Bootstrap
@@ -22,7 +23,9 @@ namespace _Project.Scripts.Bootstrap
             DefaultVisualEffectSystem defaultVisualEffectSystem,
             DefaultGameStateService gameStateService,
             ILocalAssetLoadable localAssetLoader,
-            ResourcesLoader resourcesLoader)
+            ResourcesLoader resourcesLoader,
+            AdsInitializer adsInitializer,
+            FullscreenUnityAdUnit fullscreenUnityAdUnit)
         {
             _localAssetLoader = localAssetLoader;
             _resourcesLoader = resourcesLoader;
