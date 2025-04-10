@@ -41,12 +41,12 @@ namespace _Project.Scripts.Installers
                 .WithArguments(_adsConfig);
             
             Container
-                .Bind<ILocalAssetLoadable>()
-                .To<LocalAssetLoader>()
+                .Bind<IAssetLoadable>()
+                .To<AssetLoader>()
                 .AsSingle();
             
             Container
-                .Bind<ResourcesLoader>()
+                .Bind<MainLevelResources>()
                 .AsSingle();
             
             Container

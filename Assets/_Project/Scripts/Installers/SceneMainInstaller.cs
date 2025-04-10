@@ -36,7 +36,7 @@ namespace _Project.Scripts.Installers
         
         [Inject] private readonly GameConfig _gameConfig;
         
-        [Inject] private readonly ResourcesLoader _resourcesLoader;
+        [Inject] private readonly MainLevelResources _mainLevelResources;
 
         public override void InstallBindings()
         {
@@ -69,7 +69,7 @@ namespace _Project.Scripts.Installers
                 .AsSingle();
             
             var spaceship = Container
-                .InstantiatePrefabForComponent<SpaceshipView>(_resourcesLoader.Spaceship);
+                .InstantiatePrefabForComponent<SpaceshipView>(_mainLevelResources.Spaceship);
 
             Container
                 .Bind<PlayerMovement>()
@@ -81,9 +81,9 @@ namespace _Project.Scripts.Installers
                 .AsSingle()
                 .WithArguments(
                     spaceship.transform, 
-                    new MonoFactory<AsteroidBig>(_resourcesLoader.AsteroidBig),
-                    new MonoFactory<AsteroidSmall>(_resourcesLoader.AsteroidSmall),
-                    new MonoFactory<UfoChaser>(_resourcesLoader.UfoChaser)
+                    new MonoFactory<AsteroidBig>(_mainLevelResources.AsteroidBig),
+                    new MonoFactory<AsteroidSmall>(_mainLevelResources.AsteroidSmall),
+                    new MonoFactory<UfoChaser>(_mainLevelResources.UfoChaser)
                     );
 
             Container
@@ -91,8 +91,8 @@ namespace _Project.Scripts.Installers
                 .AsSingle()
                 .WithArguments(
                     spaceship.transform,
-                    new MonoFactory<Bullet>(_resourcesLoader.Bullet),
-                    new MonoFactory<Laser>(_resourcesLoader.Laser)
+                    new MonoFactory<Bullet>(_mainLevelResources.Bullet),
+                    new MonoFactory<Laser>(_mainLevelResources.Laser)
                     );
 
             Container

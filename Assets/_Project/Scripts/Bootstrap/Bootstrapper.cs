@@ -14,33 +14,33 @@ namespace _Project.Scripts.Bootstrap
 {
     public class Bootstrapper : IInitializable
     {
-        private ILocalAssetLoadable _localAssetLoader;
-        private ResourcesLoader _resourcesLoader;
+        private IAssetLoadable _assetLoader;
+        private MainLevelResources _mainLevelResources;
 
         public Bootstrapper(ScoreSaveSystem scoreSaveSystem,
             FirebaseInstaller firebaseInstaller,
             DefaultAudioManager defaultAudioManager,
             DefaultVisualEffectSystem defaultVisualEffectSystem,
             DefaultGameStateService gameStateService,
-            ILocalAssetLoadable localAssetLoader,
-            ResourcesLoader resourcesLoader,
+            IAssetLoadable assetLoader,
+            MainLevelResources mainLevelResources,
             AdsInitializer adsInitializer,
             FullscreenUnityAdUnit fullscreenUnityAdUnit)
         {
-            _localAssetLoader = localAssetLoader;
-            _resourcesLoader = resourcesLoader;
+            _assetLoader = assetLoader;
+            _mainLevelResources = mainLevelResources;
         }
 
         public async void Initialize()
         {
-            _resourcesLoader.Laser = await _localAssetLoader.LoadAsset<Laser>("Laser");
-            _resourcesLoader.Bullet = await _localAssetLoader.LoadAsset<Bullet>("Bullet");
-            _resourcesLoader.AsteroidBig = await _localAssetLoader.LoadAsset<AsteroidBig>("AsteroidBig");
-            _resourcesLoader.AsteroidSmall = await _localAssetLoader.LoadAsset<AsteroidSmall>("AsteroidSmall");
-            _resourcesLoader.UfoChaser = await _localAssetLoader.LoadAsset<UfoChaser>("UfoChaser");
-            _resourcesLoader.Spaceship = await _localAssetLoader.LoadAsset<SpaceshipView>("Spaceship");
+            _mainLevelResources.Laser = await _assetLoader.LoadAsset<Laser>("Laser");
+            _mainLevelResources.Bullet = await _assetLoader.LoadAsset<Bullet>("Bullet");
+            _mainLevelResources.AsteroidBig = await _assetLoader.LoadAsset<AsteroidBig>("AsteroidBig");
+            _mainLevelResources.AsteroidSmall = await _assetLoader.LoadAsset<AsteroidSmall>("AsteroidSmall");
+            _mainLevelResources.UfoChaser = await _assetLoader.LoadAsset<UfoChaser>("UfoChaser");
+            _mainLevelResources.Spaceship = await _assetLoader.LoadAsset<SpaceshipView>("Spaceship");
 
-            _localAssetLoader.UnloadAsset();
+            _assetLoader.UnloadAsset();
             
             UnityEngine.SceneManagement.SceneManager.LoadScene("Main");
         }

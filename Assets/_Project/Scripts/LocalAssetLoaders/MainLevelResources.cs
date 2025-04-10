@@ -4,7 +4,7 @@ using _Project.Scripts.Spaceship.View;
 
 namespace _Project.Scripts.LocalAssetLoaders
 {
-    public class ResourcesLoader
+    public class MainLevelResources
     {
         public Laser Laser;
         public Bullet Bullet;

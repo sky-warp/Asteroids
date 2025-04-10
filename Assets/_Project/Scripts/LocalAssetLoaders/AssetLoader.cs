@@ -6,7 +6,7 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace _Project.Scripts.LocalAssetLoaders
 {
-    public class LocalAssetLoader : ILocalAssetLoadable
+    public class AssetLoader : IAssetLoadable
     {
         private List<AsyncOperationHandle> _loadedAssets = new();
         
