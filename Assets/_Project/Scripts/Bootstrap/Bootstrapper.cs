@@ -1,13 +1,7 @@
-using _Project.Scripts.AudioSystems;
 using _Project.Scripts.Environment.Units;
-using _Project.Scripts.Firebase;
-using _Project.Scripts.GameOverServices;
 using _Project.Scripts.LocalAssetLoaders;
-using _Project.Scripts.ParticleSystems;
 using _Project.Scripts.Projectiles.ProjectileTypes;
-using _Project.Scripts.SaveSystems;
 using _Project.Scripts.Spaceship.View;
-using _Project.Scripts.UnityAds;
 using Zenject;
 
 namespace _Project.Scripts.Bootstrap
@@ -17,15 +11,8 @@ namespace _Project.Scripts.Bootstrap
         private IAssetLoadable _assetLoader;
         private MainLevelResources _mainLevelResources;
 
-        public Bootstrapper(ScoreSaveSystem scoreSaveSystem,
-            FirebaseInstaller firebaseInstaller,
-            DefaultAudioManager defaultAudioManager,
-            DefaultVisualEffectSystem defaultVisualEffectSystem,
-            DefaultGameStateService gameStateService,
-            IAssetLoadable assetLoader,
-            MainLevelResources mainLevelResources,
-            AdsInitializer adsInitializer,
-            FullscreenUnityAdUnit fullscreenUnityAdUnit)
+        public Bootstrapper(IAssetLoadable assetLoader,
+            MainLevelResources mainLevelResources)
         {
             _assetLoader = assetLoader;
             _mainLevelResources = mainLevelResources;
@@ -41,7 +28,7 @@ namespace _Project.Scripts.Bootstrap
             _mainLevelResources.Spaceship = await _assetLoader.LoadAsset<SpaceshipView>("Spaceship");
 
             _assetLoader.UnloadAsset();
-            
+
             UnityEngine.SceneManagement.SceneManager.LoadScene("Main");
         }
     }

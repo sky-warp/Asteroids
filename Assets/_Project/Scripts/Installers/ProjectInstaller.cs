@@ -33,22 +33,23 @@ namespace _Project.Scripts.Installers
             Container
                 .BindInterfacesAndSelfTo<AdsInitializer>()
                 .AsSingle()
-                .WithArguments(_adsConfig);
-            
+                .WithArguments(_adsConfig)
+                .NonLazy();
+
             Container
                 .BindInterfacesAndSelfTo<FullscreenUnityAdUnit>()
                 .AsSingle()
                 .WithArguments(_adsConfig);
-            
+
             Container
                 .Bind<IAssetLoadable>()
                 .To<AssetLoader>()
                 .AsSingle();
-            
+
             Container
                 .Bind<MainLevelResources>()
                 .AsSingle();
-            
+
             Container
                 .Bind<GameConfig>()
                 .FromInstance(_gameConfig)
@@ -56,8 +57,9 @@ namespace _Project.Scripts.Installers
 
             Container
                 .Bind<DefaultGameStateService>()
-                .AsSingle();
-            
+                .AsSingle()
+                .NonLazy();
+
             Container
                 .Bind<SpawnerConfig>()
                 .FromInstance(_spawnerConfig)
@@ -70,12 +72,15 @@ namespace _Project.Scripts.Installers
 
             Container
                 .BindInterfacesAndSelfTo<ScoreSaveSystem>()
-                .AsSingle();
+                .AsSingle()
+                .NonLazy();
 
             Container
                 .Bind<FirebaseInstaller>()
                 .FromNewComponentOnNewGameObject()
-                .AsSingle();
+                .AsSingle()
+                .NonLazy();
+
             Container
                 .Bind<FirebaseEventManager>()
                 .FromNewComponentOnNewGameObject()
@@ -92,8 +97,10 @@ namespace _Project.Scripts.Installers
                 .WithArguments(
                     new SoundSourceFactory<BulletSoundSource>(new BulletSoundSource(_audioSystemConfig.BulletSound)),
                     new SoundSourceFactory<LaserSoundSource>(new LaserSoundSource(_audioSystemConfig.LaserSound)),
-                    new SoundSourceFactory<ScoreEarnSoundSource>(new ScoreEarnSoundSource(_audioSystemConfig.ScoreEarnScound)),
-                    new SoundSourceFactory<BackgroundMusic>(new BackgroundMusic(_audioSystemConfig.BackgroundMusic)));
+                    new SoundSourceFactory<ScoreEarnSoundSource>(
+                        new ScoreEarnSoundSource(_audioSystemConfig.ScoreEarnScound)),
+                    new SoundSourceFactory<BackgroundMusic>(new BackgroundMusic(_audioSystemConfig.BackgroundMusic)))
+                .NonLazy();
 
             Container
                 .Bind<DefaultVisualEffectSystem>()
@@ -101,7 +108,9 @@ namespace _Project.Scripts.Installers
                 .AsSingle()
                 .WithArguments(
                     new VisualEffectFactory<BulletShootEffect>(new BulletShootEffect(_visualEffectsConfig.ShootEffect)),
-                    new VisualEffectFactory<UnitDestroyEffect>(new UnitDestroyEffect(_visualEffectsConfig.UnitDestroyEffect)));
+                    new VisualEffectFactory<UnitDestroyEffect>(
+                        new UnitDestroyEffect(_visualEffectsConfig.UnitDestroyEffect)))
+                .NonLazy();
         }
     }
 }
