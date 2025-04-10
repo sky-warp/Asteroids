@@ -3,6 +3,7 @@ using _Project.Scripts.LocalAssetLoaders;
 using _Project.Scripts.Projectiles.ProjectileTypes;
 using _Project.Scripts.SceneManagers;
 using _Project.Scripts.Spaceship.View;
+using Cysharp.Threading.Tasks;
 using Zenject;
 
 namespace _Project.Scripts.Bootstrap
@@ -24,12 +25,21 @@ namespace _Project.Scripts.Bootstrap
 
         public async void Initialize()
         {
-            _mainLevelResources.Laser = await _assetLoader.LoadAsset<Laser>("Laser");
-            _mainLevelResources.Bullet = await _assetLoader.LoadAsset<Bullet>("Bullet");
-            _mainLevelResources.AsteroidBig = await _assetLoader.LoadAsset<AsteroidBig>("AsteroidBig");
-            _mainLevelResources.AsteroidSmall = await _assetLoader.LoadAsset<AsteroidSmall>("AsteroidSmall");
-            _mainLevelResources.UfoChaser = await _assetLoader.LoadAsset<UfoChaser>("UfoChaser");
-            _mainLevelResources.Spaceship = await _assetLoader.LoadAsset<SpaceshipView>("Spaceship");
+            var (laser, bullet, asteroidBig, asteroidSmall, ufoChaser, spaceship) = await UniTask.WhenAll(
+                _assetLoader.LoadLaser<Laser>("Laser"),
+                _assetLoader.LoadBullet<Bullet>("Bullet"),
+                _assetLoader.LoadAsteroidBig<AsteroidBig>("AsteroidBig"),
+                _assetLoader.LoadAsteroidSmall<AsteroidSmall>("AsteroidSmall"),
+                _assetLoader.LoadUfoChaser<UfoChaser>("UfoChaser"),
+                _assetLoader.LoadSpaceship<SpaceshipView>("Spaceship")
+            );
+
+            _mainLevelResources.Laser = laser;
+            _mainLevelResources.Bullet = bullet;
+            _mainLevelResources.AsteroidBig = asteroidBig;
+            _mainLevelResources.AsteroidSmall = asteroidSmall;
+            _mainLevelResources.UfoChaser = ufoChaser;
+            _mainLevelResources.Spaceship = spaceship;
 
             _assetLoader.UnloadAsset();
 
