@@ -32,13 +32,12 @@ namespace _Project.Scripts.Installers
         public override void InstallBindings()
         {
             Container
-                .BindInterfacesAndSelfTo<AdsInitializer>()
+                .BindInterfacesAndSelfTo<AdManager>()
                 .AsSingle()
-                .WithArguments(_adsConfig)
                 .NonLazy();
 
             Container
-                .BindInterfacesAndSelfTo<FullscreenUnityAdUnit>()
+                .Bind<AdsInitializer>()
                 .AsSingle()
                 .WithArguments(_adsConfig);
 
@@ -94,7 +93,7 @@ namespace _Project.Scripts.Installers
             Container
                 .Bind<SceneManager>()
                 .AsSingle();
-            
+
             Container
                 .Bind<DefaultAudioManager>()
                 .FromNewComponentOnNewGameObject()

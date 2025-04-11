@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <IOSGameID>k__BackingField: 5830729
   <AndroidGameID>k__BackingField: 5830728
-  <IOSFullscreenBannerUnitID>k__BackingField: 1
-  <AndroidFullscreenBannerUnitID>k__BackingField: 2
+  <IOSFullscreenBannerUnitID>k__BackingField: Interstitial_iOS
+  <AndroidFullscreenBannerUnitID>k__BackingField: Interstitial_Android
   <TestMode>k__BackingField: 1

@@ -2,11 +2,10 @@ using System;
 using _Project.Scripts.Configs.Ads;
 using UnityEngine;
 using UnityEngine.Advertisements;
-using Zenject;
 
 namespace _Project.Scripts.UnityAds
 {
-    public class AdsInitializer : IInitializable, IUnityAdsInitializationListener
+    public class AdsInitializer : IUnityAdsInitializationListener
     {
         private string _gameID;
         private string _androidGameID;
@@ -15,13 +14,10 @@ namespace _Project.Scripts.UnityAds
         private bool _isTesting;
 
         private AdsConfig _config;
-        
-        private FullscreenUnityAdUnit _fullscreenUnityAdUnit;
 
-        public AdsInitializer(AdsConfig config, FullscreenUnityAdUnit fullscreenUnityAdUnit)
+        public AdsInitializer(AdsConfig config)//other types of ad to load after initialization
         {
             _config = config;
-            _fullscreenUnityAdUnit = fullscreenUnityAdUnit;
 
             _androidGameID = _config.AndroidGameID;
             _iOSGameID = _config.IOSGameID;
@@ -29,12 +25,7 @@ namespace _Project.Scripts.UnityAds
             _isTesting = config.TestMode;
         }
 
-        public void Initialize()
-        {
-            InitializeAds();
-        }
-
-        private void InitializeAds()
+        public void InitializeAds()
         {
 #if UNITY_ANDROID
             _gameID = _config.AndroidGameID;
@@ -52,7 +43,6 @@ namespace _Project.Scripts.UnityAds
 
         public void OnInitializationComplete()
         {
-            _fullscreenUnityAdUnit.LoadAd();
             Debug.Log("Ads were initialized");
         }
 
