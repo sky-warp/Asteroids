@@ -11,24 +11,24 @@ namespace _Project.Scripts.UnityAds
         private string _androidGameID;
         private string _iOSGameID;
 
+        private RewardAd _rewardAd;
+        
         private bool _isTesting;
 
-        private AdsConfig _config;
-
-        public AdsInitializer(AdsConfig config)//other types of ad to load after initialization
+        public AdsInitializer(AdsConfig config, RewardAd rewardAd)
         {
-            _config = config;
-
-            _androidGameID = _config.AndroidGameID;
-            _iOSGameID = _config.IOSGameID;
+            _androidGameID = config.AndroidGameID;
+            _iOSGameID = config.IOSGameID;
 
             _isTesting = config.TestMode;
+            
+            _rewardAd = rewardAd;
         }
 
         public void InitializeAds()
         {
 #if UNITY_ANDROID
-            _gameID = _config.AndroidGameID;
+            _gameID = _androidGameID;
 
 #elif UNITY_EDITOR
             _gameID = _androidGameID;
@@ -43,6 +43,7 @@ namespace _Project.Scripts.UnityAds
 
         public void OnInitializationComplete()
         {
+            _rewardAd.LoadRewardAd();
             Debug.Log("Ads were initialized");
         }
 

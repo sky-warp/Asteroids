@@ -7,6 +7,8 @@ namespace _Project.Scripts.Configs.Ads
     {
         [field: SerializeField] public string IOSGameID { get; private set; }
         [field: SerializeField] public string AndroidGameID { get; private set; }
+        [field: SerializeField] public string RewardAdAndroidID { get; private set; }
+        [field: SerializeField] public string RewardAdIOSID { get; private set; }
         [field: SerializeField] public bool TestMode { get; private set; }
     }
 }

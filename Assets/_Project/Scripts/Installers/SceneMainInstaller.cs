@@ -18,6 +18,7 @@ using _Project.Scripts.Spaceship.Model;
 using _Project.Scripts.Spaceship.View;
 using _Project.Scripts.Spaceship.ViewModel;
 using _Project.Scripts.SpawnService;
+using _Project.Scripts.UnityAds;
 using UnityEngine;
 using Zenject;
 
@@ -29,6 +30,7 @@ namespace _Project.Scripts.Installers
 
         [SerializeField] private AmmoView _ammoView;
         [SerializeField] private ScoreView _scoreView;
+        [SerializeField] private AdsView _adsView;
 
         [SerializeField] private LevelColliderBorder _levelColliderBorder;
 
@@ -133,6 +135,11 @@ namespace _Project.Scripts.Installers
             Container
                 .Bind<ScoreView>()
                 .FromInstance(_scoreView)
+                .AsSingle();
+            
+            Container
+                .Bind<AdsView>()
+                .FromInstance(_adsView)
                 .AsSingle();
         }
     }
