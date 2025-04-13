@@ -4,13 +4,14 @@ namespace _Project.Scripts.UnityAds
 {
     public class AdManager : IInitializable
     {
+        public RewardAd RewardAd { get; private set; }
+        
         private AdsInitializer _initializer;
-        private RewardAd _rewardAd;
         
         public AdManager(AdsInitializer adsInitializer, RewardAd rewardAd)
         {
             _initializer = adsInitializer;
-            _rewardAd = rewardAd;
+            RewardAd = rewardAd;
         }
 
         public void Initialize()
@@ -20,7 +21,7 @@ namespace _Project.Scripts.UnityAds
 
         public void ShowRewardAd()
         {
-            _rewardAd.ShowRewardAd();
+            RewardAd.ShowRewardAd();
         }
     }
 }

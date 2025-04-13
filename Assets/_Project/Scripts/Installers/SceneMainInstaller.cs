@@ -138,6 +138,9 @@ namespace _Project.Scripts.Installers
                 .AsSingle();
             
             Container
+                .BindInterfacesAndSelfTo<AdsController>()
+                .AsSingle();
+            Container
                 .Bind<AdsView>()
                 .FromInstance(_adsView)
                 .AsSingle();

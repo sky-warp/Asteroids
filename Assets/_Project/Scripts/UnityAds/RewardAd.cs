@@ -1,5 +1,6 @@
 using System;
 using _Project.Scripts.Configs.Ads;
+using R3;
 using UnityEngine;
 using UnityEngine.Advertisements;
 using Zenject;
@@ -8,6 +9,8 @@ namespace _Project.Scripts.UnityAds
 {
     public class RewardAd : IInitializable, IUnityAdsLoadListener, IUnityAdsShowListener
     {
+        public readonly ReactiveProperty<bool> WasWatched = new(false);
+        
         private string _adUnitID;
         private string _androidAdUnitID;
         private string _iOSAdUnitID;
@@ -70,7 +73,7 @@ namespace _Project.Scripts.UnityAds
 
         public void OnUnityAdsShowComplete(string placementId, UnityAdsShowCompletionState showCompletionState)
         {
-            //Change isRewarded status here
+            WasWatched.Value = true;
         }
     }
 }
