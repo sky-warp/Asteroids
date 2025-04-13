@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace _Project.Scripts.UnityAds
+namespace _Project.Scripts.UnityAds.View
 {
     public class AdsView : MonoBehaviour
     {

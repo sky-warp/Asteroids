@@ -1,10 +1,11 @@
 using System;
 using _Project.Scripts.GameOverServices;
 using _Project.Scripts.SceneManagers;
+using _Project.Scripts.UnityAds.View;
 using R3;
 using Zenject;
 
-namespace _Project.Scripts.UnityAds
+namespace _Project.Scripts.UnityAds.Controller
 {
     public class AdsController : IInitializable, IDisposable
     {

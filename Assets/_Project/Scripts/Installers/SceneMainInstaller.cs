@@ -19,6 +19,8 @@ using _Project.Scripts.Spaceship.View;
 using _Project.Scripts.Spaceship.ViewModel;
 using _Project.Scripts.SpawnService;
 using _Project.Scripts.UnityAds;
+using _Project.Scripts.UnityAds.Controller;
+using _Project.Scripts.UnityAds.View;
 using UnityEngine;
 using Zenject;
 
