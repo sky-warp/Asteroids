@@ -30,11 +30,11 @@ namespace _Project.Scripts.UnityAds.Controller
                 .Subscribe(_ => _adManager.ShowRewardAd())
                 .AddTo(_disposable);
 
-            _adManager.RewardAd.WasWatched
+            _adManager.RewardAdWasWatched
                 .Where(value => value == true)
                 .Subscribe(_ => _adsView.ShowRewardedAdButton.interactable = false)
                 .AddTo(_disposable);
-            _adManager.RewardAd.WasWatched
+            _adManager.RewardAdWasWatched
                 .Where(value => value == true)
                 .Subscribe(_ => _defaultGameStateService.OnGameResume.OnNext(Unit.Default))
                 .AddTo(_disposable);

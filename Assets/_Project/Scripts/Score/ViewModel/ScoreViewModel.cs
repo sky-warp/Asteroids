@@ -92,8 +92,8 @@ namespace _Project.Scripts.Score.ViewModel
             _defaultGameStateService.OnGameResume
                 .Subscribe(_ => IsGameResume.Value = true)
                 .AddTo(_disposable);
-            
-            AdManager.ShortAd.WasWatched
+
+            AdManager.ShortAdWasWatched
                 .Where(wasWatched => wasWatched)
                 .Subscribe(_ => OnRestartGame())
                 .AddTo(_disposable);
