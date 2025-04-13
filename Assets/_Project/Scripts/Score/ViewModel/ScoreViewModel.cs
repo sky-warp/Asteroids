@@ -92,6 +92,11 @@ namespace _Project.Scripts.Score.ViewModel
             _defaultGameStateService.OnGameResume
                 .Subscribe(_ => IsGameResume.Value = true)
                 .AddTo(_disposable);
+            
+            AdManager.ShortAd.WasWatched
+                .Where(wasWatched => wasWatched)
+                .Subscribe(_ => OnRestartGame())
+                .AddTo(_disposable);
         }
 
         public void IncreaseScore(int score)
@@ -104,7 +109,7 @@ namespace _Project.Scripts.Score.ViewModel
             _scoreSaveSystem.ResetHighScore();
         }
 
-        public void OnRestartGame()
+        private void OnRestartGame()
         {
             _sceneManager.RestartGame();
         }

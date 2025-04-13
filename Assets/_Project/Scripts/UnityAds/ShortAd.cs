@@ -70,6 +70,7 @@ namespace _Project.Scripts.UnityAds
         public void OnUnityAdsShowComplete(string placementId, UnityAdsShowCompletionState showCompletionState)
         {
             WasWatched.Value = true;
+            WasWatched.Value = false;
         }
     }
 }

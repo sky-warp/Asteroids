@@ -42,10 +42,7 @@ namespace _Project.Scripts.Score.View
             _resetHighScoreButton.OnClickAsObservable()
                 .Subscribe(_ => _scoreViewModel.ResetHighScoreView())
                 .AddTo(this);
-
-            _restartButton.OnClickAsObservable()
-                .Subscribe(_ => _scoreViewModel.OnRestartGame())
-                .AddTo(this); 
+            
             _restartButton.OnClickAsObservable()
                 .Subscribe(_ => _scoreViewModel.AdManager.ShowShortAd())
                 .AddTo(this);
