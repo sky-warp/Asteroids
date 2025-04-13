@@ -47,6 +47,11 @@ namespace _Project.Scripts.Installers
                 .WithArguments(_adsConfig);
 
             Container
+                .BindInterfacesAndSelfTo<ShortAd>()
+                .AsSingle()
+                .WithArguments(_adsConfig);
+
+            Container
                 .Bind<IAssetLoadable>()
                 .To<AssetLoader>()
                 .AsSingle();

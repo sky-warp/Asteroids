@@ -45,6 +45,9 @@ namespace _Project.Scripts.Score.View
 
             _restartButton.OnClickAsObservable()
                 .Subscribe(_ => _scoreViewModel.OnRestartGame())
+                .AddTo(this); 
+            _restartButton.OnClickAsObservable()
+                .Subscribe(_ => _scoreViewModel.AdManager.ShowShortAd())
                 .AddTo(this);
 
             _scoreText.gameObject.SetActive(true);

@@ -7,22 +7,24 @@ namespace _Project.Scripts.UnityAds
 {
     public class AdsInitializer : IUnityAdsInitializationListener
     {
+        public RewardAd RewardAd { get; private set; }
+        public ShortAd ShortAd {get; private set;}
+        
         private string _gameID;
         private string _androidGameID;
         private string _iOSGameID;
-
-        private RewardAd _rewardAd;
         
         private bool _isTesting;
 
-        public AdsInitializer(AdsConfig config, RewardAd rewardAd)
+        public AdsInitializer(AdsConfig config, RewardAd rewardAd, ShortAd shortAd)
         {
             _androidGameID = config.AndroidGameID;
             _iOSGameID = config.IOSGameID;
 
             _isTesting = config.TestMode;
             
-            _rewardAd = rewardAd;
+            RewardAd = rewardAd;
+            ShortAd = shortAd;
         }
 
         public void InitializeAds()
@@ -43,7 +45,8 @@ namespace _Project.Scripts.UnityAds
 
         public void OnInitializationComplete()
         {
-            _rewardAd.LoadRewardAd();
+            RewardAd.LoadRewardAd();
+            ShortAd.LoadShortAd();
             Debug.Log("Ads were initialized");
         }
 

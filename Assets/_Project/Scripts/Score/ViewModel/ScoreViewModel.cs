@@ -4,6 +4,7 @@ using _Project.Scripts.SaveSystems;
 using _Project.Scripts.SceneManagers;
 using _Project.Scripts.Score.Model;
 using _Project.Scripts.SpawnService;
+using _Project.Scripts.UnityAds;
 using R3;
 
 namespace _Project.Scripts.Score.ViewModel
@@ -14,6 +15,8 @@ namespace _Project.Scripts.Score.ViewModel
         public readonly ReactiveProperty<bool> IsGameOver = new();
         public readonly ReactiveProperty<bool> IsGameResume = new();
 
+        public AdManager AdManager { get; private set; }
+
         private ScoreModel _scoreModel;
 
         private CompositeDisposable _disposable = new();
@@ -21,16 +24,16 @@ namespace _Project.Scripts.Score.ViewModel
         private SceneManager _sceneManager;
 
         private ScoreSaveSystem _scoreSaveSystem;
-        
+
         private EnvironmentUnitSpawnService _environmentUnitSpawnService;
-        
+
         private DefaultGameStateService _defaultGameStateService;
-        
+
         private FirebaseEventManager _firebaseEventManager;
 
         public ScoreViewModel(ScoreModel scoreModel, EnvironmentUnitSpawnService environmentUnitSpawnService,
             DefaultGameStateService defaultGameStateService, ScoreSaveSystem scoreSaveSystem,
-            FirebaseEventManager firebaseEventManager, SceneManager sceneManager)
+            FirebaseEventManager firebaseEventManager, SceneManager sceneManager, AdManager adManager)
         {
             _scoreModel = scoreModel;
             _environmentUnitSpawnService = environmentUnitSpawnService;
@@ -38,7 +41,8 @@ namespace _Project.Scripts.Score.ViewModel
             _scoreSaveSystem = scoreSaveSystem;
             _firebaseEventManager = firebaseEventManager;
             _sceneManager = sceneManager;
-            
+            AdManager = adManager;
+
             ResetScore();
         }
 
@@ -69,7 +73,7 @@ namespace _Project.Scripts.Score.ViewModel
                 .Subscribe(_ => _firebaseEventManager.IncreaseSmallAsteroidDestroyed())
                 .AddTo(_disposable);
 
-    
+
             _environmentUnitSpawnService.UfoScore
                 .Subscribe(IncreaseScore)
                 .AddTo(_disposable);
@@ -81,7 +85,7 @@ namespace _Project.Scripts.Score.ViewModel
 
             _defaultGameStateService.OnGameOver
                 .Subscribe(_ => IsGameOver.Value = true)
-                .AddTo(_disposable); 
+                .AddTo(_disposable);
             _defaultGameStateService.OnGameResume
                 .Subscribe(_ => IsGameOver.Value = false)
                 .AddTo(_disposable);
@@ -89,7 +93,7 @@ namespace _Project.Scripts.Score.ViewModel
                 .Subscribe(_ => IsGameResume.Value = true)
                 .AddTo(_disposable);
         }
-        
+
         public void IncreaseScore(int score)
         {
             CurrentScoreView.Value += score;
@@ -100,11 +104,6 @@ namespace _Project.Scripts.Score.ViewModel
             _scoreSaveSystem.ResetHighScore();
         }
 
-        public void Dispose()
-        {
-            _disposable?.Dispose();
-        }
-
         public void OnRestartGame()
         {
             _sceneManager.RestartGame();
@@ -113,6 +112,11 @@ namespace _Project.Scripts.Score.ViewModel
         private void ResetScore()
         {
             _scoreModel.CurrentScore.Value = 0;
+        }
+
+        public void Dispose()
+        {
+            _disposable?.Dispose();
         }
     }
 }
