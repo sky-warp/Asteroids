@@ -12,6 +12,7 @@ namespace _Project.Scripts.Score.ViewModel
     {
         public readonly ReactiveProperty<int> CurrentScoreView = new();
         public readonly ReactiveProperty<bool> IsGameOver = new();
+        public readonly ReactiveProperty<bool> IsGameResume = new();
 
         private ScoreModel _scoreModel;
 
@@ -80,6 +81,12 @@ namespace _Project.Scripts.Score.ViewModel
 
             _defaultGameStateService.OnGameOver
                 .Subscribe(_ => IsGameOver.Value = true)
+                .AddTo(_disposable); 
+            _defaultGameStateService.OnGameResume
+                .Subscribe(_ => IsGameOver.Value = false)
+                .AddTo(_disposable);
+            _defaultGameStateService.OnGameResume
+                .Subscribe(_ => IsGameResume.Value = true)
                 .AddTo(_disposable);
         }
         

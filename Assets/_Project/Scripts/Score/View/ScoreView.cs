@@ -34,6 +34,10 @@ namespace _Project.Scripts.Score.View
                 .Where(isGameOver => isGameOver)
                 .Subscribe(_ => ShowGameOverWindow())
                 .AddTo(this);
+            _scoreViewModel.IsGameResume
+                .Where(isGameResume => isGameResume)
+                .Subscribe(_ => HideGameOverWindow())
+                .AddTo(this);
 
             _resetHighScoreButton.OnClickAsObservable()
                 .Subscribe(_ => _scoreViewModel.ResetHighScoreView())
@@ -62,6 +66,15 @@ namespace _Project.Scripts.Score.View
             _finalScoreText.text = $"FINAL SCORE: {_scoreViewModel.CurrentScoreView.Value.ToString()}";
         }
 
+        private void HideGameOverWindow()
+        {
+            gameObject.SetActive(true);
+            
+            _gameOverWindow.SetActive(false);
+            
+            _scoreText.gameObject.SetActive(true);
+        }
+        
         private void OnDestroy()
         {
             _resetHighScoreButton.onClick.RemoveAllListeners();

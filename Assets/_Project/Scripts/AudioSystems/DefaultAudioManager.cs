@@ -38,6 +38,9 @@ namespace _Project.Scripts.AudioSystems
         {
             _gameStateService.OnGameStart
                 .Subscribe(_ => _backgroundMusic.Play())
+                .AddTo(this); 
+            _gameStateService.OnGameResume
+                .Subscribe(_ => _backgroundMusic.Play())
                 .AddTo(this);
             _gameStateService.OnGameOver
                 .Subscribe(_ => StopAllSounds())

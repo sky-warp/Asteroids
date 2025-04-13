@@ -14,7 +14,8 @@ namespace _Project.Scripts.Projectiles.Ammo.ViewModel
         public readonly ReactiveProperty<int> LaserAmmoView = new();
         public readonly ReactiveProperty<float> LaserCooldownView = new();
         public readonly ReactiveProperty<bool> IsEnoughLaserView = new();
-        public readonly ReactiveProperty<bool> IsGameOver = new();
+        public readonly ReactiveProperty<bool> IsGameOver = new(false);
+        public readonly ReactiveProperty<bool> IsGameResume = new(false);
 
         private AmmoModel _ammoModel;
         
@@ -54,6 +55,12 @@ namespace _Project.Scripts.Projectiles.Ammo.ViewModel
 
             _defaultGameStateService.OnGameOver
                 .Subscribe(_ => IsGameOver.Value = true)
+                .AddTo(_disposable);
+            _defaultGameStateService.OnGameResume
+                .Subscribe(_ => IsGameOver.Value = false)
+                .AddTo(_disposable);
+            _defaultGameStateService.OnGameResume
+                .Subscribe(_ => IsGameResume.Value = true)
                 .AddTo(_disposable);
 
             _projectileSpawnService.OnLaserSpawned

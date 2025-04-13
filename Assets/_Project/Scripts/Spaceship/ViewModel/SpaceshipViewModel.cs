@@ -13,6 +13,7 @@ namespace _Project.Scripts.Spaceship.ViewModel
         public readonly ReactiveProperty<float> CoordinateYView = new();
         public readonly ReactiveProperty<float> RotationAngleView = new();
         public readonly ReactiveProperty<bool> IsGameOver = new();
+        public readonly ReactiveProperty<bool> IsGameResume = new();
 
         private SpaceshipModel _spaceshipModel;
 
@@ -51,6 +52,12 @@ namespace _Project.Scripts.Spaceship.ViewModel
 
             _defaultGameStateService.OnGameOver
                 .Subscribe(_ => IsGameOver.Value = true)
+                .AddTo(_disposable); 
+            _defaultGameStateService.OnGameResume
+                .Subscribe(_ => IsGameOver.Value = false)
+                .AddTo(_disposable); 
+            _defaultGameStateService.OnGameResume
+                .Subscribe(_ => IsGameResume.Value = true)
                 .AddTo(_disposable);
 
             _playerMovement.CurrentSpeed

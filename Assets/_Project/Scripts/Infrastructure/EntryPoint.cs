@@ -89,6 +89,19 @@ namespace _Project.Scripts.Infrastructure
                 .Subscribe(_ => _inputManager.IsAvailable.Value = false)
                 .AddTo(_disposable);
 
+            _defaultGameStateServiceService.OnGameResume
+                .Subscribe(_ => _spaceship.GetComponent<PlayerMovement>().GameResume())
+                .AddTo(_disposable);
+            _defaultGameStateServiceService.OnGameResume
+                .Subscribe(_ => _inputManager.IsAvailable.Value = true)
+                .AddTo(_disposable);
+            _defaultGameStateServiceService.OnGameResume
+                .Subscribe(_ => _coroutineManager.StartCoroutine(_environmentUnitSpawnService.SpawnBigAsteroids()))
+                .AddTo(_disposable);
+            _defaultGameStateServiceService.OnGameResume
+                .Subscribe(_ => _coroutineManager.StartCoroutine(_environmentUnitSpawnService.SpawnUfoChasers()))
+                .AddTo(_disposable);
+            
             _coroutineManager.StartCoroutine(_environmentUnitSpawnService.SpawnBigAsteroids());
             _coroutineManager.StartCoroutine(_environmentUnitSpawnService.SpawnUfoChasers());
         }

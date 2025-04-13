@@ -21,17 +21,24 @@ namespace _Project.Scripts.Player
         private float _yInput;
         private float _xInput;
         private float _playerSpeed;
+        private float _baseSpeed;
         private IInputable _inputManager;
 
         public void Init(float speed, IInputable inputManager)
         {
             _playerSpeed = speed;
+            _baseSpeed = _playerSpeed;
             _inputManager = inputManager;
         }
 
         public void GameOver()
         {
             _playerSpeed = 0;
+        }
+
+        public void GameResume()
+        {
+            _playerSpeed = _baseSpeed;
         }
         
         private void Awake()

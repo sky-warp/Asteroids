@@ -49,7 +49,6 @@ namespace _Project.Scripts.CustomPool
             foreach (var t in Pool)
             {
                 Release(t);
-                GameObject.Destroy(t.gameObject);
             }
         }
         

@@ -1,5 +1,4 @@
 using System;
-using _Project.Scripts.AudioSystems;
 using R3;
 using UnityEngine;
 
@@ -17,20 +16,15 @@ namespace _Project.Scripts.InputService
         {
             IsAvailable = new(true);
             
-            IsAvailable
-                .Where(available => !available)
-                .Subscribe(_ => Dispose())
-                .AddTo(_disposable);
-            
             Observable
                 .EveryUpdate()
-                .Where(_ => Input.GetMouseButtonDown(0))
+                .Where(_ => Input.GetMouseButtonDown(0) && IsAvailable.Value)
                 .Subscribe(_ => OnBulletRelease?.Invoke())
                 .AddTo(_disposable);
             
             Observable
                 .EveryUpdate()
-                .Where(_ => Input.GetMouseButtonDown(1))
+                .Where(_ => Input.GetMouseButtonDown(1) && IsAvailable.Value)
                 .Subscribe(_ => OnLaserRelease?.Invoke())
                 .AddTo(_disposable);
         }

@@ -6,5 +6,6 @@ namespace _Project.Scripts.GameOverServices
     {
         public readonly Subject<Unit> OnGameOver = new();
         public readonly Subject<Unit> OnGameStart = new();
+        public readonly Subject<Unit> OnGameResume = new();
     }
 }

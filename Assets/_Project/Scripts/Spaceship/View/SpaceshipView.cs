@@ -55,9 +55,14 @@ namespace _Project.Scripts.Spaceship.View
             _spaceshipViewModel.RotationAngleView
                 .Subscribe(rotation => currentAngle.text = $"ROTATION: {rotation:F2}")
                 .AddTo(this);
+            
             _spaceshipViewModel.IsGameOver
                 .Where(isGameOver => isGameOver)
                 .Subscribe(_ => GameOver())
+                .AddTo(this);
+            _spaceshipViewModel.IsGameResume
+                .Where(isGameResume => isGameResume)
+                .Subscribe(_ => GameResume())
                 .AddTo(this);
         }
 
@@ -65,6 +70,12 @@ namespace _Project.Scripts.Spaceship.View
         {
             _statsParent.SpaceShipStatsTransform.gameObject.SetActive(false);
             gameObject.SetActive(false);
+        }
+
+        private void GameResume()
+        {
+            _statsParent.SpaceShipStatsTransform.gameObject.SetActive(true);
+            gameObject.SetActive(true);
         }
     }
 }

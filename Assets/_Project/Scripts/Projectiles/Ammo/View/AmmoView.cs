@@ -30,7 +30,12 @@ namespace _Project.Scripts.Projectiles.Ammo.View
             _ammoViewModel.IsGameOver
                 .Where(isGameOver => isGameOver)
                 .Subscribe(_ => GameOver())
+                .AddTo(this); 
+            _ammoViewModel.IsGameResume
+                .Where(isGameResume => isGameResume)
+                .Subscribe(_ => GameResume())
                 .AddTo(this);
+            
             _ammoViewModel.OnCooldownChanged
                 .Subscribe(ShowCooldownImage)
                 .AddTo(this);
@@ -51,6 +56,11 @@ namespace _Project.Scripts.Projectiles.Ammo.View
             _ammoParent.gameObject.SetActive(false);
         }
 
+        private void GameResume()
+        {
+            _ammoParent.gameObject.SetActive(true);
+        }
+        
         private void CreateLaserCount(int count)
         {
             _laserImage.sprite = _laserSprite;
