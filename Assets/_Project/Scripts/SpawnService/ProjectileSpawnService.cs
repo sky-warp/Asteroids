@@ -17,8 +17,8 @@ namespace _Project.Scripts.SpawnService
         public readonly Subject<Unit> OnBulletSpawned = new();
         public readonly ReactiveProperty<bool> IsReadyToShootLaser = new();
 
-        private CustomPool<Bullet> _bulletsPool;
-        private CustomPool<Laser> _lasersPool;
+        private ProjectilePool<Bullet> _bulletsPool;
+        private ProjectilePool<Laser> _lasersPool;
 
         private IInputable _inputManager;
         
@@ -36,8 +36,8 @@ namespace _Project.Scripts.SpawnService
             LevelColliderBorder levelBorder, 
             Transform shipTransform,
             DefaultGameStateService defaultGameStateService, 
-            MonoFactory<Bullet> bulletFactory,
-            MonoFactory<Laser> laserFactory,
+            ProjectileFactory<Bullet> bulletFactory,
+            ProjectileFactory<Laser> laserFactory,
             DefaultAudioManager audioManager,
             DefaultVisualEffectSystem visualEffectSystem)
         {
@@ -49,8 +49,8 @@ namespace _Project.Scripts.SpawnService
             
             _visualEffectSystem.CreateProjectileVisualEffects(shipTransform);
 
-            _bulletsPool = new CustomPool<Bullet>(3, shipTransform, bulletFactory);
-            _lasersPool = new CustomPool<Laser>(3, shipTransform, laserFactory);
+            _bulletsPool = new ProjectilePool<Bullet>(3, shipTransform, bulletFactory);
+            _lasersPool = new ProjectilePool<Laser>(3, shipTransform, laserFactory);
         }
 
         public void Initialize()

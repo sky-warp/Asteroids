@@ -98,8 +98,8 @@ namespace _Project.Scripts.Installers
                 .AsSingle()
                 .WithArguments(
                     spaceship.transform,
-                    new MonoFactory<Bullet>(_mainLevelResources.Bullet),
-                    new MonoFactory<Laser>(_mainLevelResources.Laser)
+                    new ProjectileFactory<Bullet>(_mainLevelResources.Bullet, _remoteData.BulletSpeed),
+                    new ProjectileFactory<Laser>(_mainLevelResources.Laser, _remoteData.LaserSpeed)
                     );
 
             Container

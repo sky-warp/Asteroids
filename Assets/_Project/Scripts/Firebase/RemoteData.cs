@@ -8,5 +8,7 @@ namespace _Project.Scripts.Firebase
         public float SpaceshipSpeed;
         public int LaserCount;
         public float LaserCooldown;
+        public float LaserSpeed;
+        public float BulletSpeed;
     }
 }
