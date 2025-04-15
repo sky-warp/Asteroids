@@ -14,18 +14,18 @@ namespace _Project.Scripts.Bootstrap
         private IAssetLoadable _assetLoader;
         private MainLevelResources _mainLevelResources;
         private SceneManager _sceneManager;
-        private RemoteConfigTest _remoteConfigTest;
+        private RemoteConfigInitializer _remoteConfigInitializer;
 
         public Bootstrapper(IAssetLoadable assetLoader,
             MainLevelResources mainLevelResources,
             SceneManager sceneManager,
-            RemoteConfigTest remoteConfigTest
+            RemoteConfigInitializer remoteConfigInitializer
             )
         {
             _assetLoader = assetLoader;
             _mainLevelResources = mainLevelResources;
             _sceneManager = sceneManager;
-            _remoteConfigTest = remoteConfigTest;
+            _remoteConfigInitializer = remoteConfigInitializer;
         }
 
         public async void Initialize()
@@ -48,7 +48,7 @@ namespace _Project.Scripts.Bootstrap
 
             _assetLoader.UnloadAsset();
 
-            await _remoteConfigTest.LoadRemoteData();
+            await _remoteConfigInitializer.LoadRemoteData();
             
             _sceneManager.LoadMainScene();
         }

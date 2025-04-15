@@ -1,4 +1,3 @@
-using _Project.Scripts.Configs.AmmoConfigs;
 using R3;
 
 namespace _Project.Scripts.Projectiles.Ammo.Model
@@ -11,10 +10,10 @@ namespace _Project.Scripts.Projectiles.Ammo.Model
         
         public readonly int MaxAmmo;
         
-        public AmmoModel(AmmoConfig config)
+        public AmmoModel(int maxAmmo, float laserCooldown)
         {
-            CurrentLaserAmmo.Value = config.LaserCount;
-            LaserCooldown.Value = config.LaserCooldown;
+            CurrentLaserAmmo.Value = maxAmmo;
+            LaserCooldown.Value = laserCooldown;
 
             MaxAmmo = CurrentLaserAmmo.Value;
         }

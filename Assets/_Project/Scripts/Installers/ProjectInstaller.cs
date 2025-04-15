@@ -32,7 +32,7 @@ namespace _Project.Scripts.Installers
         public override void InstallBindings()
         {
             Container
-                .BindInterfacesAndSelfTo<RemoteConfigTest>()
+                .BindInterfacesAndSelfTo<RemoteConfigInitializer>()
                 .AsSingle();
 
             Container

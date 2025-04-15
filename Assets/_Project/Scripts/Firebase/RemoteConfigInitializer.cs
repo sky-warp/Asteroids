@@ -5,11 +5,11 @@ using UnityEngine;
 
 namespace _Project.Scripts.Firebase
 {
-    public class RemoteConfigTest
+    public class RemoteConfigInitializer
     {
         private RemoteData _remoteData;
 
-        public RemoteConfigTest(RemoteData remoteData)
+        public RemoteConfigInitializer(RemoteData remoteData)
         {
             _remoteData = remoteData;
         }
@@ -37,15 +37,9 @@ namespace _Project.Scripts.Firebase
 
             await remoteConfig.ActivateAsync();
             
-            string confData = remoteConfig.GetValue("spaceshipData").StringValue;
+            string confData = remoteConfig.GetValue("AsteroidData").StringValue;
             
             JsonUtility.FromJsonOverwrite(confData, _remoteData);
         }
-    }
-
-    [Serializable]
-    public class RemoteData
-    {    
-        public float Speed;
     }
 }

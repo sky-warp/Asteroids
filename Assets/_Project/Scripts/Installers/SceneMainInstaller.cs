@@ -110,7 +110,7 @@ namespace _Project.Scripts.Installers
             Container
                 .Bind<SpaceshipModel>()
                 .AsSingle()
-                .WithArguments(_remoteData.Speed);
+                .WithArguments(_remoteData.SpaceshipSpeed);
             Container
                 .BindInterfacesAndSelfTo<SpaceshipViewModel>()
                 .AsSingle();
@@ -122,7 +122,7 @@ namespace _Project.Scripts.Installers
             Container
                 .Bind<AmmoModel>()
                 .AsSingle()
-                .WithArguments(_gameConfig.AmmoConfig);
+                .WithArguments(_remoteData.LaserCount, _remoteData.LaserCooldown);
             Container
                 .BindInterfacesAndSelfTo<AmmoViewModel>()
                 .AsSingle();
