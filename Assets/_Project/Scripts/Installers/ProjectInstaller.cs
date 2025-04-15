@@ -32,6 +32,14 @@ namespace _Project.Scripts.Installers
         public override void InstallBindings()
         {
             Container
+                .BindInterfacesAndSelfTo<RemoteConfigTest>()
+                .AsSingle();
+
+            Container
+                .Bind<RemoteData>()
+                .AsSingle();
+            
+            Container
                 .BindInterfacesAndSelfTo<AdManager>()
                 .AsSingle()
                 .NonLazy();

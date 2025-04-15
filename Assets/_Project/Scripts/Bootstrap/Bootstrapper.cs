@@ -1,4 +1,5 @@
 using _Project.Scripts.Environment.Units;
+using _Project.Scripts.Firebase;
 using _Project.Scripts.LocalAssetLoaders;
 using _Project.Scripts.Projectiles.ProjectileTypes;
 using _Project.Scripts.SceneManagers;
@@ -13,14 +14,18 @@ namespace _Project.Scripts.Bootstrap
         private IAssetLoadable _assetLoader;
         private MainLevelResources _mainLevelResources;
         private SceneManager _sceneManager;
+        private RemoteConfigTest _remoteConfigTest;
 
         public Bootstrapper(IAssetLoadable assetLoader,
             MainLevelResources mainLevelResources,
-            SceneManager sceneManager)
+            SceneManager sceneManager,
+            RemoteConfigTest remoteConfigTest
+            )
         {
             _assetLoader = assetLoader;
             _mainLevelResources = mainLevelResources;
             _sceneManager = sceneManager;
+            _remoteConfigTest = remoteConfigTest;
         }
 
         public async void Initialize()
@@ -43,6 +48,8 @@ namespace _Project.Scripts.Bootstrap
 
             _assetLoader.UnloadAsset();
 
+            await _remoteConfigTest.LoadRemoteData();
+            
             _sceneManager.LoadMainScene();
         }
     }

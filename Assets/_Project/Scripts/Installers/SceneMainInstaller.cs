@@ -2,6 +2,7 @@ using _Project.Scripts.Configs.GameConfigs;
 using _Project.Scripts.DOTweenAnimations;
 using _Project.Scripts.Environment.Units;
 using _Project.Scripts.Factories;
+using _Project.Scripts.Firebase;
 using _Project.Scripts.Infrastructure;
 using _Project.Scripts.InputService;
 using _Project.Scripts.LevelBorder;
@@ -41,6 +42,8 @@ namespace _Project.Scripts.Installers
         [Inject] private readonly GameConfig _gameConfig;
         
         [Inject] private readonly MainLevelResources _mainLevelResources;
+        
+        [Inject] private readonly RemoteData _remoteData;
 
         public override void InstallBindings()
         {
@@ -103,11 +106,11 @@ namespace _Project.Scripts.Installers
                 .Bind<SpaceShipStats>()
                 .FromMethod(_ => new SpaceShipStats(_spaceshipStatsParent))
                 .AsSingle();
-
+            
             Container
                 .Bind<SpaceshipModel>()
                 .AsSingle()
-                .WithArguments(_gameConfig.SpaceshipConfig);
+                .WithArguments(_remoteData.Speed);
             Container
                 .BindInterfacesAndSelfTo<SpaceshipViewModel>()
                 .AsSingle();

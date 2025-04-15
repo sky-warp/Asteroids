@@ -6,6 +6,5 @@ namespace _Project.Scripts.Configs.SpaceshipConfigs
     public class SpaceshipConfig : ScriptableObject
     {
         [field: SerializeField] public float Speed { get; private set; }
-        [field: SerializeField] public float LaserCooldown { get; private set; }
     }
 }
