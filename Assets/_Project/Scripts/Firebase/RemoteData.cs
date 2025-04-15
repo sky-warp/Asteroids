@@ -10,5 +10,7 @@ namespace _Project.Scripts.Firebase
         public float LaserCooldown;
         public float LaserSpeed;
         public float BulletSpeed;
+        public float MinSpawnSpace;
+        public float MaxSpawnSpace;
     }
 }

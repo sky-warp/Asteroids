@@ -2,9 +2,7 @@ using _Project.Scripts.AudioSystems;
 using _Project.Scripts.AudioSystems.AudioTypes;
 using _Project.Scripts.Configs.Ads;
 using _Project.Scripts.Configs.AudioConfigs;
-using _Project.Scripts.Configs.GameConfigs;
 using _Project.Scripts.Configs.ParticleConfigs;
-using _Project.Scripts.Configs.SpawnerConfigs;
 using _Project.Scripts.CoroutineManagers;
 using _Project.Scripts.Factories;
 using _Project.Scripts.Firebase;
@@ -23,8 +21,6 @@ namespace _Project.Scripts.Installers
     [CreateAssetMenu(fileName = "ProjectInstaller", menuName = "Installers/ProjectInstaller")]
     public class ProjectInstaller : ScriptableObjectInstaller
     {
-        [SerializeField] private GameConfig _gameConfig;
-        [SerializeField] private SpawnerConfig _spawnerConfig;
         [SerializeField] private AudioSystemConfig _audioSystemConfig;
         [SerializeField] private VisualEffectsConfig _visualEffectsConfig;
         [SerializeField] private AdsConfig _adsConfig;
@@ -69,19 +65,9 @@ namespace _Project.Scripts.Installers
                 .AsSingle();
 
             Container
-                .Bind<GameConfig>()
-                .FromInstance(_gameConfig)
-                .AsSingle();
-
-            Container
                 .Bind<DefaultGameStateService>()
                 .AsSingle()
                 .NonLazy();
-
-            Container
-                .Bind<SpawnerConfig>()
-                .FromInstance(_spawnerConfig)
-                .AsSingle();
 
             Container
                 .Bind<CoroutineManager>()

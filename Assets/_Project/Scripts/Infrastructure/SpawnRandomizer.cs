@@ -1,5 +1,4 @@
 using System;
-using _Project.Scripts.Configs.SpawnerConfigs;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -12,12 +11,12 @@ namespace _Project.Scripts.Infrastructure
         private float _minSpawnSpace;
         private float _maxSpawnSpace;
         
-        public SpawnRandomizer(Camera camera, SpawnerConfig config)
+        public SpawnRandomizer(Camera camera, float minSpawnSpace, float maxSpawnSpace)
         {
             _camera = camera;
             
-            _minSpawnSpace = config.MinSpawnSpace;
-            _maxSpawnSpace = config.MaxSpawnSpace;
+            _minSpawnSpace = minSpawnSpace;
+            _maxSpawnSpace = maxSpawnSpace;
         }
         
         public Transform GetRandomSpawnTransform()
@@ -68,5 +67,13 @@ namespace _Project.Scripts.Infrastructure
             
             return dummySpawnPoint.transform;
         }
+    }
+    
+    public enum SidesToSpawn
+    {
+        Left,
+        Right,
+        Top,
+        Bottom
     }
 }

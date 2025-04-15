@@ -1,4 +1,3 @@
-using _Project.Scripts.Configs.GameConfigs;
 using _Project.Scripts.DOTweenAnimations;
 using _Project.Scripts.Environment.Units;
 using _Project.Scripts.Factories;
@@ -19,7 +18,6 @@ using _Project.Scripts.Spaceship.Model;
 using _Project.Scripts.Spaceship.View;
 using _Project.Scripts.Spaceship.ViewModel;
 using _Project.Scripts.SpawnService;
-using _Project.Scripts.UnityAds;
 using _Project.Scripts.UnityAds.Controller;
 using _Project.Scripts.UnityAds.View;
 using UnityEngine;
@@ -39,8 +37,6 @@ namespace _Project.Scripts.Installers
 
         [SerializeField] public EndGameWindowAppearAnimation _endGameAnimation;
         
-        [Inject] private readonly GameConfig _gameConfig;
-        
         [Inject] private readonly MainLevelResources _mainLevelResources;
         
         [Inject] private readonly RemoteData _remoteData;
@@ -58,7 +54,8 @@ namespace _Project.Scripts.Installers
 
             Container
                 .Bind<SpawnRandomizer>()
-                .AsSingle();
+                .AsSingle()
+                .WithArguments(_remoteData.MinSpawnSpace, _remoteData.MaxSpawnSpace);
 
             Container
                 .Bind<LevelColliderBorder>()
