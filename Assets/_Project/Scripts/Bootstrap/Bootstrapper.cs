@@ -12,14 +12,14 @@ namespace _Project.Scripts.Bootstrap
     public class Bootstrapper : IInitializable
     {
         private IAssetLoadable _assetLoader;
+        private IRemoteDataLoadable _remoteConfigInitializer;
         private MainLevelResources _mainLevelResources;
         private SceneManager _sceneManager;
-        private RemoteConfigInitializer _remoteConfigInitializer;
 
         public Bootstrapper(IAssetLoadable assetLoader,
             MainLevelResources mainLevelResources,
             SceneManager sceneManager,
-            RemoteConfigInitializer remoteConfigInitializer
+            IRemoteDataLoadable remoteConfigInitializer
             )
         {
             _assetLoader = assetLoader;

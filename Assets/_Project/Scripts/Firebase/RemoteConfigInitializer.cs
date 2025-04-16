@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace _Project.Scripts.Firebase
 {
-    public class RemoteConfigInitializer
+    public class RemoteConfigInitializer : IRemoteDataLoadable
     {
         private RemoteData _remoteData;
 

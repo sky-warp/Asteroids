@@ -28,7 +28,8 @@ namespace _Project.Scripts.Installers
         public override void InstallBindings()
         {
             Container
-                .BindInterfacesAndSelfTo<RemoteConfigInitializer>()
+                .Bind<IRemoteDataLoadable>()
+                .To<RemoteConfigInitializer>()
                 .AsSingle();
 
             Container
