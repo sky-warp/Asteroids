@@ -38,9 +38,9 @@ namespace _Project.Scripts.SpawnService
             LevelColliderBorder levelColliderBorder,
             DefaultGameStateService defaultGameStateService,
             SpawnRandomizer spawnRandomizer,
-            EnvironmentUnitFactory<AsteroidBig> asteroidBigFactory,
-            EnvironmentUnitFactory<AsteroidSmall> asteroidSmallFactory,
-            EnvironmentUnitFactory<UfoChaser> ufoChaserFactory,
+            BaseMonoFactory<AsteroidBig> asteroidBigFactory,
+            BaseMonoFactory<AsteroidSmall> asteroidSmallFactory,
+            BaseMonoFactory<UfoChaser> ufoChaserFactory,
             DefaultVisualEffectSystem visualEffectSystem
         )
         {

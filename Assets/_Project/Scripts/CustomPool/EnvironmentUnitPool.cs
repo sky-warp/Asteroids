@@ -8,10 +8,10 @@ namespace _Project.Scripts.CustomPool
     public class EnvironmentUnitPool<T> : BasePool<T> where T : EnvironmentObject
     {
         private Transform _parent;
-        private EnvironmentUnitFactory<T> _factory;
+        private BaseMonoFactory<T> _factory;
         private List<T> Pool { get; }
 
-        public EnvironmentUnitPool(int prewarmObjects, Transform parent, EnvironmentUnitFactory<T> factory) : base(
+        public EnvironmentUnitPool(int prewarmObjects, Transform parent, BaseMonoFactory<T> factory) : base(
             prewarmObjects, parent, factory)
         {
         }

@@ -36,8 +36,8 @@ namespace _Project.Scripts.SpawnService
             LevelColliderBorder levelBorder, 
             Transform shipTransform,
             DefaultGameStateService defaultGameStateService, 
-            ProjectileFactory<Bullet> bulletFactory,
-            ProjectileFactory<Laser> laserFactory,
+            BaseMonoFactory<Bullet> bulletFactory,
+            BaseMonoFactory<Laser> laserFactory,
             DefaultAudioManager audioManager,
             DefaultVisualEffectSystem visualEffectSystem)
         {

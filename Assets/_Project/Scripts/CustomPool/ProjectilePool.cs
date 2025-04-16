@@ -8,10 +8,10 @@ namespace _Project.Scripts.CustomPool
     public class ProjectilePool<T> : BasePool<T> where T : Projectile
     {
         private Transform _parent;
-        private ProjectileFactory<T> _factory;
+        private BaseMonoFactory<T> _factory;
         private List<T> Pool { get; }
 
-        public ProjectilePool(int prewarmObjects, Transform parent, ProjectileFactory<T> factory) : base(prewarmObjects,
+        public ProjectilePool(int prewarmObjects, Transform parent, BaseMonoFactory<T> factory) : base(prewarmObjects,
             parent, factory)
         {
         }
