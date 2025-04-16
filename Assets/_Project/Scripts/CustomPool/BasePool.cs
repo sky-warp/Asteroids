@@ -5,13 +5,13 @@ using UnityEngine;
 
 namespace _Project.Scripts.CustomPool
 {
-    public class CustomPool<T> where T : MonoBehaviour
+    public abstract class BasePool<T> where T : MonoBehaviour
     {
         private Transform _parent;
-        private MonoFactory<T> _factory;
+        private BaseMonoFactory<T> _factory;
         private List<T> Pool { get; }
 
-        public CustomPool(int prewarmObjects, Transform parent, MonoFactory<T> factory)
+        public BasePool(int prewarmObjects, Transform parent, BaseMonoFactory<T> factory)
         {
             _factory = factory;
             _parent = parent;
