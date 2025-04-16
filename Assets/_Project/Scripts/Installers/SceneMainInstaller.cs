@@ -36,9 +36,9 @@ namespace _Project.Scripts.Installers
         [SerializeField] private LevelColliderBorder _levelColliderBorder;
 
         [SerializeField] public EndGameWindowAppearAnimation _endGameAnimation;
-        
+
         [Inject] private readonly MainLevelResources _mainLevelResources;
-        
+
         [Inject] private readonly RemoteData _remoteData;
 
         public override void InstallBindings()
@@ -47,7 +47,7 @@ namespace _Project.Scripts.Installers
                 .Bind<Camera>()
                 .FromInstance(Camera.main)
                 .AsSingle();
-            
+
             Container
                 .BindInterfacesTo<EntryPoint>()
                 .AsSingle();
@@ -71,7 +71,7 @@ namespace _Project.Scripts.Installers
                 .Bind<EndGameWindowAppearAnimation>()
                 .FromInstance(_endGameAnimation)
                 .AsSingle();
-            
+
             var spaceship = Container
                 .InstantiatePrefabForComponent<SpaceshipView>(_mainLevelResources.Spaceship);
 
@@ -79,16 +79,19 @@ namespace _Project.Scripts.Installers
                 .Bind<PlayerMovement>()
                 .FromInstance(spaceship.GetComponent<PlayerMovement>())
                 .AsSingle();
-            
+
             Container
                 .BindInterfacesAndSelfTo<EnvironmentUnitSpawnService>()
                 .AsSingle()
                 .WithArguments(
-                    spaceship.transform, 
-                    new MonoFactory<AsteroidBig>(_mainLevelResources.AsteroidBig),
-                    new MonoFactory<AsteroidSmall>(_mainLevelResources.AsteroidSmall),
-                    new MonoFactory<UfoChaser>(_mainLevelResources.UfoChaser)
-                    );
+                    spaceship.transform,
+                    new EnvironmentUnitFactory<AsteroidBig>(_mainLevelResources.AsteroidBig,
+                        _remoteData.BigAsteroidUnitSpeed, _remoteData.BigAsteroidUnitScore),
+                    new EnvironmentUnitFactory<AsteroidSmall>(_mainLevelResources.AsteroidSmall,
+                        _remoteData.SmallAsteroidUnitSpeed, _remoteData.SmallAsteroidUnitScore),
+                    new EnvironmentUnitFactory<UfoChaser>(_mainLevelResources.UfoChaser, _remoteData.UfoChaserUnitSpeed,
+                        _remoteData.UfoChaserUnitScore)
+                );
 
             Container
                 .BindInterfacesAndSelfTo<ProjectileSpawnService>()
@@ -97,13 +100,13 @@ namespace _Project.Scripts.Installers
                     spaceship.transform,
                     new ProjectileFactory<Bullet>(_mainLevelResources.Bullet, _remoteData.BulletSpeed),
                     new ProjectileFactory<Laser>(_mainLevelResources.Laser, _remoteData.LaserSpeed)
-                    );
+                );
 
             Container
                 .Bind<SpaceShipStats>()
                 .FromMethod(_ => new SpaceShipStats(_spaceshipStatsParent))
                 .AsSingle();
-            
+
             Container
                 .Bind<SpaceshipModel>()
                 .AsSingle()
@@ -138,7 +141,7 @@ namespace _Project.Scripts.Installers
                 .Bind<ScoreView>()
                 .FromInstance(_scoreView)
                 .AsSingle();
-            
+
             Container
                 .BindInterfacesAndSelfTo<AdsController>()
                 .AsSingle();

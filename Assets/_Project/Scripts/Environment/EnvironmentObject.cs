@@ -18,15 +18,20 @@ namespace _Project.Scripts.Environment
         protected Rigidbody2D Rigidbody2D { get; private set; }
         public CompositeDisposable Disposable { get; private set; } = new();
         
-        [SerializeField] private EnvironmentUnitConfig _environmentUnitConfig;
-        
         private void Awake()
         {
-            Score = _environmentUnitConfig.UnitScore;
-            Speed = _environmentUnitConfig.UnitSpeed;
-            _initialSpeed = Speed;
-            
             Rigidbody2D = GetComponent<Rigidbody2D>();
+        }
+
+        public void SetSpeed(float speed)
+        {
+            Speed = speed;
+            _initialSpeed = Speed;
+        }
+
+        public void SetScore(int score)
+        {
+            Score = score;
         }
         
         public void AddSubscription(IDisposable subscription)

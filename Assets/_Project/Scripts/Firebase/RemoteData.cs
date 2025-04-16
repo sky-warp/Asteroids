@@ -12,5 +12,11 @@ namespace _Project.Scripts.Firebase
         public float BulletSpeed;
         public float MinSpawnSpace;
         public float MaxSpawnSpace;
+        public float BigAsteroidUnitSpeed;
+        public int BigAsteroidUnitScore;
+        public float SmallAsteroidUnitSpeed;
+        public int SmallAsteroidUnitScore;
+        public float UfoChaserUnitSpeed;
+        public int UfoChaserUnitScore;
     }
 }

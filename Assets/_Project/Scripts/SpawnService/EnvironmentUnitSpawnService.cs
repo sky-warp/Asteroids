@@ -6,7 +6,6 @@ using _Project.Scripts.GameOverServices;
 using _Project.Scripts.Infrastructure;
 using _Project.Scripts.LevelBorder;
 using _Project.Scripts.ParticleSystems;
-using _Project.Scripts.UnityAds;
 using R3;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -21,9 +20,9 @@ namespace _Project.Scripts.SpawnService
 
         private Transform _ufoTarget;
 
-        private CustomPool<AsteroidBig> _bigAsteroidsPool;
-        private CustomPool<AsteroidSmall> _smallAsteroidsPool;
-        private CustomPool<UfoChaser> _ufoChasersPool;
+        private EnvironmentUnitPool<AsteroidBig> _bigAsteroidsPool;
+        private EnvironmentUnitPool<AsteroidSmall> _smallAsteroidsPool;
+        private EnvironmentUnitPool<UfoChaser> _ufoChasersPool;
 
         private DefaultGameStateService _defaultGameStateService;
 
@@ -39,9 +38,9 @@ namespace _Project.Scripts.SpawnService
             LevelColliderBorder levelColliderBorder,
             DefaultGameStateService defaultGameStateService,
             SpawnRandomizer spawnRandomizer,
-            MonoFactory<AsteroidBig> asteroidBigFactory,
-            MonoFactory<AsteroidSmall> asteroidSmallFactory,
-            MonoFactory<UfoChaser> ufoChaserFactory,
+            EnvironmentUnitFactory<AsteroidBig> asteroidBigFactory,
+            EnvironmentUnitFactory<AsteroidSmall> asteroidSmallFactory,
+            EnvironmentUnitFactory<UfoChaser> ufoChaserFactory,
             DefaultVisualEffectSystem visualEffectSystem
         )
         {
@@ -57,11 +56,11 @@ namespace _Project.Scripts.SpawnService
             _defaultVisualEffectSystem.CreateUnitEffects(levelColliderBorder.transform);
 
             _bigAsteroidsPool =
-                new CustomPool<AsteroidBig>(3, _spawnRandomizer.GetRandomSpawnTransform(), asteroidBigFactory);
+                new EnvironmentUnitPool<AsteroidBig>(3, _spawnRandomizer.GetRandomSpawnTransform(), asteroidBigFactory);
             _smallAsteroidsPool =
-                new CustomPool<AsteroidSmall>(3, _spawnRandomizer.GetRandomSpawnTransform(), asteroidSmallFactory);
+                new EnvironmentUnitPool<AsteroidSmall>(3, _spawnRandomizer.GetRandomSpawnTransform(), asteroidSmallFactory);
             _ufoChasersPool =
-                new CustomPool<UfoChaser>(3, _spawnRandomizer.GetRandomSpawnTransform(), ufoChaserFactory);
+                new EnvironmentUnitPool<UfoChaser>(3, _spawnRandomizer.GetRandomSpawnTransform(), ufoChaserFactory);
         }
 
         public void Initialize()
