@@ -4,18 +4,22 @@ using Zenject;
 
 namespace _Project.Scripts.UnityAds
 {
-    public class AdManager : IInitializable, IDisposable
+    public class AdManager : IAdShowable, IInitializable, IDisposable
     {
-        public readonly ReactiveProperty<bool> RewardAdWasWatched = new(false);
-        public readonly ReactiveProperty<bool> ShortAdWasWatched = new(false);
-        
-        public RewardAd RewardAd { get; private set; }
-        public ShortAd ShortAd { get; private set; }
-        
+        public ReactiveProperty<bool> RewardAdWasWatched { get; } = new();
+        public ReactiveProperty<bool> ShortAdWasWatched { get; } = new();
+
+        public RewardAd RewardAd { get;}
+        public ShortAd ShortAd { get;}
+
         private AdsInitializer _initializer;
-        
+
         private readonly CompositeDisposable _disposable = new();
-        
+        private ReactiveProperty<bool> _rewardAdWasWatched;
+        private ReactiveProperty<bool> _shortAdWasWatched;
+        private ReactiveProperty<bool> _rewardAdWasWatched1;
+        private ReactiveProperty<bool> _shortAdWasWatched1;
+
         public AdManager(AdsInitializer adsInitializer)
         {
             _initializer = adsInitializer;
@@ -28,11 +32,11 @@ namespace _Project.Scripts.UnityAds
             RewardAd.WasWatched
                 .Subscribe(x => RewardAdWasWatched.Value = x)
                 .AddTo(_disposable);
-            
+
             ShortAd.WasWatched
                 .Subscribe(x => ShortAdWasWatched.Value = x)
                 .AddTo(_disposable);
-            
+
             _initializer.InitializeAds();
         }
 

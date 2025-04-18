@@ -9,13 +9,13 @@ namespace _Project.Scripts.UnityAds.Controller
 {
     public class AdsController : IInitializable, IDisposable
     {
-        private AdManager _adManager;
+        private IAdShowable _adManager;
         private AdsView _adsView;
         private DefaultGameStateService _defaultGameStateService;
         private readonly CompositeDisposable _disposable = new();
         private SceneManager _sceneManager;
 
-        public AdsController(AdsView adsView, AdManager adManager, DefaultGameStateService defaultGameStateService,
+        public AdsController(AdsView adsView, IAdShowable adManager, DefaultGameStateService defaultGameStateService,
             SceneManager sceneManager)
         {
             _adManager = adManager;

@@ -38,7 +38,8 @@ namespace _Project.Scripts.Installers
 
             Container
                 .BindInterfacesAndSelfTo<AdManager>()
-                .AsSingle();
+                .AsSingle()
+                .NonLazy();
 
             Container
                 .Bind<AdsInitializer>()

@@ -15,7 +15,7 @@ namespace _Project.Scripts.Score.ViewModel
         public readonly ReactiveProperty<bool> IsGameOver = new();
         public readonly ReactiveProperty<bool> IsGameResume = new();
 
-        public AdManager AdManager { get; private set; }
+        public IAdShowable AdManager { get; private set; }
 
         private ScoreModel _scoreModel;
 
@@ -33,7 +33,7 @@ namespace _Project.Scripts.Score.ViewModel
 
         public ScoreViewModel(ScoreModel scoreModel, EnvironmentUnitSpawnService environmentUnitSpawnService,
             DefaultGameStateService defaultGameStateService, ScoreSaveSystem scoreSaveSystem,
-            FirebaseEventManager firebaseEventManager, SceneManager sceneManager, AdManager adManager)
+            FirebaseEventManager firebaseEventManager, SceneManager sceneManager, IAdShowable adManager)
         {
             _scoreModel = scoreModel;
             _environmentUnitSpawnService = environmentUnitSpawnService;
