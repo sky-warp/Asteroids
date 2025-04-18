@@ -39,7 +39,7 @@ namespace _Project.Scripts.UnityAds.Controller
                 .Subscribe(_ => _defaultGameStateService.OnGameResume.OnNext(Unit.Default))
                 .AddTo(_disposable);
 
-            _sceneManager.OnSceneChange
+            _sceneManager.SceneChanged
                 .Subscribe(_ => _adManager.RewardAd.WasWatched.Value = false)
                 .AddTo(_disposable);
         }
