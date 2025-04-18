@@ -35,11 +35,10 @@ namespace _Project.Scripts.Installers
             Container
                 .Bind<RemoteData>()
                 .AsSingle();
-            
+
             Container
                 .BindInterfacesAndSelfTo<AdManager>()
-                .AsSingle()
-                .NonLazy();
+                .AsSingle();
 
             Container
                 .Bind<AdsInitializer>()

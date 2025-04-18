@@ -1,9 +1,6 @@
-using _Project.Scripts.Environment.Units;
 using _Project.Scripts.Firebase;
 using _Project.Scripts.LocalAssetLoaders;
-using _Project.Scripts.Projectiles.ProjectileTypes;
 using _Project.Scripts.SceneManagers;
-using _Project.Scripts.Spaceship.View;
 using Cysharp.Threading.Tasks;
 using Zenject;
 
@@ -31,12 +28,12 @@ namespace _Project.Scripts.Bootstrap
         public async void Initialize()
         {
             var (laser, bullet, asteroidBig, asteroidSmall, ufoChaser, spaceship) = await UniTask.WhenAll(
-                _assetLoader.LoadLaser<Laser>("Laser"),
-                _assetLoader.LoadBullet<Bullet>("Bullet"),
-                _assetLoader.LoadAsteroidBig<AsteroidBig>("AsteroidBig"),
-                _assetLoader.LoadAsteroidSmall<AsteroidSmall>("AsteroidSmall"),
-                _assetLoader.LoadUfoChaser<UfoChaser>("UfoChaser"),
-                _assetLoader.LoadSpaceship<SpaceshipView>("Spaceship")
+                _assetLoader.LoadLaser(),
+                _assetLoader.LoadBullet(),
+                _assetLoader.LoadAsteroidBig(),
+                _assetLoader.LoadAsteroidSmall(),
+                _assetLoader.LoadUfoChaser(),
+                _assetLoader.LoadSpaceship()
             );
 
             _mainLevelResources.Laser = laser;
