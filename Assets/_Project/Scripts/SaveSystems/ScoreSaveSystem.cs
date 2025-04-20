@@ -15,6 +15,9 @@ namespace _Project.Scripts.SaveSystems
         private CloudSave _cloudSave;
         private CompositeDisposable _disposable = new();
 
+        private string _tempJSON;
+        private SaveData _localData;
+
         public ScoreSaveSystem(SaveData saveData, CloudSave cloudSave)
         {
             SaveData = saveData;
@@ -23,6 +26,11 @@ namespace _Project.Scripts.SaveSystems
 
         public void Initialize()
         {
+            _tempJSON = PlayerPrefs.GetString("key", "");
+
+            _localData = JsonUtility.FromJson<SaveData>(_tempJSON);
+
+
             if (Application.internetReachability == NetworkReachability.NotReachable)
             {
                 InitializeLocalSave();
@@ -35,14 +43,11 @@ namespace _Project.Scripts.SaveSystems
 
         private void InitializeLocalSave()
         {
-            string tempJson = PlayerPrefs.GetString("key", "");
-
-            if (!string.IsNullOrEmpty(tempJson))
+            if (!string.IsNullOrEmpty(_tempJSON))
             {
-                var data = JsonUtility.FromJson<SaveData>(tempJson);
-                SaveData.SetHighScoreData(data.HighScore);
-                SaveData.SaveDate(data.LastSaveDate);
-                SaveData.SaveTime(data.LastSaveTime);
+                SaveData.SetHighScoreData(_localData.HighScore);
+                SaveData.SaveDate(_localData.LastSaveDate);
+                SaveData.SaveTime(_localData.LastSaveTime);
             }
 
             Observable
@@ -67,6 +72,15 @@ namespace _Project.Scripts.SaveSystems
                 _cloudSave.LoadLastDate(),
                 _cloudSave.LoadLastTime()
             );
+            
+            DateTime localDateTime = DateTime.Parse(_localData.LastSaveDate + " " + _localData.LastSaveTime);
+            DateTime cloudDateTime = DateTime.Parse(cloudDate + " " + cloudTime);
+            
+            if (localDateTime > cloudDateTime)
+            {
+                InitializeLocalSave();
+                return;
+            }
 
             SaveData.SetHighScoreData(cloudHighScore);
             SaveData.SaveDate(cloudDate);
@@ -83,7 +97,7 @@ namespace _Project.Scripts.SaveSystems
                 .Subscribe(_ => UpdateHighScoreCloud())
                 .AddTo(_disposable);
         }
-        
+
         public void ResetHighScore()
         {
             SaveData.ClearHighScoreData();
