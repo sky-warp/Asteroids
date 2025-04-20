@@ -5,20 +5,38 @@ namespace _Project.Scripts.SaveSystems
     [Serializable]
     public class SaveData
     {
-        public event Action OnHighScoreChanged;
         public int HighScore;
+        public string LastSaveDate;
+        public string LastSaveTime;
+        public event Action OnHighScoreChanged;
+        public event Action OnHighScoreReset;
 
-        public void SaveHighScoreData(int highScore)
+        public int SetHighScoreData(int highScore)
         {
             if (highScore > HighScore)
+            {
                 HighScore = highScore;
 
-            OnHighScoreChanged?.Invoke();
+                OnHighScoreChanged?.Invoke();
+            }
+            
+            return HighScore;
         }
 
-        public void CleaHighScoreData()
+        public void ClearHighScoreData()
         {
             HighScore = 0;
+            OnHighScoreReset?.Invoke();
+        }
+
+        public void SaveDate(string date)
+        {
+            LastSaveDate = date;
+        }
+
+        public void SaveTime(string time)
+        {
+            LastSaveTime = time;
         }
     }
 }

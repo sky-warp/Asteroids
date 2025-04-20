@@ -53,7 +53,7 @@ namespace _Project.Scripts.Score.ViewModel
                 .AddTo(_disposable);
 
             CurrentScoreView
-                .Subscribe(_scoreSaveSystem.SaveData.SaveHighScoreData)
+                .Subscribe(currentScore => _scoreSaveSystem.SaveData.SetHighScoreData(currentScore))
                 .AddTo(_disposable);
 
             _environmentUnitSpawnService.BigAsteroidScore

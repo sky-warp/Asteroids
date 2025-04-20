@@ -28,6 +28,11 @@ namespace _Project.Scripts.Installers
         public override void InstallBindings()
         {
             Container
+                .Bind<CloudSave>()
+                .AsSingle()
+                .NonLazy();
+            
+            Container
                 .Bind<IRemoteDataLoadable>()
                 .To<RemoteConfigInitializer>()
                 .AsSingle();
