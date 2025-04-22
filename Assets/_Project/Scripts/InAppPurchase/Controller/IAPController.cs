@@ -1,9 +1,10 @@
 using System;
+using _Project.Scripts.InAppPurchase.View;
 using R3;
 using UnityEngine;
 using Zenject;
 
-namespace _Project.Scripts.InAppPurchase
+namespace _Project.Scripts.InAppPurchase.Controller
 {
     public class IAPController : IInitializable, IDisposable
     {

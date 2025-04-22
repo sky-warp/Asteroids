@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace _Project.Scripts.InAppPurchase
+namespace _Project.Scripts.InAppPurchase.View
 {
     public class IAPView : MonoBehaviour
     {

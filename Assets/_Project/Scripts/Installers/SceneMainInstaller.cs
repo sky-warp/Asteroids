@@ -3,6 +3,8 @@ using _Project.Scripts.Environment.Units;
 using _Project.Scripts.Factories;
 using _Project.Scripts.Firebase;
 using _Project.Scripts.InAppPurchase;
+using _Project.Scripts.InAppPurchase.Controller;
+using _Project.Scripts.InAppPurchase.View;
 using _Project.Scripts.Infrastructure;
 using _Project.Scripts.InputService;
 using _Project.Scripts.LevelBorder;

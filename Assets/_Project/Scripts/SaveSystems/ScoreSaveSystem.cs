@@ -63,7 +63,6 @@ namespace _Project.Scripts.SaveSystems
 
         private async void InitializeRemoteSave()
         {
-            await UnityServices.InitializeAsync();
             await _cloudSave.Authenticate();
 
             var (cloudHighScore, cloudDate, cloudTime) = await UniTask.WhenAll(

@@ -53,6 +53,7 @@ namespace _Project.Scripts.Score.View
                 .Subscribe(_ => _scoreViewModel.AdManager.ShowShortAd())
                 .AddTo(_shortAdDisposable); 
             _restartButton.OnClickAsObservable()
+                .Where(_ => scoreViewModel.IAPController.IsNoAds.Value)
                 .Subscribe(_ => _scoreViewModel.OnRestartGame())
                 .AddTo(this);
 
