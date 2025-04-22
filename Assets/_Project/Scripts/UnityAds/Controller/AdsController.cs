@@ -1,5 +1,6 @@
 using System;
 using _Project.Scripts.GameOverServices;
+using _Project.Scripts.InAppPurchase;
 using _Project.Scripts.SceneManagers;
 using _Project.Scripts.UnityAds.View;
 using R3;
@@ -14,14 +15,16 @@ namespace _Project.Scripts.UnityAds.Controller
         private DefaultGameStateService _defaultGameStateService;
         private readonly CompositeDisposable _disposable = new();
         private SceneManager _sceneManager;
+        private IAPController _iAPController;
 
         public AdsController(AdsView adsView, IAdShowable adManager, DefaultGameStateService defaultGameStateService,
-            SceneManager sceneManager)
+            SceneManager sceneManager, IAPController iAPController)
         {
             _adManager = adManager;
             _adsView = adsView;
             _defaultGameStateService = defaultGameStateService;
             _sceneManager = sceneManager;
+            _iAPController = iAPController;
         }
 
         public void Initialize()
@@ -41,6 +44,11 @@ namespace _Project.Scripts.UnityAds.Controller
 
             _sceneManager.SceneChanged
                 .Subscribe(_ => _adManager.RewardAd.WasWatched.Value = false)
+                .AddTo(_disposable);
+            
+            _iAPController.IsNoAds
+                .Where(value => value)
+                .Subscribe(_ => Dispose())
                 .AddTo(_disposable);
         }
 

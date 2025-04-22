@@ -2,6 +2,7 @@ using _Project.Scripts.DOTweenAnimations;
 using _Project.Scripts.Environment.Units;
 using _Project.Scripts.Factories;
 using _Project.Scripts.Firebase;
+using _Project.Scripts.InAppPurchase;
 using _Project.Scripts.Infrastructure;
 using _Project.Scripts.InputService;
 using _Project.Scripts.LevelBorder;
@@ -32,6 +33,7 @@ namespace _Project.Scripts.Installers
         [SerializeField] private AmmoView _ammoView;
         [SerializeField] private ScoreView _scoreView;
         [SerializeField] private AdsView _adsView;
+        [SerializeField] private IAPView _iAPView;
 
         [SerializeField] private LevelColliderBorder _levelColliderBorder;
 
@@ -148,6 +150,14 @@ namespace _Project.Scripts.Installers
             Container
                 .Bind<AdsView>()
                 .FromInstance(_adsView)
+                .AsSingle();
+            
+            Container
+                .Bind<IAPView>()
+                .FromInstance(_iAPView)
+                .AsSingle();
+            Container
+                .BindInterfacesAndSelfTo<IAPController>()
                 .AsSingle();
         }
     }

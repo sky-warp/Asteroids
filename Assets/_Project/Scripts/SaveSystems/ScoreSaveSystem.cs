@@ -5,11 +5,10 @@ using Newtonsoft.Json;
 using R3;
 using Unity.Services.Core;
 using UnityEngine;
-using Zenject;
 
 namespace _Project.Scripts.SaveSystems
 {
-    public class ScoreSaveSystem : IInitializable, IDisposable
+    public class ScoreSaveSystem : IDisposable
     {
         public SaveData SaveData { get; }
         private CloudSave _cloudSave;
@@ -24,7 +23,7 @@ namespace _Project.Scripts.SaveSystems
             _cloudSave = cloudSave;
         }
 
-        public void Initialize()
+        public void Init()
         {
             _tempJSON = PlayerPrefs.GetString("key", "");
 

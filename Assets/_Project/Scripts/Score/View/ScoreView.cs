@@ -21,6 +21,8 @@ namespace _Project.Scripts.Score.View
 
         private EndGameWindowAppearAnimation _endGameWindowAppearAnimation;
         
+        private CompositeDisposable _shortAdDisposable = new();
+        
         [Inject]
         public void Init(ScoreViewModel scoreViewModel, EndGameWindowAppearAnimation endGameWindowAppearAnimation)
         {
@@ -38,6 +40,10 @@ namespace _Project.Scripts.Score.View
                 .Where(isGameResume => isGameResume)
                 .Subscribe(_ => HideGameOverWindow())
                 .AddTo(this);
+            _scoreViewModel.IAPController.IsNoAds
+                .Where(value => value)
+                .Subscribe(_ => _shortAdDisposable?.Dispose())
+                .AddTo(this);
 
             _resetHighScoreButton.OnClickAsObservable()
                 .Subscribe(_ => _scoreViewModel.ResetHighScoreView())
@@ -45,6 +51,9 @@ namespace _Project.Scripts.Score.View
             
             _restartButton.OnClickAsObservable()
                 .Subscribe(_ => _scoreViewModel.AdManager.ShowShortAd())
+                .AddTo(_shortAdDisposable); 
+            _restartButton.OnClickAsObservable()
+                .Subscribe(_ => _scoreViewModel.OnRestartGame())
                 .AddTo(this);
 
             _scoreText.gameObject.SetActive(true);
@@ -78,6 +87,7 @@ namespace _Project.Scripts.Score.View
         private void OnDestroy()
         {
             _resetHighScoreButton.onClick.RemoveAllListeners();
+            _shortAdDisposable?.Dispose();
         }
     }
 }

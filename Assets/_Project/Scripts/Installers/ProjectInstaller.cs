@@ -7,6 +7,8 @@ using _Project.Scripts.CoroutineManagers;
 using _Project.Scripts.Factories;
 using _Project.Scripts.Firebase;
 using _Project.Scripts.GameOverServices;
+using _Project.Scripts.InAppPurchase;
+using _Project.Scripts.InAppPurchase.Products;
 using _Project.Scripts.LocalAssetLoaders;
 using _Project.Scripts.ParticleSystems;
 using _Project.Scripts.SaveSystems;
@@ -27,6 +29,14 @@ namespace _Project.Scripts.Installers
 
         public override void InstallBindings()
         {
+            Container
+                .Bind<IAPInitializer>()
+                .AsSingle();
+            
+            Container
+                .Bind<NoAdsProductData>()
+                .AsSingle();
+            
             Container
                 .Bind<CloudSave>()
                 .AsSingle()
@@ -82,9 +92,8 @@ namespace _Project.Scripts.Installers
 
             Container
                 .BindInterfacesAndSelfTo<ScoreSaveSystem>()
-                .AsSingle()
-                .NonLazy();
-
+                .AsSingle();
+            
             Container
                 .Bind<FirebaseInstaller>()
                 .FromNewComponentOnNewGameObject()

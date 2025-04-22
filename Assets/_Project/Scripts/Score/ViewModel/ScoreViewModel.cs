@@ -1,5 +1,6 @@
 using _Project.Scripts.Firebase;
 using _Project.Scripts.GameOverServices;
+using _Project.Scripts.InAppPurchase;
 using _Project.Scripts.SaveSystems;
 using _Project.Scripts.SceneManagers;
 using _Project.Scripts.Score.Model;
@@ -11,6 +12,8 @@ namespace _Project.Scripts.Score.ViewModel
 {
     public class ScoreViewModel : Zenject.IInitializable
     {
+        public IAPController IAPController { get; private set; }
+
         public readonly ReactiveProperty<int> CurrentScoreView = new();
         public readonly ReactiveProperty<bool> IsGameOver = new();
         public readonly ReactiveProperty<bool> IsGameResume = new();
@@ -33,7 +36,8 @@ namespace _Project.Scripts.Score.ViewModel
 
         public ScoreViewModel(ScoreModel scoreModel, EnvironmentUnitSpawnService environmentUnitSpawnService,
             DefaultGameStateService defaultGameStateService, ScoreSaveSystem scoreSaveSystem,
-            FirebaseEventManager firebaseEventManager, SceneManager sceneManager, IAdShowable adManager)
+            FirebaseEventManager firebaseEventManager, SceneManager sceneManager, IAdShowable adManager,
+            IAPController iapController)
         {
             _scoreModel = scoreModel;
             _environmentUnitSpawnService = environmentUnitSpawnService;
@@ -42,6 +46,7 @@ namespace _Project.Scripts.Score.ViewModel
             _firebaseEventManager = firebaseEventManager;
             _sceneManager = sceneManager;
             AdManager = adManager;
+            IAPController = iapController;
 
             ResetScore();
         }
@@ -109,7 +114,7 @@ namespace _Project.Scripts.Score.ViewModel
             _scoreSaveSystem.ResetHighScore();
         }
 
-        private void OnRestartGame()
+        public void OnRestartGame()
         {
             _sceneManager.RestartGame();
         }
