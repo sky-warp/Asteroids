@@ -1,7 +1,7 @@
 using _Project.Scripts.AudioSystems;
 using _Project.Scripts.CustomPool;
 using _Project.Scripts.Factories;
-using _Project.Scripts.GameOverServices;
+using _Project.Scripts.GameStateServices;
 using _Project.Scripts.InputService;
 using _Project.Scripts.LevelBorder;
 using _Project.Scripts.ParticleSystems;

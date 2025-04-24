@@ -14,7 +14,7 @@ namespace _Project.Scripts.Environment.Units
         {
             Rigidbody2D.velocity = direction * Speed;
         }
-
+        
         private new void OnTriggerEnter2D(Collider2D other)
         {
             base.OnTriggerEnter2D(other);

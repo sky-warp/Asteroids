@@ -1,5 +1,5 @@
 using _Project.Scripts.Firebase;
-using _Project.Scripts.GameOverServices;
+using _Project.Scripts.GameStateServices;
 using _Project.Scripts.InAppPurchase.Controller;
 using _Project.Scripts.SaveSystems;
 using _Project.Scripts.SceneManagers;

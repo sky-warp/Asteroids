@@ -1,6 +1,5 @@
 using System;
-using _Project.Scripts.GameOverServices;
-using _Project.Scripts.InAppPurchase;
+using _Project.Scripts.GameStateServices;
 using _Project.Scripts.InAppPurchase.Controller;
 using _Project.Scripts.SceneManagers;
 using _Project.Scripts.UnityAds.View;

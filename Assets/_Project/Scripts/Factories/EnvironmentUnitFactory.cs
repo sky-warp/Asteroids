@@ -19,7 +19,7 @@ namespace _Project.Scripts.Factories
         public override T Create(Transform parent)
         {
             var instance = GameObject.Instantiate(_unitPrefab, parent);
-            instance.SetSpeed(_unitSpeed);
+            instance.SetStartSpeed(_unitSpeed);
             instance.SetScore(_unitScore);
             return instance;
         }

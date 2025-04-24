@@ -2,6 +2,7 @@ using _Project.Scripts.DOTweenAnimations;
 using _Project.Scripts.Environment.Units;
 using _Project.Scripts.Factories;
 using _Project.Scripts.Firebase;
+using _Project.Scripts.GameStateServices.PauseMenu;
 using _Project.Scripts.InAppPurchase;
 using _Project.Scripts.InAppPurchase.Controller;
 using _Project.Scripts.InAppPurchase.View;
@@ -36,6 +37,7 @@ namespace _Project.Scripts.Installers
         [SerializeField] private ScoreView _scoreView;
         [SerializeField] private AdsView _adsView;
         [SerializeField] private IAPView _iAPView;
+        [SerializeField] private PauseMenuView _pauseMenuView;
 
         [SerializeField] private LevelColliderBorder _levelColliderBorder;
 
@@ -67,8 +69,7 @@ namespace _Project.Scripts.Installers
                 .AsSingle();
 
             Container
-                .Bind<IInputable>()
-                .To<InputManager>()
+                .BindInterfacesAndSelfTo<InputManager>()
                 .AsSingle();
 
             Container
@@ -160,6 +161,14 @@ namespace _Project.Scripts.Installers
                 .AsSingle();
             Container
                 .BindInterfacesAndSelfTo<IAPController>()
+                .AsSingle(); 
+            
+            Container
+                .Bind<PauseMenuView>()
+                .FromInstance(_pauseMenuView)
+                .AsSingle();
+            Container
+                .BindInterfacesAndSelfTo<PauseMenuController>()
                 .AsSingle();
         }
     }

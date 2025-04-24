@@ -17,28 +17,38 @@ namespace _Project.Scripts.Environment
         private float _initialSpeed;
         protected Rigidbody2D Rigidbody2D { get; private set; }
         public CompositeDisposable Disposable { get; private set; } = new();
-        
+
         private void Awake()
         {
             Rigidbody2D = GetComponent<Rigidbody2D>();
         }
+        
+        public void StopObject()
+        {
+            Rigidbody2D.velocity = Vector2.zero;
+        }
 
-        public void SetSpeed(float speed)
+        public void SetStartSpeed(float speed)
         {
             Speed = speed;
             _initialSpeed = Speed;
+        }
+
+        private void RestoreSpeed()
+        {
+            Speed = _initialSpeed;
         }
 
         public void SetScore(int score)
         {
             Score = score;
         }
-        
+
         public void AddSubscription(IDisposable subscription)
         {
             Disposable.Add(subscription);
         }
-        
+
         public void ResetSubscription()
         {
             Disposable?.Dispose();
@@ -51,7 +61,7 @@ namespace _Project.Scripts.Environment
             {
                 OnSpaceshipTouched?.OnNext(Unit.Default);
             }
-            
+
             if (other.TryGetComponent(out Bullet big) || other.TryGetComponent(out Laser small))
             {
                 UnitPositionWhenHit?.OnNext(transform.position);
@@ -60,7 +70,7 @@ namespace _Project.Scripts.Environment
 
         private void OnDisable()
         {
-            Speed = _initialSpeed;
+            RestoreSpeed();
         }
 
         private void OnDestroy()

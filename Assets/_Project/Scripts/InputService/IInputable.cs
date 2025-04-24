@@ -9,6 +9,7 @@ namespace _Project.Scripts.InputService
 
         event Action OnBulletRelease;
         event Action OnLaserRelease;
+        event Action OnEscPressed;
 
         float GetAxisVertical();
         float GetAxisHorizontal();

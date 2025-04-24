@@ -2,7 +2,7 @@ using System.Collections;
 using _Project.Scripts.CustomPool;
 using _Project.Scripts.Environment.Units;
 using _Project.Scripts.Factories;
-using _Project.Scripts.GameOverServices;
+using _Project.Scripts.GameStateServices;
 using _Project.Scripts.Infrastructure;
 using _Project.Scripts.LevelBorder;
 using _Project.Scripts.ParticleSystems;
@@ -58,7 +58,8 @@ namespace _Project.Scripts.SpawnService
             _bigAsteroidsPool =
                 new EnvironmentUnitPool<AsteroidBig>(3, _spawnRandomizer.GetRandomSpawnTransform(), asteroidBigFactory);
             _smallAsteroidsPool =
-                new EnvironmentUnitPool<AsteroidSmall>(3, _spawnRandomizer.GetRandomSpawnTransform(), asteroidSmallFactory);
+                new EnvironmentUnitPool<AsteroidSmall>(3, _spawnRandomizer.GetRandomSpawnTransform(),
+                    asteroidSmallFactory);
             _ufoChasersPool =
                 new EnvironmentUnitPool<UfoChaser>(3, _spawnRandomizer.GetRandomSpawnTransform(), ufoChaserFactory);
         }
@@ -87,23 +88,6 @@ namespace _Project.Scripts.SpawnService
         {
             var asteroid = _bigAsteroidsPool.Get();
 
-            asteroid.ResetSubscription();
-
-            var gameOverSubscription = asteroid.OnSpaceshipTouched
-                .Subscribe(_ => GameOver());
-
-            var hitSubscription = asteroid.OnBigAsteroidHit
-                .Subscribe(_ =>
-                    CreateSmallAsteroids(asteroid, asteroid.transform.position, asteroid.SmallAsteroidsAmountAfterHit));
-
-            var playEffectSubscription = asteroid.UnitPositionWhenHit
-                .Subscribe(_defaultVisualEffectSystem.PlayUnitDestroyEffect)
-                .AddTo(_disposable);
-
-            asteroid.AddSubscription(hitSubscription);
-            asteroid.AddSubscription(gameOverSubscription);
-            asteroid.AddSubscription(playEffectSubscription);
-
             var spawnPoint = _spawnRandomizer.GetRandomSpawnTransform();
 
             asteroid.transform.position = spawnPoint.position;
@@ -122,6 +106,33 @@ namespace _Project.Scripts.SpawnService
             }
 
             Vector2 asteroidDirection = new Vector2(xDirection, yDirection).normalized;
+
+            asteroid.ResetSubscription();
+
+            var gameOverSubscription = asteroid.OnSpaceshipTouched
+                .Subscribe(_ => GameOver());
+
+            var hitSubscription = asteroid.OnBigAsteroidHit
+                .Subscribe(_ =>
+                    CreateSmallAsteroids(asteroid, asteroid.transform.position, asteroid.SmallAsteroidsAmountAfterHit));
+
+            var playEffectSubscription = asteroid.UnitPositionWhenHit
+                .Subscribe(_defaultVisualEffectSystem.PlayUnitDestroyEffect)
+                .AddTo(_disposable);
+
+            var stopBigAsterSubscription = _defaultGameStateService.OnGamePaused
+                .Subscribe(_ => asteroid.StopObject())
+                .AddTo(_disposable);
+            
+            var moveBigAsterSubscription = _defaultGameStateService.OnGameResume
+                .Subscribe(_ => asteroid.MoveAsteroidBig(asteroidDirection))
+                .AddTo(_disposable);
+
+            asteroid.AddSubscription(hitSubscription);
+            asteroid.AddSubscription(gameOverSubscription);
+            asteroid.AddSubscription(playEffectSubscription);
+            asteroid.AddSubscription(stopBigAsterSubscription);
+            asteroid.AddSubscription(moveBigAsterSubscription);
 
             asteroid.MoveAsteroidBig(asteroidDirection);
         }
@@ -154,10 +165,20 @@ namespace _Project.Scripts.SpawnService
                 var playEffectSubscription = asteroidSmall.UnitPositionWhenHit
                     .Subscribe(_defaultVisualEffectSystem.PlayUnitDestroyEffect)
                     .AddTo(_disposable);
+                
+                var stopSmallAsteroidSubscription = _defaultGameStateService.OnGamePaused
+                    .Subscribe(_ => asteroidSmall.StopObject())
+                    .AddTo(_disposable);
+                
+                var moveSmallAsteroidSubscription = _defaultGameStateService.OnGameResume
+                    .Subscribe(_ => asteroidSmall.MoveSmallAsteroid(startPosition))
+                    .AddTo(_disposable);
 
                 asteroidSmall.AddSubscription(hitSubscription);
                 asteroidSmall.AddSubscription(gameOverSubscription);
                 asteroidSmall.AddSubscription(playEffectSubscription);
+                asteroidSmall.AddSubscription(stopSmallAsteroidSubscription);
+                asteroidSmall.AddSubscription(moveSmallAsteroidSubscription);
 
                 asteroidSmall.MoveSmallAsteroid(startPosition);
             }
@@ -205,6 +226,14 @@ namespace _Project.Scripts.SpawnService
                 .Subscribe(_defaultVisualEffectSystem.PlayUnitDestroyEffect)
                 .AddTo(ufoChaser.Disposable);
 
+            _defaultGameStateService.OnGamePaused
+                .Subscribe(_ => ufoChaser.StopChasing())
+                .AddTo(ufoChaser.Disposable);
+            
+            _defaultGameStateService.OnGameResume
+                .Subscribe(_ => ufoChaser.MoveTowardsTarget())
+                .AddTo(ufoChaser.Disposable);
+            
             var spawnPoint = _spawnRandomizer.GetRandomSpawnTransform();
 
             ufoChaser.transform.position = spawnPoint.position;

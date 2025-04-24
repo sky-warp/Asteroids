@@ -1,3 +1,4 @@
+using System;
 using _Project.Scripts.Projectiles.ProjectileTypes;
 using R3;
 using UnityEngine;
@@ -11,9 +12,11 @@ namespace _Project.Scripts.Environment.Units
         public readonly Subject<Unit> OnUfoDeath = new();
         public readonly ReactiveProperty<Vector2> TargetPosition = new();
 
+        private IDisposable _moveTowards;
+        
         public void MoveTowardsTarget()
         {
-            TargetPosition
+            _moveTowards = TargetPosition
                 .Subscribe(playerPosition =>
                 {
                     Vector2 direction = (playerPosition - (Vector2)transform.position).normalized;
@@ -23,6 +26,12 @@ namespace _Project.Scripts.Environment.Units
                     Rigidbody2D.rotation = angle;
                 })
                 .AddTo(Disposable);
+        }
+
+        public void StopChasing()
+        {
+            _moveTowards?.Dispose();
+            Rigidbody2D.velocity = Vector2.zero;
         }
         
         private new void OnTriggerEnter2D(Collider2D other)

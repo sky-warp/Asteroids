@@ -22,25 +22,29 @@ namespace _Project.Scripts.Player
         private float _xInput;
         private float _playerSpeed;
         private float _baseSpeed;
+        private float _baseRotationSpeed;
         private IInputable _inputManager;
 
         public void Init(float speed, IInputable inputManager)
         {
             _playerSpeed = speed;
             _baseSpeed = _playerSpeed;
+            _baseRotationSpeed = _rotateSpeed;
             _inputManager = inputManager;
         }
 
         public void GameOver()
         {
             _playerSpeed = 0;
+            _rotateSpeed = 0;
         }
 
         public void GameResume()
         {
             _playerSpeed = _baseSpeed;
+            _rotateSpeed = _baseRotationSpeed;
         }
-        
+
         private void Awake()
         {
             _rigidbody2D = GetComponent<Rigidbody2D>();
@@ -51,7 +55,7 @@ namespace _Project.Scripts.Player
             if (_inputManager != null)
             {
                 _yInput = _inputManager.GetAxisVertical();
-            _xInput = _inputManager.GetAxisHorizontal();
+                _xInput = _inputManager.GetAxisHorizontal();
             }
 
             CurrentRotationAngle.Value = transform.eulerAngles.z;

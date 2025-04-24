@@ -1,6 +1,6 @@
 using System;
 using _Project.Scripts.Firebase;
-using _Project.Scripts.GameOverServices;
+using _Project.Scripts.GameStateServices;
 using _Project.Scripts.SpawnService;
 using R3;
 using AmmoModel = _Project.Scripts.Projectiles.Ammo.Model.AmmoModel;

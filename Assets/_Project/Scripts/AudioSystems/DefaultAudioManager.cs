@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using _Project.Scripts.AudioSystems.AudioTypes;
 using _Project.Scripts.Factories;
-using _Project.Scripts.GameOverServices;
+using _Project.Scripts.GameStateServices;
 using R3;
 using UnityEngine;
 using Zenject;
@@ -39,6 +39,9 @@ namespace _Project.Scripts.AudioSystems
             _gameStateService.OnGameStart
                 .Subscribe(_ => _backgroundMusic.Play())
                 .AddTo(this); 
+            _gameStateService.OnGamePaused
+                .Subscribe(_ => _backgroundMusic.Pause())
+                .AddTo(this);
             _gameStateService.OnGameResume
                 .Subscribe(_ => _backgroundMusic.Play())
                 .AddTo(this);

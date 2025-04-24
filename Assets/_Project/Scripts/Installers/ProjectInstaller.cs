@@ -6,7 +6,7 @@ using _Project.Scripts.Configs.ParticleConfigs;
 using _Project.Scripts.CoroutineManagers;
 using _Project.Scripts.Factories;
 using _Project.Scripts.Firebase;
-using _Project.Scripts.GameOverServices;
+using _Project.Scripts.GameStateServices;
 using _Project.Scripts.InAppPurchase;
 using _Project.Scripts.InAppPurchase.Products;
 using _Project.Scripts.LocalAssetLoaders;

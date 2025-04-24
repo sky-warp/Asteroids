@@ -1,4 +1,4 @@
-using _Project.Scripts.GameOverServices;
+using _Project.Scripts.GameStateServices;
 using _Project.Scripts.Player;
 using _Project.Scripts.Spaceship.Model;
 using R3;

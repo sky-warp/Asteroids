@@ -17,7 +17,6 @@ namespace _Project.Scripts.Spaceship.View
         [SerializeField] private TextMeshProUGUI _rotationRotationText;
 
         private SpaceShipStats _statsParent;
-        private PlayerMovement _playerMovement;
         private SpaceshipViewModel _spaceshipViewModel;
 
         public void Init(SpaceshipViewModel spaceshipViewModel, SpaceShipStats statsParent)
