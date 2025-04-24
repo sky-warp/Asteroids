@@ -24,7 +24,7 @@ namespace _Project.Scripts.Bootstrap
             IRemoteDataLoadable remoteConfigInitializer,
             ScoreSaveSystem scoreSaveSystem,
             IAPInitializer initializer
-            )
+        )
         {
             _assetLoader = assetLoader;
             _mainLevelResources = mainLevelResources;
@@ -37,10 +37,7 @@ namespace _Project.Scripts.Bootstrap
         public async void Initialize()
         {
             await UnityServices.InitializeAsync();
-            
-            _scoreSaveSystem.Init();
-            _initializer.Init();
-            
+
             var (laser, bullet, asteroidBig, asteroidSmall, ufoChaser, spaceship) = await UniTask.WhenAll(
                 _assetLoader.LoadLaser(),
                 _assetLoader.LoadBullet(),
@@ -60,7 +57,10 @@ namespace _Project.Scripts.Bootstrap
             _assetLoader.UnloadAsset();
 
             await _remoteConfigInitializer.LoadRemoteData();
-            
+
+            _scoreSaveSystem.Init();
+            _initializer.Init();
+
             _sceneManager.LoadMainScene();
         }
     }
