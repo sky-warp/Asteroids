@@ -26,13 +26,13 @@ namespace _Project.Scripts.Firebase
             {
                 FirebaseApp app = FirebaseApp.DefaultInstance;
                 FirebaseAnalytics.SetAnalyticsCollectionEnabled(true);
-                OnFirebaseStatusRecived(task);
+                OnFirebaseStatusReceived(task);
             });
             
             OnFirebaseInitialized += _firebaseEventManager.ChangeReadyState;
         }
 
-        private void OnFirebaseStatusRecived(Task<DependencyStatus> task)
+        private void OnFirebaseStatusReceived(Task<DependencyStatus> task)
         {
             try
             {
