@@ -70,9 +70,20 @@ namespace _Project.Scripts.SaveSystems
                 _cloudSave.LoadLastDate(),
                 _cloudSave.LoadLastTime()
             );
+
+            DateTime localDateTime;
+            DateTime cloudDateTime;
             
-            DateTime localDateTime = DateTime.Parse(_localData.LastSaveDate + " " + _localData.LastSaveTime);
-            DateTime cloudDateTime = DateTime.Parse(cloudDate + " " + cloudTime);
+            if (_localData.LastSaveDate == null || _localData.LastSaveTime == null)
+            {
+                localDateTime = DateTime.MinValue;
+                cloudDateTime = DateTime.MinValue;
+            }
+            else
+            {
+                localDateTime = DateTime.Parse(_localData.LastSaveDate + " " + _localData.LastSaveTime);
+                cloudDateTime = DateTime.Parse(cloudDate + " " + cloudTime);
+            }
             
             if (localDateTime > cloudDateTime)
             {

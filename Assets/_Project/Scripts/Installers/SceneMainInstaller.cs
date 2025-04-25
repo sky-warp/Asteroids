@@ -170,6 +170,10 @@ namespace _Project.Scripts.Installers
             Container
                 .BindInterfacesAndSelfTo<PauseMenuController>()
                 .AsSingle();
+            
+            Container
+                .BindInterfacesAndSelfTo<PurchaseService>()
+                .AsSingle();
         }
     }
 }

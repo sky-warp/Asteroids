@@ -61,18 +61,22 @@ namespace _Project.Scripts.InAppPurchase
         
         public void OnInitializeFailed(InitializationFailureReason error)
         {
+            Debug.Log("Cannot initialize product");
         }
 
         public void OnInitializeFailed(InitializationFailureReason error, string message)
         {
+            Debug.Log("Cannot initialize product");
         }
 
         public void OnPurchaseFailed(Product product, PurchaseFailureReason failureReason)
         {
+            Debug.Log("Faile when purchasing product");
         }
 
         public void OnPurchaseFailed(Product product, PurchaseFailureDescription failureDescription)
         {
+            Debug.Log("Faile when purchasing product");
         }
     }
 }
