@@ -3,7 +3,7 @@ using System;
 namespace _Project.Scripts.SaveSystems
 {
     [Serializable]
-    public class SaveData
+    public class ScoreSaveData
     {
         public int HighScore;
         public string LastSaveDate;

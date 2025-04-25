@@ -26,7 +26,7 @@ namespace _Project.Scripts.Score.ViewModel
 
         private SceneManager _sceneManager;
 
-        private ScoreSaveSystem _scoreSaveSystem;
+        private ISaveable _scoreSaveSystem;
 
         private EnvironmentUnitSpawnService _environmentUnitSpawnService;
 
@@ -35,7 +35,7 @@ namespace _Project.Scripts.Score.ViewModel
         private FirebaseEventManager _firebaseEventManager;
 
         public ScoreViewModel(ScoreModel scoreModel, EnvironmentUnitSpawnService environmentUnitSpawnService,
-            DefaultGameStateService defaultGameStateService, ScoreSaveSystem scoreSaveSystem,
+            DefaultGameStateService defaultGameStateService, ISaveable scoreSaveSystem,
             FirebaseEventManager firebaseEventManager, SceneManager sceneManager, IAdShowable adManager,
             IAPController iapController)
         {
@@ -58,7 +58,7 @@ namespace _Project.Scripts.Score.ViewModel
                 .AddTo(_disposable);
 
             CurrentScoreView
-                .Subscribe(currentScore => _scoreSaveSystem.SaveData.SetHighScoreData(currentScore))
+                .Subscribe(currentScore => _scoreSaveSystem.ScoreSaveData.SetHighScoreData(currentScore))
                 .AddTo(_disposable);
 
             _environmentUnitSpawnService.BigAsteroidScore
@@ -111,7 +111,7 @@ namespace _Project.Scripts.Score.ViewModel
 
         public void ResetHighScoreView()
         {
-            _scoreSaveSystem.ResetHighScore();
+            _scoreSaveSystem.ResetParticularSaveData();
         }
 
         public void OnRestartGame()

@@ -106,7 +106,7 @@ namespace _Project.Scripts.Installers
                 .AsSingle();
 
             Container
-                .Bind<SaveData>()
+                .Bind<ScoreSaveData>()
                 .AsSingle();
 
             Container

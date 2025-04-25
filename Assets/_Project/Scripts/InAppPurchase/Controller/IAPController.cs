@@ -40,8 +40,7 @@ namespace _Project.Scripts.InAppPurchase.Controller
                     .AddTo(_disposable);
 
                 IsNoAds
-                    .Where(value => value)
-                    .Subscribe(value => _view.NoAdsButton.interactable = value)
+                    .Subscribe(value => _view.NoAdsButton.interactable = !value)
                     .AddTo(_disposable);
             }
         }

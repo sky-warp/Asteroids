@@ -15,14 +15,14 @@ namespace _Project.Scripts.Bootstrap
         private IRemoteDataLoadable _remoteConfigInitializer;
         private MainLevelResources _mainLevelResources;
         private SceneManager _sceneManager;
-        private ScoreSaveSystem _scoreSaveSystem;
+        private ISaveable _scoreSaveSystem;
         private IAPInitializer _initializer;
 
         public Bootstrapper(IAssetLoadable assetLoader,
             MainLevelResources mainLevelResources,
             SceneManager sceneManager,
             IRemoteDataLoadable remoteConfigInitializer,
-            ScoreSaveSystem scoreSaveSystem,
+            ISaveable scoreSaveSystem,
             IAPInitializer initializer
         )
         {

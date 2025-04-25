@@ -3,23 +3,22 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
 using R3;
-using Unity.Services.Core;
 using UnityEngine;
 
 namespace _Project.Scripts.SaveSystems
 {
-    public class ScoreSaveSystem : IDisposable
+    public class ScoreSaveSystem : IDisposable, ISaveable
     {
-        public SaveData SaveData { get; }
+        public ScoreSaveData ScoreSaveData { get; }
         private CloudSave _cloudSave;
         private CompositeDisposable _disposable = new();
 
         private string _tempJSON;
-        private SaveData _localData;
+        private ScoreSaveData _localData;
 
-        public ScoreSaveSystem(SaveData saveData, CloudSave cloudSave)
+        public ScoreSaveSystem(ScoreSaveData scoreSaveData, CloudSave cloudSave)
         {
-            SaveData = saveData;
+            ScoreSaveData = scoreSaveData;
             _cloudSave = cloudSave;
         }
 
@@ -27,7 +26,7 @@ namespace _Project.Scripts.SaveSystems
         {
             _tempJSON = PlayerPrefs.GetString("key", "");
 
-            _localData = JsonUtility.FromJson<SaveData>(_tempJSON);
+            _localData = JsonUtility.FromJson<ScoreSaveData>(_tempJSON);
 
 
             if (Application.internetReachability == NetworkReachability.NotReachable)
@@ -40,28 +39,28 @@ namespace _Project.Scripts.SaveSystems
             }
         }
 
-        private void InitializeLocalSave()
+        public void InitializeLocalSave()
         {
             if (!string.IsNullOrEmpty(_tempJSON))
             {
-                SaveData.SetHighScoreData(_localData.HighScore);
-                SaveData.SaveDate(_localData.LastSaveDate);
-                SaveData.SaveTime(_localData.LastSaveTime);
+                ScoreSaveData.SetHighScoreData(_localData.HighScore);
+                ScoreSaveData.SaveDate(_localData.LastSaveDate);
+                ScoreSaveData.SaveTime(_localData.LastSaveTime);
             }
 
             Observable
-                .FromEvent(scoreChanged => SaveData.OnHighScoreChanged += scoreChanged,
-                    scoreChanged => SaveData.OnHighScoreChanged -= scoreChanged)
+                .FromEvent(scoreChanged => ScoreSaveData.OnHighScoreChanged += scoreChanged,
+                    scoreChanged => ScoreSaveData.OnHighScoreChanged -= scoreChanged)
                 .Subscribe(_ => UpdateHighScoreLocally())
                 .AddTo(_disposable);
             Observable
-                .FromEvent(scoreChanged => SaveData.OnHighScoreReset += scoreChanged,
-                    scoreChanged => SaveData.OnHighScoreReset -= scoreChanged)
+                .FromEvent(scoreChanged => ScoreSaveData.OnHighScoreReset += scoreChanged,
+                    scoreChanged => ScoreSaveData.OnHighScoreReset -= scoreChanged)
                 .Subscribe(_ => UpdateHighScoreLocally())
                 .AddTo(_disposable);
         }
 
-        private async void InitializeRemoteSave()
+        public async void InitializeRemoteSave()
         {
             await _cloudSave.Authenticate();
 
@@ -91,33 +90,33 @@ namespace _Project.Scripts.SaveSystems
                 return;
             }
 
-            SaveData.SetHighScoreData(cloudHighScore);
-            SaveData.SaveDate(cloudDate);
-            SaveData.SaveTime(cloudTime);
+            ScoreSaveData.SetHighScoreData(cloudHighScore);
+            ScoreSaveData.SaveDate(cloudDate);
+            ScoreSaveData.SaveTime(cloudTime);
 
             Observable
-                .FromEvent(scoreChanged => SaveData.OnHighScoreChanged += scoreChanged,
-                    scoreChanged => SaveData.OnHighScoreChanged -= scoreChanged)
+                .FromEvent(scoreChanged => ScoreSaveData.OnHighScoreChanged += scoreChanged,
+                    scoreChanged => ScoreSaveData.OnHighScoreChanged -= scoreChanged)
                 .Subscribe(_ => UpdateHighScoreCloud())
                 .AddTo(_disposable);
             Observable
-                .FromEvent(scoreChanged => SaveData.OnHighScoreReset += scoreChanged,
-                    scoreChanged => SaveData.OnHighScoreReset -= scoreChanged)
+                .FromEvent(scoreChanged => ScoreSaveData.OnHighScoreReset += scoreChanged,
+                    scoreChanged => ScoreSaveData.OnHighScoreReset -= scoreChanged)
                 .Subscribe(_ => UpdateHighScoreCloud())
                 .AddTo(_disposable);
         }
 
-        public void ResetHighScore()
+        public void ResetParticularSaveData()
         {
-            SaveData.ClearHighScoreData();
+            ScoreSaveData.ClearHighScoreData();
         }
 
         private void UpdateHighScoreLocally()
         {
-            SaveData.SaveDate(DateTime.Now.ToShortDateString());
-            SaveData.SaveTime(DateTime.Now.ToLongTimeString());
+            ScoreSaveData.SaveDate(DateTime.Now.ToShortDateString());
+            ScoreSaveData.SaveTime(DateTime.Now.ToLongTimeString());
 
-            string json = JsonUtility.ToJson(SaveData);
+            string json = JsonUtility.ToJson(ScoreSaveData);
 
             PlayerPrefs.SetString("key", json);
 
@@ -126,16 +125,16 @@ namespace _Project.Scripts.SaveSystems
 
         private async void UpdateHighScoreCloud()
         {
-            SaveData.SaveDate(DateTime.Now.ToShortDateString());
-            SaveData.SaveTime(DateTime.Now.ToLongTimeString());
+            ScoreSaveData.SaveDate(DateTime.Now.ToShortDateString());
+            ScoreSaveData.SaveTime(DateTime.Now.ToLongTimeString());
 
-            string json = JsonUtility.ToJson(SaveData);
+            string json = JsonUtility.ToJson(ScoreSaveData);
 
             var values = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
 
             await _cloudSave.SaveData(values);
 
-            Debug.Log($"High Score: {SaveData.HighScore}");
+            Debug.Log($"High Score: {ScoreSaveData.HighScore}");
         }
 
         public void Dispose()

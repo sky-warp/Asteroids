@@ -20,7 +20,7 @@ namespace _Project.Scripts.InAppPurchase
         public void Initialize()
         {
             _initializer.NoAdsWasPaid
-                .Subscribe(value => IsNoAds.Value = true)
+                .Subscribe(value => IsNoAds.Value = value)
                 .AddTo(_disposable);
         }
 
