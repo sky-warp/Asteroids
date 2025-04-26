@@ -1,5 +1,4 @@
 using _Project.Scripts.Infrastructure;
-using _Project.Scripts.Player;
 using _Project.Scripts.Spaceship.ViewModel;
 using R3;
 using TMPro;

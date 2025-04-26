@@ -1,7 +1,7 @@
 using System;
-using _Project.Scripts.CoroutineManagers;
 using _Project.Scripts.Firebase;
 using _Project.Scripts.GameStateServices;
+using _Project.Scripts.Infrastructure.CoroutineManagers;
 using _Project.Scripts.InputService;
 using _Project.Scripts.Player;
 using _Project.Scripts.Projectiles.Ammo.ViewModel;

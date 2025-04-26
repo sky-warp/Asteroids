@@ -3,7 +3,6 @@ using _Project.Scripts.Environment.Units;
 using _Project.Scripts.Factories;
 using _Project.Scripts.Firebase;
 using _Project.Scripts.GameStateServices.PauseMenu;
-using _Project.Scripts.InAppPurchase;
 using _Project.Scripts.InAppPurchase.Controller;
 using _Project.Scripts.InAppPurchase.View;
 using _Project.Scripts.Infrastructure;
@@ -46,6 +45,7 @@ namespace _Project.Scripts.Installers
         [Inject] private readonly MainLevelResources _mainLevelResources;
 
         [Inject] private readonly RemoteData _remoteData;
+        [Inject] private readonly DiContainer _container;
 
         public override void InstallBindings()
         {
@@ -77,8 +77,7 @@ namespace _Project.Scripts.Installers
                 .FromInstance(_endGameAnimation)
                 .AsSingle();
 
-            var spaceship = Container
-                .InstantiatePrefabForComponent<SpaceshipView>(_mainLevelResources.Spaceship);
+            var spaceship = new SpaceshipFactory<SpaceshipView>(_mainLevelResources.Spaceship, _container).Create(default);
 
             Container
                 .Bind<PlayerMovement>()
