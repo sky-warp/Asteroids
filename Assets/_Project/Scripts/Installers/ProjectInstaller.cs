@@ -32,16 +32,12 @@ namespace _Project.Scripts.Installers
             Container
                 .Bind<IAPInitializer>()
                 .AsSingle();
-            
+
             Container
-                .Bind<NoAdsProductData>()
-                .AsSingle();
-            
-            Container
-                .Bind<CloudSave>()
+                .Bind<CloudSaveSystem>()
                 .AsSingle()
                 .NonLazy();
-            
+
             Container
                 .Bind<IRemoteDataLoadable>()
                 .To<RemoteConfigInitializer>()
@@ -91,9 +87,22 @@ namespace _Project.Scripts.Installers
                 .AsSingle();
 
             Container
+                .Bind<ScoreSaveData>()
+                .AsSingle();
+            Container
                 .BindInterfacesAndSelfTo<ScoreSaveSystem>()
                 .AsSingle();
-            
+
+            Container
+                .Bind<NoAdsProductData>()
+                .AsSingle();
+            Container
+                .Bind<NoAdsSaveData>()
+                .AsSingle();
+            Container
+                .BindInterfacesAndSelfTo<NoAdsSaveSystem>()
+                .AsSingle();
+
             Container
                 .Bind<FirebaseInstaller>()
                 .FromNewComponentOnNewGameObject()
@@ -103,10 +112,6 @@ namespace _Project.Scripts.Installers
             Container
                 .Bind<FirebaseEventManager>()
                 .FromNewComponentOnNewGameObject()
-                .AsSingle();
-
-            Container
-                .Bind<ScoreSaveData>()
                 .AsSingle();
 
             Container

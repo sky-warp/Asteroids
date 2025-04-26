@@ -10,24 +10,30 @@ namespace _Project.Scripts.SaveSystems
     public class ScoreSaveSystem : IDisposable, ISaveable
     {
         public ScoreSaveData ScoreSaveData { get; }
-        private CloudSave _cloudSave;
+        private CloudSaveSystem _cloudSaveSystem;
         private CompositeDisposable _disposable = new();
 
         private string _tempJSON;
-        private ScoreSaveData _localData;
+        private ScoreSaveData _localData = new();
 
-        public ScoreSaveSystem(ScoreSaveData scoreSaveData, CloudSave cloudSave)
+        public ScoreSaveSystem(ScoreSaveData scoreSaveData, CloudSaveSystem cloudSaveSystem)
         {
             ScoreSaveData = scoreSaveData;
-            _cloudSave = cloudSave;
+            _cloudSaveSystem = cloudSaveSystem;
         }
 
         public void Init()
         {
             _tempJSON = PlayerPrefs.GetString("key", "");
 
-            _localData = JsonUtility.FromJson<ScoreSaveData>(_tempJSON);
-
+            if (_tempJSON == "")
+            {
+                _localData.SetDefaultValues();
+            }
+            else
+            {
+                _localData = JsonUtility.FromJson<ScoreSaveData>(_tempJSON);
+            }
 
             if (Application.internetReachability == NetworkReachability.NotReachable)
             {
@@ -41,12 +47,9 @@ namespace _Project.Scripts.SaveSystems
 
         public void InitializeLocalSave()
         {
-            if (!string.IsNullOrEmpty(_tempJSON))
-            {
-                ScoreSaveData.SetHighScoreData(_localData.HighScore);
-                ScoreSaveData.SaveDate(_localData.LastSaveDate);
-                ScoreSaveData.SaveTime(_localData.LastSaveTime);
-            }
+            ScoreSaveData.SetHighScoreData(_localData.HighScore);
+            ScoreSaveData.SaveDate(_localData.LastSaveDate);
+            ScoreSaveData.SaveTime(_localData.LastSaveTime);
 
             Observable
                 .FromEvent(scoreChanged => ScoreSaveData.OnHighScoreChanged += scoreChanged,
@@ -62,28 +65,20 @@ namespace _Project.Scripts.SaveSystems
 
         public async void InitializeRemoteSave()
         {
-            await _cloudSave.Authenticate();
+            await _cloudSaveSystem.Authenticate();
 
             var (cloudHighScore, cloudDate, cloudTime) = await UniTask.WhenAll(
-                _cloudSave.LoadHighScore(),
-                _cloudSave.LoadLastDate(),
-                _cloudSave.LoadLastTime()
+                _cloudSaveSystem.LoadHighScore(),
+                _cloudSaveSystem.LoadLastDate(),
+                _cloudSaveSystem.LoadLastTime()
             );
 
             DateTime localDateTime;
             DateTime cloudDateTime;
-            
-            if (_localData.LastSaveDate == null || _localData.LastSaveTime == null)
-            {
-                localDateTime = DateTime.MinValue;
-                cloudDateTime = DateTime.MinValue;
-            }
-            else
-            {
-                localDateTime = DateTime.Parse(_localData.LastSaveDate + " " + _localData.LastSaveTime);
-                cloudDateTime = DateTime.Parse(cloudDate + " " + cloudTime);
-            }
-            
+
+            localDateTime = DateTime.Parse(_localData.LastSaveDate + " " + _localData.LastSaveTime);
+            cloudDateTime = DateTime.Parse(cloudDate + " " + cloudTime);
+
             if (localDateTime > cloudDateTime)
             {
                 InitializeLocalSave();
@@ -132,7 +127,7 @@ namespace _Project.Scripts.SaveSystems
 
             var values = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
 
-            await _cloudSave.SaveData(values);
+            await _cloudSaveSystem.SaveData(values);
 
             Debug.Log($"High Score: {ScoreSaveData.HighScore}");
         }

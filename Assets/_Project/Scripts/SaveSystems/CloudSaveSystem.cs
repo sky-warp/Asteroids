@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace _Project.Scripts.SaveSystems
 {
-    public class CloudSave
+    public class CloudSaveSystem
     {
         public const string HIGH_SCORE_KEY = "HighScore";
         public const string LAST_DATE_KEY = "LastSaveDate";

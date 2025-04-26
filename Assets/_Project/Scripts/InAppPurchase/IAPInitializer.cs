@@ -1,4 +1,5 @@
 using _Project.Scripts.InAppPurchase.Products;
+using _Project.Scripts.SaveSystems;
 using R3;
 using UnityEngine;
 using UnityEngine.Purchasing;
@@ -9,23 +10,30 @@ namespace _Project.Scripts.InAppPurchase
     public class IAPInitializer : IDetailedStoreListener
     {
         public readonly ReactiveProperty<bool> NoAdsWasPaid = new();
-        
+
         public NoAdsProductData NoAdsProductData { get; private set; }
         public IStoreController StoreController { get; private set; }
-        
-        public IAPInitializer(NoAdsProductData noAdsProductData)
+
+        private NoAdsSaveData _noAdsSaveData;
+        private NoAdsSaveSystem _noAdsSaveSystem;
+
+        public IAPInitializer(NoAdsProductData noAdsProductData, NoAdsSaveData noAdsSaveData,
+            NoAdsSaveSystem noAdsSaveSystem)
         {
             NoAdsProductData = noAdsProductData;
+            _noAdsSaveData = noAdsSaveData;
+            _noAdsSaveSystem = noAdsSaveSystem;
         }
-        
+
         public void Init()
         {
-            if (PlayerPrefs.GetInt("NoAdsWasPurchased") == 1)
+            if (_noAdsSaveSystem.CheckBuyStatus())
             {
+                NoAdsWasPaid.Value = true;
                 return;
             }
-            
-            SetupBuilder();
+
+            SetupNoAdsPurchase();
         }
 
         public void OnInitialized(IStoreController controller, IExtensionProvider extensions)
@@ -39,18 +47,19 @@ namespace _Project.Scripts.InAppPurchase
 
             if (product.definition.id == NoAdsProductData.ProductId)
             {
+                _noAdsSaveData.SetPurchaseStatus(1);
+                
                 Debug.Log("No ads from now");
-                PlayerPrefs.SetInt("NoAdsWasPurchased", 1);
-                
+
                 NoAdsWasPaid.Value = true;
-                
+
                 return PurchaseProcessingResult.Complete;
             }
 
             return PurchaseProcessingResult.Pending;
         }
 
-        private void SetupBuilder()
+        private void SetupNoAdsPurchase()
         {
             var builder = ConfigurationBuilder.Instance(StandardPurchasingModule.Instance());
 
@@ -58,7 +67,7 @@ namespace _Project.Scripts.InAppPurchase
 
             UnityPurchasing.Initialize(this, builder);
         }
-        
+
         public void OnInitializeFailed(InitializationFailureReason error)
         {
             Debug.Log("Cannot initialize product");

@@ -38,5 +38,12 @@ namespace _Project.Scripts.SaveSystems
         {
             LastSaveTime = time;
         }
+
+        public void SetDefaultValues()
+        {
+            HighScore = 0;
+            LastSaveDate = DateTime.Now.ToString();
+            LastSaveTime = DateTime.Now.ToString();
+        }
     }
 }
