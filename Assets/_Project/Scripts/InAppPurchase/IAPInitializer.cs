@@ -1,3 +1,4 @@
+using _Project.Scripts.GameStateServices;
 using _Project.Scripts.InAppPurchase.Products;
 using _Project.Scripts.SaveSystems;
 using R3;
@@ -10,30 +11,30 @@ namespace _Project.Scripts.InAppPurchase
     public class IAPInitializer : IDetailedStoreListener
     {
         public readonly ReactiveProperty<bool> NoAdsWasPaid = new();
+        public readonly ReactiveProperty<bool> IsContinueWasPaid = new();
 
         public NoAdsProductData NoAdsProductData { get; private set; }
+        public ContinueGameProductData ContinueGameProductData { get; private set; }
         public IStoreController StoreController { get; private set; }
 
         private NoAdsSaveData _noAdsSaveData;
         private NoAdsSaveSystem _noAdsSaveSystem;
+        private DefaultGameStateService _defaultGameStateService;
 
         public IAPInitializer(NoAdsProductData noAdsProductData, NoAdsSaveData noAdsSaveData,
-            NoAdsSaveSystem noAdsSaveSystem)
+            NoAdsSaveSystem noAdsSaveSystem, ContinueGameProductData continueGameProductData,
+            DefaultGameStateService defaultGameStateService)
         {
             NoAdsProductData = noAdsProductData;
             _noAdsSaveData = noAdsSaveData;
             _noAdsSaveSystem = noAdsSaveSystem;
+            ContinueGameProductData = continueGameProductData;
+            _defaultGameStateService = defaultGameStateService;
         }
 
         public void Init()
         {
-            if (_noAdsSaveSystem.CheckBuyStatus())
-            {
-                NoAdsWasPaid.Value = true;
-                return;
-            }
-
-            SetupNoAdsPurchase();
+            SetupPurchases();
         }
 
         public void OnInitialized(IStoreController controller, IExtensionProvider extensions)
@@ -48,22 +49,39 @@ namespace _Project.Scripts.InAppPurchase
             if (product.definition.id == NoAdsProductData.ProductId)
             {
                 _noAdsSaveData.SetPurchaseStatus(1);
-                
+
                 Debug.Log("No ads from now");
 
                 NoAdsWasPaid.Value = true;
 
                 return PurchaseProcessingResult.Complete;
             }
+            else if (product.definition.id == ContinueGameProductData.ProductId)
+            {
+                if (!IsContinueWasPaid.Value)
+                {
+                    IsContinueWasPaid.Value = true;
+                    _defaultGameStateService.OnGameResume.OnNext(Unit.Default);
+                }
+            }
 
             return PurchaseProcessingResult.Pending;
         }
 
-        private void SetupNoAdsPurchase()
+        private void SetupPurchases()
         {
             var builder = ConfigurationBuilder.Instance(StandardPurchasingModule.Instance());
 
-            builder.AddProduct(NoAdsProductData.ProductId, ProductType.NonConsumable);
+            if (_noAdsSaveSystem.CheckBuyStatus())
+            {
+                NoAdsWasPaid.Value = true;
+            }
+            else
+            {
+                builder.AddProduct(NoAdsProductData.ProductId, ProductType.NonConsumable);
+            }
+
+            builder.AddProduct(ContinueGameProductData.ProductId, ProductType.Consumable);
 
             UnityPurchasing.Initialize(this, builder);
         }

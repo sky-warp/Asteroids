@@ -5,9 +5,10 @@ using Zenject;
 
 namespace _Project.Scripts.InAppPurchase
 {
-    public class PurchaseService : InAppPurchaseBuyable, IInitializable, IDisposable
+    public class PurchaseService : IAppPurchaseBuyable, IInitializable, IDisposable
     {
         public ReactiveProperty<bool> IsNoAds { get; } = new();
+        public ReactiveProperty<bool> IsContinue { get; } = new();
 
         private IAPInitializer _initializer;
         private CompositeDisposable _disposable = new();
@@ -21,6 +22,9 @@ namespace _Project.Scripts.InAppPurchase
         {
             _initializer.NoAdsWasPaid
                 .Subscribe(value => IsNoAds.Value = value)
+                .AddTo(_disposable); 
+            _initializer.IsContinueWasPaid
+                .Subscribe(value => IsContinue.Value = value)
                 .AddTo(_disposable);
         }
 
@@ -36,6 +40,13 @@ namespace _Project.Scripts.InAppPurchase
             {
                 _initializer.StoreController.InitiatePurchase(_initializer.NoAdsProductData.ProductId);
             }
+        }
+
+        public void PurchaseContinueGame()
+        {
+            var product = _initializer.StoreController.products.WithID(_initializer.ContinueGameProductData.ProductId);
+
+            _initializer.StoreController.InitiatePurchase(_initializer.ContinueGameProductData.ProductId);
         }
 
         public void Dispose()

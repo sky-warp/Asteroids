@@ -98,6 +98,9 @@ namespace _Project.Scripts.Infrastructure
             _defaultGameStateServiceService.OnGamePaused
                 .Subscribe(_ => _inputManager.IsAvailable.Value = false)
                 .AddTo(_disposable);
+            _defaultGameStateServiceService.OnGamePaused
+                .Subscribe(_ => _inputManager.IsAvailable.Value = false)
+                .AddTo(_disposable);
 
             _defaultGameStateServiceService.OnGameResume
                 .Subscribe(_ => _spaceship.GetComponent<PlayerMovement>().GameResume())
@@ -110,10 +113,6 @@ namespace _Project.Scripts.Infrastructure
                 .AddTo(_disposable);
             _defaultGameStateServiceService.OnGameResume
                 .Subscribe(_ => _coroutineManager.StartCoroutine(_environmentUnitSpawnService.SpawnUfoChasers()))
-                .AddTo(_disposable);
-            
-            _defaultGameStateServiceService.OnGamePaused
-                .Subscribe(_ => _inputManager.IsAvailable.Value = false)
                 .AddTo(_disposable);
             
             _coroutineManager.StartCoroutine(_environmentUnitSpawnService.SpawnBigAsteroids());

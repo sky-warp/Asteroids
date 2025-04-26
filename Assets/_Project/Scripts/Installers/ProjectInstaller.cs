@@ -30,6 +30,11 @@ namespace _Project.Scripts.Installers
         public override void InstallBindings()
         {
             Container
+                .BindInterfacesAndSelfTo<PurchaseService>()
+                .AsSingle()
+                .NonLazy();
+            
+            Container
                 .Bind<IAPInitializer>()
                 .AsSingle();
 
@@ -93,6 +98,10 @@ namespace _Project.Scripts.Installers
                 .BindInterfacesAndSelfTo<ScoreSaveSystem>()
                 .AsSingle();
 
+            Container
+                .Bind<ContinueGameProductData>()
+                .AsSingle();
+            
             Container
                 .Bind<NoAdsProductData>()
                 .AsSingle();
