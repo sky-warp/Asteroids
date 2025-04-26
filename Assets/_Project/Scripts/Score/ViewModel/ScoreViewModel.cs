@@ -91,6 +91,9 @@ namespace _Project.Scripts.Score.ViewModel
             _defaultGameStateService.OnGameOver
                 .Subscribe(_ => IsGameOver.Value = true)
                 .AddTo(_disposable);
+            _defaultGameStateService.OnGameOver
+                .Subscribe(_ => IsGameResume.Value = false)
+                .AddTo(_disposable);
             _defaultGameStateService.OnGameResume
                 .Subscribe(_ => IsGameOver.Value = false)
                 .AddTo(_disposable);
