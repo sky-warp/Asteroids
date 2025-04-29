@@ -1,5 +1,6 @@
 using System;
 using _Project.Scripts.InAppPurchase.View;
+using _Project.Scripts.SaveSystems;
 using R3;
 using Zenject;
 
@@ -8,16 +9,17 @@ namespace _Project.Scripts.InAppPurchase.Controller
     public class IAPController : IInitializable, IDisposable
     {
         public readonly ReactiveProperty<bool> IsNoAds = new();
-        public readonly ReactiveProperty<bool> IsContinue = new();
 
         private IAPView _view;
+        private SaveData _saveData;
         private IAppPurchaseBuyable _purchaseService;
         private CompositeDisposable _disposable = new();
 
-        public IAPController(IAPView view, IAppPurchaseBuyable purchaseService)
+        public IAPController(IAPView view, IAppPurchaseBuyable purchaseService, SaveData saveData)
         {
             _view = view;
             _purchaseService = purchaseService;
+            _saveData = saveData;
         }
 
         public void Initialize()
@@ -30,25 +32,20 @@ namespace _Project.Scripts.InAppPurchase.Controller
                 .Subscribe(_ => _purchaseService.PurchaseContinueGame())
                 .AddTo(_disposable);
 
-            _purchaseService.IsNoAds
-                .Subscribe(value => this.IsNoAds.Value = value)
+            _saveData.SetOnGameContinueStatus(true);
+            
+            Observable
+                .EveryUpdate()
+                .Where(_ => _saveData.NoAdsPurchaseStatus == 1)
+                .Subscribe(_ => IsNoAds.Value = true)
                 .AddTo(_disposable);
-            _purchaseService.IsContinue
-                .Subscribe(value => this.IsContinue.Value = value)
-                .AddTo(_disposable);
-
+            
             IsNoAds
                 .Subscribe(value => _view.NoAdsButton.interactable = !value)
                 .AddTo(_disposable);
-
-            if (IsNoAds.Value)
-            {
-                _view.ContinueGameButton.interactable = IsNoAds.Value;
-            }
-            else if (!IsNoAds.Value)
-            {
-                _view.ContinueGameButton.interactable = IsNoAds.Value;
-            }
+            IsNoAds
+                .Subscribe(value => _view.ContinueGameButton.interactable = value)
+                .AddTo(_disposable);
         }
 
         public void Dispose()

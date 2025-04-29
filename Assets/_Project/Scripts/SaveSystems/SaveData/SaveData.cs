@@ -9,13 +9,16 @@ namespace _Project.Scripts.SaveSystems
         public int NoAdsPurchaseStatus;
         public string LastSaveDate;
         public string LastSaveTime;
+
+        public bool IsContinueAvailable { get; private set; }
+
         public event Action OnHighScoreChanged;
         public event Action OnHighScoreReset;
         public event Action OnNoAdsPurchased;
         public event Action OnNoAdsReseted;
 
         private bool _isNoAdsPurchase;
-        
+
         public int SetHighScoreData(int highScore)
         {
             if (highScore > HighScore)
@@ -24,7 +27,7 @@ namespace _Project.Scripts.SaveSystems
 
                 OnHighScoreChanged?.Invoke();
             }
-            
+
             return HighScore;
         }
 
@@ -41,7 +44,7 @@ namespace _Project.Scripts.SaveSystems
             LastSaveDate = DateTime.Now.ToString();
             LastSaveTime = DateTime.Now.ToString();
         }
-        
+
         public void SetPurchaseStatus(int purchaseStatus)
         {
             NoAdsPurchaseStatus = purchaseStatus;
@@ -55,7 +58,12 @@ namespace _Project.Scripts.SaveSystems
             NoAdsPurchaseStatus = 0;
             OnNoAdsReseted?.Invoke();
         }
-        
+
+        public void SetOnGameContinueStatus(bool isAvaliable)
+        {
+            IsContinueAvailable = isAvaliable;
+        }
+
         public bool CheckStatus()
         {
             if (NoAdsPurchaseStatus == 0)
@@ -67,7 +75,7 @@ namespace _Project.Scripts.SaveSystems
             _isNoAdsPurchase = true;
             return _isNoAdsPurchase;
         }
-        
+
         public void SaveDate(string date)
         {
             LastSaveDate = date;

@@ -56,12 +56,13 @@ namespace _Project.Scripts.InAppPurchase
 
                 return PurchaseProcessingResult.Complete;
             }
-            else if (product.definition.id == ContinueGameProductData.ProductId)
+            if (product.definition.id == ContinueGameProductData.ProductId)
             {
-                if (!IsContinueWasPaid.Value)
+                if (_savedData.IsContinueAvailable)
                 {
-                    IsContinueWasPaid.Value = true;
+                    _savedData.SetOnGameContinueStatus(false);
                     _defaultGameStateService.OnGameResume.OnNext(Unit.Default);
+                    return PurchaseProcessingResult.Complete;
                 }
             }
 
