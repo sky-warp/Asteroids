@@ -15,26 +15,23 @@ namespace _Project.Scripts.Bootstrap
         private IRemoteDataLoadable _remoteConfigInitializer;
         private MainLevelResources _mainLevelResources;
         private SceneManager _sceneManager;
-        private ISaveable _scoreSaveSystem;
-        private NoAdsSaveSystem _noAdsSaveSystem;
+        private ISaveable _saveSystem;
         private IAPInitializer _initializer;
 
         public Bootstrapper(IAssetLoadable assetLoader,
             MainLevelResources mainLevelResources,
             SceneManager sceneManager,
             IRemoteDataLoadable remoteConfigInitializer,
-            ISaveable scoreSaveSystem,
-            IAPInitializer initializer,
-            NoAdsSaveSystem noAdsSaveSystem
+            ISaveable saveSystem,
+            IAPInitializer initializer
         )
         {
             _assetLoader = assetLoader;
             _mainLevelResources = mainLevelResources;
             _sceneManager = sceneManager;
             _remoteConfigInitializer = remoteConfigInitializer;
-            _scoreSaveSystem = scoreSaveSystem;
+            _saveSystem = saveSystem;
             _initializer = initializer;
-            _noAdsSaveSystem = noAdsSaveSystem;
         }
 
         public async void Initialize()
@@ -61,8 +58,8 @@ namespace _Project.Scripts.Bootstrap
 
             await _remoteConfigInitializer.LoadRemoteData();
 
-            _scoreSaveSystem.Init();
-            _noAdsSaveSystem.Init();
+            await _saveSystem.Init();
+            
             _initializer.Init();
 
             _sceneManager.LoadMainScene();

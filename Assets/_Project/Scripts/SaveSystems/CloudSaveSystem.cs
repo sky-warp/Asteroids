@@ -11,6 +11,7 @@ namespace _Project.Scripts.SaveSystems
         public const string HIGH_SCORE_KEY = "HighScore";
         public const string LAST_DATE_KEY = "LastSaveDate";
         public const string LAST_TIME_KEY = "LastSaveTime";
+        public const string NO_ADS_WAS_PURCHASED = "NoAdsPurchaseStatus";
 
         public async UniTask Authenticate()
         {
@@ -82,6 +83,22 @@ namespace _Project.Scripts.SaveSystems
             if (playerData.TryGetValue(LAST_TIME_KEY, out var score))
             {
                 result = score.Value.GetAs<string>();
+            }
+
+            return result;
+        }
+        public async UniTask<int> LoadNoAdsPurchaseStatus()
+        {
+            int result = 0;
+
+            var playerData = await CloudSaveService.Instance.Data.Player.LoadAsync(new HashSet<string>
+            {
+                NO_ADS_WAS_PURCHASED
+            });
+
+            if (playerData.TryGetValue(NO_ADS_WAS_PURCHASED, out var score))
+            {
+                result = score.Value.GetAs<int>();
             }
 
             return result;

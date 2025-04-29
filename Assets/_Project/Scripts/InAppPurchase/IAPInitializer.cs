@@ -17,17 +17,17 @@ namespace _Project.Scripts.InAppPurchase
         public ContinueGameProductData ContinueGameProductData { get; private set; }
         public IStoreController StoreController { get; private set; }
 
-        private NoAdsSaveData _noAdsSaveData;
-        private NoAdsSaveSystem _noAdsSaveSystem;
+        private SaveData _savedData;
+        private ISaveable _saveSystem;
         private DefaultGameStateService _defaultGameStateService;
 
-        public IAPInitializer(NoAdsProductData noAdsProductData, NoAdsSaveData noAdsSaveData,
-            NoAdsSaveSystem noAdsSaveSystem, ContinueGameProductData continueGameProductData,
+        public IAPInitializer(NoAdsProductData noAdsProductData, SaveData savedData,
+            ISaveable saveSystem, ContinueGameProductData continueGameProductData,
             DefaultGameStateService defaultGameStateService)
         {
             NoAdsProductData = noAdsProductData;
-            _noAdsSaveData = noAdsSaveData;
-            _noAdsSaveSystem = noAdsSaveSystem;
+            _savedData = savedData;
+            _saveSystem = saveSystem;
             ContinueGameProductData = continueGameProductData;
             _defaultGameStateService = defaultGameStateService;
         }
@@ -48,7 +48,7 @@ namespace _Project.Scripts.InAppPurchase
 
             if (product.definition.id == NoAdsProductData.ProductId)
             {
-                _noAdsSaveData.SetPurchaseStatus(1);
+                _savedData.SetPurchaseStatus(1);
 
                 Debug.Log("No ads from now");
 
@@ -72,7 +72,7 @@ namespace _Project.Scripts.InAppPurchase
         {
             var builder = ConfigurationBuilder.Instance(StandardPurchasingModule.Instance());
 
-            if (_noAdsSaveSystem.CheckBuyStatus())
+            if (_saveSystem.CheckBuyStatus())
             {
                 NoAdsWasPaid.Value = true;
             }

@@ -1,12 +1,16 @@
+using Cysharp.Threading.Tasks;
+
 namespace _Project.Scripts.SaveSystems
 {
     public interface ISaveable
     {
-        public ScoreSaveData ScoreSaveData { get; }
+        public SaveData SavedData { get; }
         
-        void Init();
+        UniTask Init();
         void InitializeLocalSave();
-        void InitializeRemoteSave();
-        void ResetParticularSaveData();
+        UniTask InitializeRemoteSave();
+        void ResetHighScore();
+        void ResetNoAdsPurchased();
+        bool CheckBuyStatus();
     }
 }

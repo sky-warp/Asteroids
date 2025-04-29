@@ -16,6 +16,7 @@ namespace _Project.Scripts.Score.View
         [SerializeField] private GameObject _gameOverWindow;
         [SerializeField] private Button _restartButton;
         [SerializeField] private Button _resetHighScoreButton;
+        [SerializeField] private Button _resetNoAdsStatus;
 
         private ScoreViewModel _scoreViewModel;
 
@@ -47,6 +48,9 @@ namespace _Project.Scripts.Score.View
 
             _resetHighScoreButton.OnClickAsObservable()
                 .Subscribe(_ => _scoreViewModel.ResetHighScoreView())
+                .AddTo(this);
+            _resetNoAdsStatus.OnClickAsObservable()
+                .Subscribe(_ => scoreViewModel.ResetNoAdsStatus())
                 .AddTo(this);
             
             _restartButton.OnClickAsObservable()

@@ -58,7 +58,7 @@ namespace _Project.Scripts.Score.ViewModel
                 .AddTo(_disposable);
 
             CurrentScoreView
-                .Subscribe(currentScore => _scoreSaveSystem.ScoreSaveData.SetHighScoreData(currentScore))
+                .Subscribe(currentScore => _scoreSaveSystem.SavedData.SetHighScoreData(currentScore))
                 .AddTo(_disposable);
 
             _environmentUnitSpawnService.BigAsteroidScore
@@ -114,9 +114,14 @@ namespace _Project.Scripts.Score.ViewModel
 
         public void ResetHighScoreView()
         {
-            _scoreSaveSystem.ResetParticularSaveData();
+            _scoreSaveSystem.ResetHighScore();
         }
 
+        public void ResetNoAdsStatus()
+        {
+            _scoreSaveSystem.ResetNoAdsPurchased();
+        }
+        
         public void OnRestartGame()
         {
             _sceneManager.RestartGame();

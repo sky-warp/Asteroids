@@ -92,10 +92,10 @@ namespace _Project.Scripts.Installers
                 .AsSingle();
 
             Container
-                .Bind<ScoreSaveData>()
+                .Bind<SaveData>()
                 .AsSingle();
             Container
-                .BindInterfacesAndSelfTo<ScoreSaveSystem>()
+                .BindInterfacesAndSelfTo<DefaultSaveSystem>()
                 .AsSingle();
 
             Container
@@ -104,12 +104,6 @@ namespace _Project.Scripts.Installers
             
             Container
                 .Bind<NoAdsProductData>()
-                .AsSingle();
-            Container
-                .Bind<NoAdsSaveData>()
-                .AsSingle();
-            Container
-                .BindInterfacesAndSelfTo<NoAdsSaveSystem>()
                 .AsSingle();
 
             Container
