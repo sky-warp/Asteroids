@@ -41,8 +41,9 @@ namespace _Project.Scripts.SaveSystems
         {
             HighScore = 0;
             NoAdsPurchaseStatus = 0;
-            LastSaveDate = DateTime.Now.ToString();
-            LastSaveTime = DateTime.Now.ToString();
+
+            LastSaveDate = DateTime.Now.ToShortDateString();
+            LastSaveTime = DateTime.Now.ToLongTimeString();
         }
 
         public void SetPurchaseStatus(int purchaseStatus)

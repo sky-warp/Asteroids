@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Cysharp.Threading.Tasks;
 using Newtonsoft.Json;
 using R3;
@@ -89,8 +90,16 @@ namespace _Project.Scripts.SaveSystems
             DateTime localDateTime;
             DateTime cloudDateTime;
 
-            localDateTime = DateTime.Parse(_localData.LastSaveDate + " " + _localData.LastSaveTime);
-            cloudDateTime = DateTime.Parse(cloudDate + " " + cloudTime);
+            localDateTime = DateTime.Parse(_localData.LastSaveDate + " " + _localData.LastSaveTime,
+                CultureInfo.GetCultureInfo("en-US"));
+            
+            if(cloudDate == "" && cloudTime == "")
+            {
+                cloudDate = _localData.LastSaveDate;
+                cloudTime = _localData.LastSaveTime;
+            }
+            
+            cloudDateTime = DateTime.Parse(cloudDate + " " + cloudTime, CultureInfo.GetCultureInfo("en-US"));
 
             if (localDateTime > cloudDateTime)
             {
