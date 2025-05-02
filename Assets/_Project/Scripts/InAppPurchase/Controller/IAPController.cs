@@ -34,12 +34,10 @@ namespace _Project.Scripts.InAppPurchase.Controller
 
             _saveData.SetOnGameContinueStatus(true);
             
-            Observable
-                .EveryUpdate()
+            IsNoAds
                 .Where(_ => _saveData.NoAdsPurchaseStatus == 1)
                 .Subscribe(_ => IsNoAds.Value = true)
                 .AddTo(_disposable);
-            
             IsNoAds
                 .Subscribe(value => _view.NoAdsButton.interactable = !value)
                 .AddTo(_disposable);
