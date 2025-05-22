@@ -2,6 +2,7 @@ using System;
 using _Project.Scripts.InAppPurchase.Products;
 using Cysharp.Threading.Tasks;
 using Firebase.RemoteConfig;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace _Project.Scripts.Firebase
@@ -47,9 +48,10 @@ namespace _Project.Scripts.Firebase
             string adsData = remoteConfig.GetValue("NoAdsProduct").StringValue;
             string continueGameData = remoteConfig.GetValue("ContinueGameProduct").StringValue;
 
-            JsonUtility.FromJsonOverwrite(confData, _remoteData);
-            JsonUtility.FromJsonOverwrite(adsData, _noAdsProductData);
-            JsonUtility.FromJsonOverwrite(continueGameData, _continueGameProductData);
+            JsonConvert.PopulateObject(confData, _remoteData);
+            JsonConvert.PopulateObject(adsData, _noAdsProductData);
+            JsonConvert.PopulateObject(continueGameData, _continueGameProductData);
+
         }
     }
 }

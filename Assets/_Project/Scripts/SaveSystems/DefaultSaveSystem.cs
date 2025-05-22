@@ -33,7 +33,7 @@ namespace _Project.Scripts.SaveSystems
             }
             else
             {
-                _localData = JsonUtility.FromJson<SaveData>(_tempJSON);
+                _localData = JsonConvert.DeserializeObject<SaveData>(_tempJSON);
             }
 
             if (Application.internetReachability == NetworkReachability.NotReachable)
@@ -150,7 +150,7 @@ namespace _Project.Scripts.SaveSystems
             SavedData.SaveDate(DateTime.Now.ToShortDateString());
             SavedData.SaveTime(DateTime.Now.ToLongTimeString());
 
-            string json = JsonUtility.ToJson(SavedData);
+            string json = JsonConvert.SerializeObject(SavedData);
 
             PlayerPrefs.SetString("key", json);
 
@@ -162,7 +162,7 @@ namespace _Project.Scripts.SaveSystems
             SavedData.SaveDate(DateTime.Now.ToShortDateString());
             SavedData.SaveTime(DateTime.Now.ToLongTimeString());
 
-            string json = JsonUtility.ToJson(SavedData);
+            string json = JsonConvert.SerializeObject(SavedData);
 
             var values = JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
 
